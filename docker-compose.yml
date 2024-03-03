@@ -14,30 +14,35 @@ services:
     restart: unless-stopped
     networks:
       - lsm-network
-  middleware-node:
-    build: ./middleware
-    container_name: middleware-node
+  python-node:
+    image: python:latest
+    container_name: python-node
     environment:
       - discovery.type=single-node
-    expose:
-      - "80"
+    ports:
+      - "8080:80"
+    tty: true
+    stdin_open: true
     restart: unless-stopped
     networks:
       - lsm-network
-  caddy-node:
-    image: caddy:latest
-    container_name: caddy-node
-    ports:
-      - "8443:443"
-      - "8080:80"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
+      - ./middleware-python:/workspace
+
+  nodejs-node:
+    image: node:lts-slim
+    container_name: nodejs-node
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9080:80"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
     networks:
       - lsm-network
-    depends_on:
-      - middleware-node
+    volumes:
+      - ./middleware-nodejs:/workspace
 networks:
   lsm-network:
 volumes:
