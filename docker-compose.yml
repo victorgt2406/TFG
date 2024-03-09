@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   opensearch-node:
     image: opensearchproject/opensearch:latest
@@ -14,6 +15,7 @@ services:
     restart: unless-stopped
     networks:
       - lsm-network
+  
   python-node:
     image: python:latest
     container_name: python-node
@@ -28,7 +30,7 @@ services:
       - lsm-network
     volumes:
       - ./middleware-python:/workspace
-
+  
   nodejs-node:
     image: node:lts-slim
     container_name: nodejs-node
@@ -43,8 +45,30 @@ services:
       - lsm-network
     volumes:
       - ./middleware-nodejs:/workspace
+
+  llm-node:
+    image: victorgtutad/python-ubuntucuda:3.12-ubuntu22.04
+    container_name: llm-node
+    environment:
+      - discovery.type=single-node
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - lsm-network
+    volumes:
+      - ./llm:/workspace
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 networks:
   lsm-network:
+
 volumes:
   caddy_data:
+  
   caddy_config:

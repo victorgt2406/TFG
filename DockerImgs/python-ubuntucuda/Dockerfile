@@ -48,7 +48,3 @@ ENV PATH "$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH"
 
 # global python version
 RUN pyenv install $PYTHON_VERSION && pyenv global $PYTHON_VERSION
-
-COPY ./requirements.txt /cp-files/requirements.txt
-
-RUN pip install -r /cp-files/requirements.txt
