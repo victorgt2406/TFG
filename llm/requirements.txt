@@ -1,0 +1,7 @@
+fastapi
+git+https://github.com/huggingface/transformers#egg=transformers
+torch
+torchaudio
+torchvision
+numpy
+jupyterlab
