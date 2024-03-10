@@ -1,31 +1,74 @@
-version: '3'
+version: '3.8'
+
 services:
-  searchengine:
+  opensearch-node:
     image: opensearchproject/opensearch:latest
-    container_name: searchengine
+    container_name: opensearch-node
     environment:
-      - cluster.name=opensearch-cluster
-      - node.name=searchengine
       - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
-      - "plugins.security.disabled=true" # Temporalmente deshabilitamos seguridad para simplificar el inicio
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-      nofile:
-        soft: 65536
-        hard: 65536
-    volumes:
-      - opensearch-data1:/usr/share/opensearch/data
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
     ports:
-      - 9200:9200
+      - "9200:9200"
+      - "9600:9600"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
     networks:
-      - lsm-net
+      - lsm-network
+  
+  python-node:
+    image: python:latest
+    container_name: python-node
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "8080:80"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - lsm-network
+    volumes:
+      - ./middleware-python:/workspace
+  
+  nodejs-node:
+    image: node:lts-slim
+    container_name: nodejs-node
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9080:80"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - lsm-network
+    volumes:
+      - ./middleware-nodejs:/workspace
+
+  llm-node:
+    image: victorgtutad/python-ubuntucuda:3.12-ubuntu22.04
+    container_name: llm-node
+    environment:
+      - discovery.type=single-node
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - lsm-network
+    volumes:
+      - ./llm:/workspace
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+networks:
+  lsm-network:
 
 volumes:
-  opensearch-data1:
-
-networks:
-  lsm-net:
+  caddy_data:
+  
+  caddy_config:
