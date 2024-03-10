@@ -1,9 +1,0 @@
-:80 {
-    reverse_proxy middleware-node:80
-}
-
-
-:443 {
-    tls internal
-    reverse_proxy middleware-node:80
-}

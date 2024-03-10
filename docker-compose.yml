@@ -65,10 +65,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+
 networks:
   lsm-network:
-
-volumes:
-  caddy_data:
-  
-  caddy_config:
