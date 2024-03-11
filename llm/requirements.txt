@@ -1,5 +1,6 @@
 fastapi
-git+https://github.com/huggingface/transformers#egg=transformers
+uvicorn
+# git+https://github.com/huggingface/transformers#egg=transformers
 torch
 torchaudio
 torchvision
