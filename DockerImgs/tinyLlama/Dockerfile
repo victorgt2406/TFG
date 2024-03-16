@@ -7,3 +7,5 @@ WORKDIR /llm_app
 RUN pip install -r requirements.txt
 
 RUN ./tranformers-hface.sh
+
+ENTRYPOINT ["python", "./app.py"]
