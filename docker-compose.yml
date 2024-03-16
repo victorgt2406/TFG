@@ -47,10 +47,12 @@ services:
       - ./middleware-nodejs:/workspace
 
   llm-node:
-    image: victorgtutad/python-ubuntucuda:3.12-ubuntu22.04
+    image: victorgtutad/llm-tinyllama:0.2
     container_name: llm-node
     environment:
       - discovery.type=single-node
+    ports:
+      - "6060:8080"
     tty: true
     stdin_open: true
     restart: unless-stopped
