@@ -1,12 +1,12 @@
 FROM victorgtutad/python-ubuntucuda:3.12-ubuntu22.04
 # https://github.com/victorgt2406/containers/tree/main/python-ubuntucuda
 
-COPY ./api /llm_app
+COPY ./ /app
 
-WORKDIR /llm_app
+WORKDIR /app
 
 RUN pip install -r requirements.txt
 
 RUN ./tranformers-hface.sh
 
-ENTRYPOINT ["python", "./app.py"]
+ENTRYPOINT ["python", "./main.py"]
