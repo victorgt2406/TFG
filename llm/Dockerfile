@@ -1,5 +1,5 @@
 FROM victorgtutad/python-ubuntucuda:3.12-ubuntu22.04
-# https://github.com/victorgt2406/containers/tree/main/python-ubuntucuda
+# Using image created by me https://github.com/victorgt2406/containers/tree/main/python-ubuntucuda
 
 COPY ./ /app
 
