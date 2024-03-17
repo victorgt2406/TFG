@@ -34,10 +34,11 @@ services:
       - lsm-network
 
   llm-node:
-    image: victorgtutad/llm-tinyllama:0.2
+    build: ./llm
     container_name: llm-node
     environment:
       - discovery.type=single-node
+      - LLM_PORT=${LLM_PORT}
     ports:
       - "6060:8080"
     tty: true
