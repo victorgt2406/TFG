@@ -1,4 +1,4 @@
-"Function to load the LLM choosen"
+"Function to load the LLM chosen"
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from printlog import PrintlogEnum, printlog
@@ -14,8 +14,6 @@ def generate_llm_tokenizer(device:str = "cuda" if torch.cuda.is_available() else
 
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    # else:
-    #     raise ValueError("ERROR: Tokenizer Error, Model did not load correctly")
 
     model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype="auto", trust_remote_code=True).to(device)
 
@@ -23,7 +21,9 @@ def generate_llm_tokenizer(device:str = "cuda" if torch.cuda.is_available() else
 
 
 def encode_text(text:str, tokenizer, device="cuda" if torch.cuda.is_available() else "cpu"):
+    "Transform a string to token to then be read by the model"
     return tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=512).to(device)
 
 def decode_text(output, tokenizer):
+    "Transform a token from the model to string to be read by the user"
     return tokenizer.decode(output, skip_special_tokens=True)

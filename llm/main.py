@@ -1,6 +1,10 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from models import AskModel
 from llm_model import generate_llm_tokenizer, encode_text, decode_text
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -36,4 +40,6 @@ async def ask(question: AskModel):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    port = int(os.getenv("LLM_PORT")) # type: ignore
+    print(f"Running LLM API at http://localhost:{port} 🚀")
+    uvicorn.run(app, host="0.0.0.0", port=port)

@@ -1,5 +1,6 @@
 fastapi
 uvicorn
+python-dotenv
 # git+https://github.com/huggingface/transformers#egg=transformers
 torch
 torchaudio
