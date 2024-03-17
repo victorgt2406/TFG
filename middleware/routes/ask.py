@@ -1,5 +1,4 @@
 "Users ask questions"
-import json
 import aiohttp
 from fastapi import APIRouter
 from models import AskModel
