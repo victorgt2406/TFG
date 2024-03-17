@@ -40,6 +40,8 @@ services:
     restart: unless-stopped
     networks:
       - lsm-network
+    volumes:
+      - ./data:/data
     deploy:
       resources:
         limits:
@@ -62,8 +64,6 @@ services:
     restart: unless-stopped
     networks:
       - lsm-network
-    volumes:
-      - ./llm:/workspace
     deploy:
       resources:
         limits:
