@@ -4,7 +4,7 @@ import os
 from fastapi import FastAPI
 
 
-def load_routes(app: FastAPI) -> list[str]:
+def load_routes(app: FastAPI) -> None:
     """
     Loads all the routes of the api
     """
