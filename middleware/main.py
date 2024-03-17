@@ -2,7 +2,9 @@ import os
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from routes import load_routes
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 app_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of app.py
 client_dist_dir = os.path.join(app_dir, 'client', 'dist')  # Path to your client/dist
@@ -25,6 +27,6 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    port = 3000
+    port = int(os.getenv("MDW_PORT")) # type: ignore
     print(f"Running API at http://localhost:{port} 🚀")
     uvicorn.run(app, host="0.0.0.0", port=port)

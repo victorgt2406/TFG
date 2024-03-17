@@ -16,35 +16,22 @@ services:
     networks:
       - lsm-network
   
-  python-node:
-    image: python:latest
-    container_name: python-node
+  middleware:
+    build: ./middleware
+    container_name: middleware-node
     environment:
       - discovery.type=single-node
+      - LLM_HOST=${LLM_HOST}
+      - LLM_PORT=${LLM_PORT}
+      - OS_HOST=${OS_HOST}
+      - MDW_PORT=${MDW_PORT}
     ports:
-      - "8080:80"
+      - "8080:8080"
     tty: true
     stdin_open: true
     restart: unless-stopped
     networks:
       - lsm-network
-    volumes:
-      - ./middleware-python:/workspace
-  
-  nodejs-node:
-    image: node:lts-slim
-    container_name: nodejs-node
-    environment:
-      - discovery.type=single-node
-    ports:
-      - "9080:80"
-    tty: true
-    stdin_open: true
-    restart: unless-stopped
-    networks:
-      - lsm-network
-    volumes:
-      - ./middleware-nodejs:/workspace
 
   llm-node:
     image: victorgtutad/llm-tinyllama:0.2

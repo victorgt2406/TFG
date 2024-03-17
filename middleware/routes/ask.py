@@ -1,12 +1,17 @@
 "Users ask questions"
+import os
 import aiohttp
 from fastapi import APIRouter
 from models import AskModel
+
 router = APIRouter()
 
 @router.post("/")
 async def ask(req: AskModel):
-    url = "http://localhost:6060/ask"
+    llm_host = os.getenv('LLM_HOST')
+    llm_port = os.getenv('LLM_PORT')
+    url = f"http://{llm_host}:{llm_port}/ask"
+    print(f"LLM url {url}")
     async with aiohttp.ClientSession() as session:
         # Convert the Pydantic model to a JSON string
         json_data = req.model_dump_json()
@@ -19,4 +24,3 @@ async def ask(req: AskModel):
                     return {"error": f"Upstream server responded with status {response.status}"}
         except aiohttp.ClientError as e:
             return {"error": str(e)}
-
