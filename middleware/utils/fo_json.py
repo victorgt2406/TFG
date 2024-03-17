@@ -1,0 +1,60 @@
+import json
+from utils import get_opensearch_client
+
+def docs_to_bulkop_string(documents:list[dict]):
+    """
+    Transforms a list of dictionaries into a bulk operation string for OpenSearch,
+    where each document contains '_id' and '_index' keys.
+    
+    Parameters:
+    documents (list): A list of dictionaries, each representing a document.
+    
+    Returns:
+    str: A string formatted for the OpenSearch bulk API.
+    """
+    bulk_op_lines = []
+    
+    for doc in documents:
+        # Basic metadata
+        doc_index = doc['_index']
+        doc_id = doc['_id']
+        
+        # Prepare action metadata
+        action_meta = {"update": {"_index": doc_index, "_id": doc_id}}
+        
+        # Delete _index and _id keys
+        del doc["_id"]
+        del doc["_index"]
+        doc_data = {
+            "doc": doc,
+            "doc_as_upsert": True
+        }
+        
+        # Add action metadata line and document data line
+        bulk_op_lines.append(json.dumps(action_meta))
+        bulk_op_lines.append(json.dumps(doc_data))
+    
+    # Convert each element to JSON and join with newline characters
+    bulk_op_string = '\n'.join(bulk_op_lines)
+    
+    return bulk_op_string
+
+def index_docs(docs: list[dict]) -> None:
+    "index docs to Opensearch"
+    os_client = get_opensearch_client()
+    os_client.bulk(docs_to_bulkop_string(docs))
+
+def update_jsonfile(filepath: str) -> None:
+    try:
+        with open(filepath, "r", encoding="utf-8") as file:
+            file_content = file.read()
+            # Ensure file_content is not empty
+            if not file_content.strip():
+                print("File is empty")
+                return
+            jsonfile = json.loads(file_content)
+        index_docs(jsonfile)
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
