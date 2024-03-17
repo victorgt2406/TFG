@@ -5,3 +5,4 @@ aiohttp
 opensearch-dsl
 pytest
 python-dotenv
+watchdog
