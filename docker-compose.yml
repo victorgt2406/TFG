@@ -15,6 +15,14 @@ services:
     restart: unless-stopped
     networks:
       - lsm-network
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 8g
+        reservations:
+          cpus: "2"
+          memory: 4g
   
   middleware:
     build: ./middleware
@@ -32,6 +40,14 @@ services:
     restart: unless-stopped
     networks:
       - lsm-network
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2g
+        reservations:
+          cpus: "0.25"
+          memory: 250M
 
   llm-node:
     build: ./llm
@@ -50,7 +66,12 @@ services:
       - ./llm:/workspace
     deploy:
       resources:
+        limits:
+          cpus: "8"
+          memory: 20g
         reservations:
+          cpus: "4"
+          memory: 8g
           devices:
             - driver: nvidia
               count: 1
