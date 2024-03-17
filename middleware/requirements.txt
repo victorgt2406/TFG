@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+httpx
+aiohttp
+opensearch-dsl
+pytest
+python-dotenv
