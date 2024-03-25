@@ -1,4 +1,5 @@
 import json
+from opensearchpy.exceptions import ConnectionError as OpenSearchConnectionError
 from utils import get_opensearch_client
 
 def docs_to_bulkop_string(documents:list[dict]):
@@ -42,7 +43,10 @@ def docs_to_bulkop_string(documents:list[dict]):
 def index_docs(docs: list[dict]) -> None:
     "index docs to Opensearch"
     os_client = get_opensearch_client()
-    os_client.bulk(docs_to_bulkop_string(docs))
+    try:
+        os_client.bulk(docs_to_bulkop_string(docs))
+    except OpenSearchConnectionError:
+        print("Error when connecting to OpenSearch")
 
 def update_jsonfile(filepath: str) -> None:
     try:
@@ -56,5 +60,3 @@ def update_jsonfile(filepath: str) -> None:
         index_docs(jsonfile)
     except json.JSONDecodeError as e:
         print(f"Error decoding JSON: {e}")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
