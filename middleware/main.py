@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from routes import load_routes
 from dotenv import load_dotenv
-from file_observer import start_observer
+from file_observer import file_observer
 
 load_dotenv()
 app = FastAPI()
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     port = int(os.getenv("MDW_PORT") or 3000) # type: ignore
 
     # Prepare and start the file watcher in a daemon thread
-    watcher_thread = threading.Thread(target=start_observer, args=(), daemon=True)
+    watcher_thread = threading.Thread(target=file_observer, args=(), daemon=True)
     watcher_thread.start()
 
     print(f"Running API at http://localhost:{port} 🚀")

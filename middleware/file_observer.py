@@ -19,7 +19,7 @@ class MyHandler(FileSystemEventHandler):
             if event.src_path.endswith(".json"):
                 update_jsonfile(event.src_path)
 
-def start_observer(path='../data'):
+def file_observer(path='../data'):
     event_handler = MyHandler()
     observer = Observer()
     observer.schedule(event_handler, path, recursive=False)
