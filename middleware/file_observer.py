@@ -1,6 +1,7 @@
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from utils.fo_csv import update_csvfile
 from utils.fo_json import update_jsonfile
 from utils.fo_pdf import update_pdffile
 from utils.fo_text import update_textfile
@@ -15,7 +16,7 @@ class MyHandler(FileSystemEventHandler):
         elif src_path.endswith(".pdf"):
             update_pdffile(src_path)
         elif src_path.endswith(".csv"):
-            pass
+            update_csvfile(src_path)
             
 
     def on_created(self, event):
