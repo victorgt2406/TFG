@@ -37,7 +37,7 @@ def docs_to_bulkop_string(documents: list[dict]):
         # Add action metadata line and document data line
         bulk_op_lines.append(json.dumps(action_meta))
         bulk_op_lines.append(json.dumps(doc_data))
-
+    print(bulk_op_lines[0])
     # Convert each element to JSON and join with newline characters
     bulk_op_string = '\n'.join(bulk_op_lines)
 
