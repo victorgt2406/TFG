@@ -11,12 +11,14 @@ async def ask(req: AskModel):
     llm_host = os.getenv('LLM_HOST')
     llm_port = os.getenv('LLM_PORT')
     url = f"http://{llm_host}:{llm_port}/ask"
-    print(f"LLM url {url}")
+    print(f"Asking to LLM on {url}")
     async with aiohttp.ClientSession() as session:
         # Convert the Pydantic model to a JSON string
-        json_data = req.model_dump_json()
+        data_json = req.model_dump()
+        data_str:str = req.model_dump_json()
+        print(data_json)
         try:
-            async with session.post(url, data=json_data, headers={"Content-Type": "application/json"}) as response:
+            async with session.post(url, data=data_str, headers={"Content-Type": "application/json"}) as response:
                 if response.status == 200:
                     response_data = await response.json()  # Get the response JSON
                     return response_data  # Return the response data as JSON
