@@ -1,6 +1,6 @@
 import csv
 import sys
-from utils.fo_json import index_docs
+from utils import index_docs
 
 def update_csvfile(filepath: str) -> None:
     try:

@@ -1,5 +1,5 @@
-import fitz  # PyMuPDF
-from utils.fo_json import index_docs
+import fitz
+from utils import index_docs
 
 
 def update_pdffile(filepath: str) -> None:

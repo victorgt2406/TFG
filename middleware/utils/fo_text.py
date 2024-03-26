@@ -1,4 +1,4 @@
-from utils.fo_json import index_docs
+from utils import index_docs
 
 
 def update_textfile(filepath: str) -> None:
