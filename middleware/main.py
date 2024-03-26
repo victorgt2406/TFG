@@ -1,8 +1,10 @@
 import os
+import threading
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from routes import load_routes
 from dotenv import load_dotenv
+from file_observer import file_observer
 
 load_dotenv()
 app = FastAPI()
@@ -27,6 +29,11 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("MDW_PORT")) # type: ignore
+    port = int(os.getenv("MDW_PORT") or 3000) # type: ignore
+
+    # Prepare and start the file watcher in a daemon thread
+    watcher_thread = threading.Thread(target=file_observer, args=(), daemon=True)
+    watcher_thread.start()
+
     print(f"Running API at http://localhost:{port} 🚀")
     uvicorn.run(app, host="0.0.0.0", port=port)
