@@ -17,6 +17,6 @@ async def ask(question: AskModel):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("LLM_PORT") or 3000)
+    port = int(os.getenv("LLM_PORT") or 3001)
     print(f"Running LLM API at http://localhost:{port} 🚀")
     uvicorn.run(app, host="0.0.0.0", port=port)
