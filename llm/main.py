@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from models import AskModel
+from api_models import AskModel
 from llm_model import generate_llm_tokenizer, encode_text, decode_text
 
 load_dotenv()

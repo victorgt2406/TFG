@@ -1,6 +1,6 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from models.template import LlmTemplate
+from llm_models.template import LlmTemplate
 from printlog import PrintlogEnum, printlog
 
 
