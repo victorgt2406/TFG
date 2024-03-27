@@ -10,6 +10,10 @@ app = FastAPI()
 
 model, tokenizer = generate_llm_tokenizer()
 
+llm_context = {
+    "pre_context": "You will be an assistant who is going to respond concisely and directly to the question without additional details.",
+}
+
 @app.post("/ask")
 async def ask(question: AskModel):
     "Gets a question form the message field of the json body and returns an answer to the question"
