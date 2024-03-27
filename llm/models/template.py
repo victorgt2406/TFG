@@ -9,10 +9,12 @@ class LlmTemplate(ABC):
     - Method `ask` should be implemented to process the message and return a string with response to that message
     """
 
-    def __init__(self, name, tokenizer: PreTrainedTokenizer, model: PreTrainedModel) -> None:
+    def __init__(self, name, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, device: str) -> None:
         self.name = name
         self.tokenizer = tokenizer
         self.model = model
+        self.device = device
+        self.context = ""
 
     @ abstractmethod
     def ask(self, message: str) -> str:
@@ -20,3 +22,7 @@ class LlmTemplate(ABC):
         From a message, the LLM process it and return a response
         """
         raise NotImplementedError("The ask method needs to be implemented by subclasses.")
+    
+    def set_context(self, context:str):
+        "Set the context to the LLM when asking to the model"
+        self.context = context

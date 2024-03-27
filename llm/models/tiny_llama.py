@@ -1,45 +1,62 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from models.template import LlmTemplate
 from printlog import PrintlogEnum, printlog
 
-class TinyLlamaChat:
-    def __init__(self, model_name="PY007/TinyLlama-1.1B-Chat-v0.4", device=None):
-        self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
-        printlog(f"Initializing TinyLlama with device: {self.device}", PrintlogEnum.INFO)
-        
-        self.model_name = model_name
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype="auto").to(self.device)
-        
-        self.pipeline = pipeline(
-            "text-generation",
-            model=self.model,
-            tokenizer=self.tokenizer,
-            torch_dtype=torch.float16,
-            device_map="auto" if self.device == "cuda" else None
-        )
-        
-        self.CHAT_EOS_TOKEN_ID = 32002  # End-of-sequence token ID for chat
-    
-    def ask(self, prompt, max_new_tokens=1024, top_k=50, top_p=0.9, num_return_sequences=1, repetition_penalty=1.1):
-        formatted_prompt = f"user\n{prompt}\nassistant\n"
-        sequences = self.pipeline(
-            formatted_prompt,
-            do_sample=True,
-            top_k=top_k,
-            top_p=top_p,
-            num_return_sequences=num_return_sequences,
-            repetition_penalty=repetition_penalty,
-            max_new_tokens=max_new_tokens,
-            eos_token_id=self.CHAT_EOS_TOKEN_ID,
-        )
-        return sequences
 
-# Example usage:
-if __name__ == "__main__":
-    chat_model = TinyLlamaChat()
-    prompt = "How to get in a good university?"
-    sequences = chat_model.ask(prompt)
-    
-    for seq in sequences:
-        print(f"Result: {seq['generated_text']}")
+class TinyLlamaChatBot(LlmTemplate):
+    def __init__(self) -> None:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        name = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+        tokenizer, model = self.generate_llm_tokenizer(
+            model_name=name, device=device)
+        super().__init__(name, tokenizer, model, device)
+        self.context = "You will be an assistant who is going to respond concisely and directly to the question without additional details."
+
+    def ask(self, message: str) -> str:
+        str_input = f"{self.context}\nUser: {message}\nAssistant: "
+        encoded_input = self.encode_text(str_input)
+        output = self.model.generate(
+            **encoded_input,
+            max_length=512,
+            pad_token_id=self.tokenizer.eos_token_id,
+            temperature=0.1,
+            top_k=20,
+            top_p=0.6,
+            repetition_penalty=1.2,
+            no_repeat_ngram_size=2,
+            num_return_sequences=1,
+            do_sample=True,
+        )
+
+        # res = tokenizer.decode(output[0], skip_special_tokens=True)
+        res = self.decode_text(output[0])
+        answer_start = res.find("\nAssistant: ") + len("\nAssistant: ")
+        answer:str = res[answer_start:]
+
+        return answer
+
+    def generate_llm_tokenizer(self, model_name: str, device: str):
+        "Return the model selected"
+
+        printlog(f"The LLM is using {device}", PrintlogEnum.INFO)
+        torch.set_default_device(device)
+
+        tokenizer = AutoTokenizer.from_pretrained(
+            model_name, trust_remote_code=True)
+
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, torch_dtype="auto", trust_remote_code=True).to(device)
+
+        return model, tokenizer
+
+    def encode_text(self, input_text: str):
+        "Transform a string to token to then be read by the model"
+        return self.tokenizer(input_text, return_tensors='pt', padding=True, truncation=True, max_length=512).to(self.device)
+
+    def decode_text(self, output):
+        "Transform a token from the model to string to be read by the user"
+        return self.tokenizer.decode(output, skip_special_tokens=True)
