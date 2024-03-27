@@ -9,7 +9,7 @@ class LlmTemplate(ABC):
     - Method `ask` should be implemented to process the message and return a string with response to that message
     """
 
-    def __init__(self, name, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, device: str) -> None:
+    def __init__(self, name:str, tokenizer: PreTrainedTokenizer, model: PreTrainedModel, device: str) -> None:
         self.name = name
         self.tokenizer = tokenizer
         self.model = model

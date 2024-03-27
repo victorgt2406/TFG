@@ -1,0 +1,7 @@
+###
+POST http://localhost:3000/ask
+Content-Type: application/json
+
+{
+    "message" : "Name me the planets of the solar system"
+}
