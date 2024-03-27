@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from api_models import AskModel
+from api_models import AskModel, ContextModel
 from llm_models import TinyLlamaChatBot
 
 load_dotenv()
@@ -11,8 +11,14 @@ llm_model = TinyLlamaChatBot()
 
 @app.post("/ask")
 async def ask(question: AskModel):
+    "ask to the model"
     answer = llm_model.ask(question.message)
-    # return {"answer": answer}
+    return answer
+
+@app.post("/get_terms")
+async def get_terms(question: AskModel):
+    "ask to the model"
+    answer = llm_model.get_terms(question.message)
     return answer
 
 if __name__ == "__main__":

@@ -1,0 +1,15 @@
+###
+POST http://localhost:6060/ask
+Content-Type: application/json
+
+{
+    "message" : "Input Text: 'I have the flu and a very bad back pain.' Task: Directly list the medical terms found in the text without providing definitions or additional information. 'Response': "
+}
+
+###
+POST http://localhost:6060/ask
+Content-Type: application/json
+
+{
+    "message" : "Just name me the titles from this text: 1) Flu - Influenza (flu), also known as influenza A or B, is caused by viruses that belong to two different families: Orthomyxoviridae and Paramyxoveniradiolivirusidae. The virus spreads through droplets when people cough or sneeze, and it can live for up to several days on surfaces. Symptoms include fever, fatigue, headache, muscle aches, chills, nausea, vomiting, diarrhea and sometimes pneumonia. It's usually mild but severe cases may lead to hospitalization. 2) Back pain - Back Pain refers to any discomfort in the spine, which includes lower back pain, upper back/shoulder pain and neck pain. Common causes are overuse, injury, poor posture, genetics, pregnancy, menopause, arthritis, tumors, etc. Treatment options vary depending on the cause and severity of symptoms. For example, physical therapy, chiropractic care, medication, surgery, massage therapies, acupuncture and other complementary treatments may help alleviate pain or improve function."
+}

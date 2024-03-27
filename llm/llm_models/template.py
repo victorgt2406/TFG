@@ -14,7 +14,6 @@ class LlmTemplate(ABC):
         self.tokenizer = tokenizer
         self.model = model
         self.device = device
-        self.context = ""
 
     @ abstractmethod
     def ask(self, message: str) -> str:
@@ -22,7 +21,3 @@ class LlmTemplate(ABC):
         From a message, the LLM process it and return a response
         """
         raise NotImplementedError("The ask method needs to be implemented by subclasses.")
-    
-    def set_context(self, context:str):
-        "Set the context to the LLM when asking to the model"
-        self.context = context

@@ -11,10 +11,41 @@ class TinyLlamaChatBot(LlmTemplate):
         model, tokenizer = self.generate_llm_tokenizer(
             model_name=name, device=device)
         super().__init__(name, tokenizer, model, device)
-        self.context = "You will be an assistant who is going to respond concisely and directly to the question without additional details."
+        # self.context = "You will be an assistant who is going to respond concisely and directly to the question without additional details."
 
     def ask(self, message: str) -> str:
-        input_text = f"{self.context}\nUser: {message}\nAssistant: "
+        context = "You will be an assistant who is going to respond concisely and directly to the question without additional details."
+        
+        input_text = f"{context}\nUser: {message}\nAssistant: "
+
+        encoded_input = self.encode_text(input_text)
+        output = self.model.generate(
+            **encoded_input,
+            max_length=512,
+            pad_token_id=self.tokenizer.eos_token_id,
+            temperature=0.1,
+            top_k=20,
+            top_p=0.6,
+            repetition_penalty=1.2,
+            no_repeat_ngram_size=2,
+            num_return_sequences=1,
+            do_sample=True,
+        )
+        res = self.decode_text(output[0])
+
+        answer_start = res.find("\nAssistant: ") + len("\nAssistant: ")
+        answer: str = res[answer_start:]
+
+        return answer
+    
+    def get_terms(self, message: str) -> str:
+        "Get the terms of the question"
+        
+        context = """You are an assistant programmed to extract specific terms from a given text. 
+        Your task is to identify key terms related to the prompt and list them succinctly. 
+        No explanations, interpretations, or any supplementary information. Only listing the terms as they are requested.
+        """
+        input_text = f"{context}\nMessage: {message}\nTerms: "
         encoded_input = self.encode_text(input_text)
         output = self.model.generate(
             **encoded_input,
@@ -31,7 +62,7 @@ class TinyLlamaChatBot(LlmTemplate):
 
         # res = tokenizer.decode(output[0], skip_special_tokens=True)
         res = self.decode_text(output[0])
-        answer_start = res.find("\nAssistant: ") + len("\nAssistant: ")
+        answer_start = res.find("\nTerms: ") + len("\nTerms: ")
         answer: str = res[answer_start:]
 
         return answer
