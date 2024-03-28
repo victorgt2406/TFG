@@ -42,30 +42,26 @@ class TinyLlamaChatBot(LlmTemplate):
         "Get the terms of the question"
         
         context = """You are an assistant programmed to extract specific terms from a given text. 
-        Your task is to identify key terms related to the prompt and list them succinctly. 
+        Your task is to identify key terms related to the prompt and list them separated by commas,
+        like in this example: "ExampleText: ... \nExampleTerms: term 1, "term 2, ..., term n".
         No explanations, interpretations, or any supplementary information. Only listing the terms as they are requested.
         """
-        input_text = f"{context}\nMessage: {message}\nTerms: "
-        encoded_input = self.encode_text(input_text)
-        output = self.model.generate(
-            **encoded_input,
-            max_length=512,
-            pad_token_id=self.tokenizer.eos_token_id,
-            temperature=0.1,
-            top_k=20,
-            top_p=0.6,
-            repetition_penalty=1.2,
-            no_repeat_ngram_size=2,
-            num_return_sequences=1,
-            do_sample=True,
-        )
+        msg_start = "\nText: "
+        msg_end = "\nTerms: "
 
-        # res = tokenizer.decode(output[0], skip_special_tokens=True)
-        res = self.decode_text(output[0])
-        answer_start = res.find("\nTerms: ") + len("\nTerms: ")
-        answer: str = res[answer_start:]
+        response = self.generate_text(message, context, msg_start, msg_end)
+        print(response)
 
-        return answer
+        response = response.lower()
+        response = response.split("\n")[0]
+        response = response.strip()
+        response = response.replace(", ",",")
+        response = response.replace(".","")
+        response = response.replace(" ","-")
+        
+        print(response)
+        response_list = response.split(",")
+        return response_list
 
     def generate_llm_tokenizer(self, model_name: str, device: str) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
         "Return the model selected"

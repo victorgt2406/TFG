@@ -28,7 +28,7 @@ POST http://localhost:3001/get_terms
 Content-Type: application/json
 
 {
-    "message" : "Given the text: 'Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough.' Identify and list the medical terms present without providing any additional information or definitions."
+    "message" : "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
 }
 
 ###
@@ -36,5 +36,29 @@ POST http://localhost:3001/get_terms
 Content-Type: application/json
 
 {
-    "message" : "Given the text, name the illegal things: During a routine traffic stop, a vehicle was found to be transporting a significant quantity of substances believed to be narcotics. The driver was detained for possession with intent to distribute, as well as for driving under the influence (DUI). The substances were sent for lab analysis to confirm their composition. Additionally, the vehicle's registration was expired, and there was an open container of alcohol in the car."
+    "message" : "(Extract the symptoms) Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+}
+
+###
+POST http://localhost:3001/get_terms
+Content-Type: application/json
+
+{
+    "message" : "(Extract the ilegal terms) During a routine traffic stop, a vehicle was found to be transporting a significant quantity of substances believed to be narcotics. The driver was detained for possession with intent to distribute, as well as for driving under the influence (DUI). The substances were sent for lab analysis to confirm their composition. Additionally, the vehicle's registration was expired, and there was an open container of alcohol in the car."
+}
+
+###
+POST http://localhost:3001/get_terms
+Content-Type: application/json
+
+{
+  "message": "Recent data from our network of sensors indicate a significant increase in particulate matter (PM2.5) levels across several urban areas. This rise correlates with increased traffic congestion reported during the last month. Additionally, there has been a notable decrease in air quality index (AQI) values in these regions, prompting concerns about potential health impacts on local populations. Authorities are being alerted to enforce stricter emissions standards and promote public transportation options."
+}
+
+###
+POST http://localhost:3001/get_terms
+Content-Type: application/json
+
+{
+  "message": "The stock market witnessed a volatile session today, with the tech sector leading the declines. Major indices such as the S&P 500 and NASDAQ composite fell sharply in early trading, attributed to investor concerns over upcoming interest rate decisions by the Federal Reserve. High-growth tech companies, especially those in the semiconductor and software industries, saw significant sell-offs. Market analysts are closely monitoring the situation, with many expecting further fluctuations in response to any policy announcements or economic indicators released later in the week."
 }
