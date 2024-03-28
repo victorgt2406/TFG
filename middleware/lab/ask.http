@@ -3,25 +3,7 @@ POST http://localhost:3000/api/ask/
 Content-Type: application/json
 
 {
-    "message": "What means Luna?"
-}
-###
-
-
-###
-POST http://localhost:3000/api/ask/
-Content-Type: application/json
-
-{
-    "message": "To the following question, you will answer with the medical terms of the situation of the patient. For example, Q: I have a heache.\nA: headche.\nNow you, Q:I have a lot of pain in my head A:"
-}
-
-###
-POST http://localhost:3000/api/ask/
-Content-Type: application/json
-
-{
-    "message": "Given the text, Identify and list the medical terms present without providing any additional information or definitions.: Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+    "message": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
 }
 
 
@@ -30,7 +12,7 @@ POST http://localhost:3000/api/ask/
 Content-Type: application/json
 
 {
-    "message": "Given the text, Identify and list the medical terms present without providing any additional information or definitions.: Last week, after trying a new food, I experienced itching, redness on my skin, and slight swelling around my lips. I also noticed hives appearing on my arms."
+    "message": "Last week, after trying a new food, I experienced itching, redness on my skin, and slight swelling around my lips. I also noticed hives appearing on my arms."
 }
 
 
