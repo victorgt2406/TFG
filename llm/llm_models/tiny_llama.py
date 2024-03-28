@@ -14,33 +14,16 @@ class TinyLlamaChatBot(LlmTemplate):
         # self.context = "You will be an assistant who is going to respond concisely and directly to the question without additional details."
 
     def ask(self, message: str) -> str:
+
         context = "You will be an assistant who is going to respond concisely and directly to the question without additional details."
-        
-        input_text = f"{context}\nUser: {message}\nAssistant: "
-
-        encoded_input = self.encode_text(input_text)
-        output = self.model.generate(
-            **encoded_input,
-            max_length=512,
-            pad_token_id=self.tokenizer.eos_token_id,
-            temperature=0.1,
-            top_k=20,
-            top_p=0.6,
-            repetition_penalty=1.2,
-            no_repeat_ngram_size=2,
-            num_return_sequences=1,
-            do_sample=True,
-        )
-        res = self.decode_text(output[0])
-
-        answer_start = res.find("\nAssistant: ") + len("\nAssistant: ")
-        answer: str = res[answer_start:]
+        msg_start = "\nUser: "
+        msg_end = "\nAssistant: "
+        answer = self.generate_text(message, context, msg_start, msg_end)
 
         return answer
     
     def get_terms(self, message: str) -> str:
-        "Get the terms of the question"
-        
+
         context = """You are an assistant programmed to extract specific terms from a given text. 
         Your task is to identify key terms related to the prompt and list them separated by commas,
         like in this example: "ExampleText: ... \nExampleTerms: term 1, "term 2, ..., term n".
@@ -80,16 +63,3 @@ class TinyLlamaChatBot(LlmTemplate):
 
         printlog("✅ The LLM and Tokenizer are ready!", PrintlogEnum.INFO)
         return model, tokenizer
-
-    def encode_text(self, input_text: str):
-        "Transform a string to token to then be read by the model"
-        return self.tokenizer(
-            input_text,
-            return_tensors='pt',
-            padding=True,
-            truncation=True, max_length=512
-        ).to(self.device)
-
-    def decode_text(self, output):
-        "Transform a token from the model to string to be read by the user"
-        return self.tokenizer.decode(output, skip_special_tokens=True)

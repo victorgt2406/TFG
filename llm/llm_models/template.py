@@ -55,6 +55,13 @@ class LlmTemplate(ABC):
     @ abstractmethod
     def ask(self, message: str) -> str:
         """
-        From a message, the LLM process it and return a response
+        From a message, the LLM will response to the question as an Assistant
+        """
+        raise NotImplementedError("The ask method needs to be implemented by subclasses.")
+    
+    @ abstractmethod
+    def get_terms(self, message: str) -> str:
+        """
+        From a message, the LLM will response with a list of terms from the text provided
         """
         raise NotImplementedError("The ask method needs to be implemented by subclasses.")
