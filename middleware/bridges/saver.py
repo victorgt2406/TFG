@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Generic, List, TypeVar
-from bridges.template.connector import Connector
+from bridges.connector import Connector
 
 L = TypeVar('L') # List type
 P = TypeVar('P') # Place to store it or upload it
