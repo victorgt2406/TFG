@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache nodejs npm python3 py3-pip
+RUN apk add --no-cache nodejs npm python3 python3-dev py3-pip build-base
 
 COPY . /app
 WORKDIR /app
