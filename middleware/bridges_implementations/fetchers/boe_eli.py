@@ -16,9 +16,7 @@ def is_day_url(url:str) -> bool:
 async def eli_urls(url: str) -> list[str]:
     is_eli_url(url)
     async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        
-    # Parse the response content with BeautifulSoup
+        response = await client.get(url, timeout=3600)
     soup = BeautifulSoup(response.content, 'html.parser')
 
     urls = []
@@ -53,7 +51,10 @@ async def get_all_eli_urls(url: str) -> list[str]:
 if __name__ == "__main__":
     import asyncio
     async def  main():
-        # print(await eli_urls("https://www.boe.es/eli/es/l/2015/03/30"))
-        print(await get_all_eli_urls("https://www.boe.es/eli/es/l/2015"))
+        tipos = ["c", "l", "lo"]
+        years = range(1975, 2024)
+        for tipo in tipos:
+            for year in years:
+                print(await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}"))
 
     asyncio.run(main())
