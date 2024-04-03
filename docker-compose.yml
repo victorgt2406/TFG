@@ -33,6 +33,7 @@ services:
       - LLM_PORT=${LLM_PORT}
       - OS_HOST=${OS_HOST}
       - MDW_PORT=${MDW_PORT}
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
     ports:
       - "8080:8080"
     tty: true
