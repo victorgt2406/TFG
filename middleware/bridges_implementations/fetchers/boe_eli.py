@@ -1,5 +1,5 @@
-
 import httpx
+import json
 from bs4 import BeautifulSoup
 
 
@@ -53,8 +53,14 @@ if __name__ == "__main__":
     async def  main():
         tipos = ["c", "l", "lo"]
         years = range(1975, 2024)
+        data = []
         for tipo in tipos:
             for year in years:
-                print(await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}"))
+                data.append(await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}"))
+                await asyncio.sleep(10)
+                print(f"Year {year} loaded...")
+        # To save the JSON data to a file, you can do the following:
+        with open('data/data.json', 'w') as file:
+            json.dump(data, file)
 
     asyncio.run(main())
