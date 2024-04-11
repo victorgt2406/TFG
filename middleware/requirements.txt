@@ -7,3 +7,5 @@ pytest
 python-dotenv
 watchdog
 PyMuPDF
+beautifulsoup4
+xmltodict
