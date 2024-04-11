@@ -1,0 +1,49 @@
+###
+POST http://localhost:11434/api/chat
+Content-Type: application/json
+
+{
+    "model": "llama2",
+    "stream": false,
+    "messages": [
+        {
+            "role": "system",
+            "content": "Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: \"user: Me duele mucho la cabeza.\nassistant: dolor, cabeza\". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan."
+        },
+        {
+            "role": "user",
+            "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+        }
+        {
+            "role": "assistant",
+            "content": "throat, fever, nose, cough"
+        }
+    ]
+}
+
+###
+POST http://localhost:11434/api/chat
+Content-Type: application/json
+
+{
+    "model": "llama2",
+    "stream": false,
+    "messages": [
+        {
+            "role": "system",
+            "content": "Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: \"user: Me duele mucho la cabeza.\nassistant: dolor, cabeza\". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan."
+        },
+        {
+            "role": "user",
+            "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+        },
+        {
+            "role": "assistant",
+            "content": "throat, fever, nose, cough"
+        },
+        {
+            "role": "user",
+            "content": "Last week, after trying a new food, I experienced itching, redness on my skin, and slight swelling around my lips. I also noticed hives appearing on my arms."
+        }
+    ]
+}

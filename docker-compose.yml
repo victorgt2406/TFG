@@ -78,5 +78,28 @@ services:
               count: 1
               capabilities: [gpu]
 
+  ollama-node:
+    image: ollama/ollama:latest
+    container_name: ollama-node
+    ports:
+      - "11434:11434"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - lsm-network
+    deploy:
+      resources:
+        limits:
+          cpus: "8"
+          memory: 20g
+        reservations:
+          cpus: "4"
+          memory: 8g
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
 networks:
   lsm-network:
