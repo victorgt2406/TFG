@@ -52,32 +52,6 @@ services:
           cpus: "0.25"
           memory: 250M
 
-  llm-node:
-    build: ./llm
-    container_name: llm-node
-    environment:
-      - discovery.type=single-node
-      - LLM_PORT=${LLM_PORT}
-    ports:
-      - "6060:8080"
-    tty: true
-    stdin_open: true
-    restart: unless-stopped
-    networks:
-      - lsm-network
-    deploy:
-      resources:
-        limits:
-          cpus: "8"
-          memory: 20g
-        reservations:
-          cpus: "4"
-          memory: 8g
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-
   ollama-node:
     # image: ollama/ollama:latest
     build: ./ollama
