@@ -29,8 +29,8 @@ services:
     container_name: middleware-node
     environment:
       - discovery.type=single-node
-      - LLM_HOST=${LLM_HOST}
-      - LLM_PORT=${LLM_PORT}
+      - OLLAMA_HOST=${OLLAMA_HOST}
+      - OLLAMA_PORT=${OLLAMA_PORT}
       - OS_HOST=${OS_HOST}
       - MDW_PORT=${MDW_PORT}
       - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
