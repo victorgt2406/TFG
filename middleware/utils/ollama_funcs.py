@@ -36,7 +36,7 @@ async def ollama_simple_chat(url: str, message: str, model: LlmModels, messages:
 
 
 async def ollama_get_terms(url: str, message: str) -> list[str]:
-    context = [
+    messages = [
         {
             "role": "system",
             "content": "Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: \"user: Me duele mucho la cabeza.\nassistant: dolor, cabeza\". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan."
@@ -57,12 +57,25 @@ async def ollama_get_terms(url: str, message: str) -> list[str]:
             "role": "assistant",
             "content": "dolor-de-garganta, fiebre, secreción-nasal, tos"
         },
+        # {
+        #     "role": "user",
+        #     "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+        # },
+        # {
+        #     "role": "assistant",
+        #     "content": "sore-throat, fever, runny-nose, cough"
+            
+        # },
         {
             "role": "user",
-            "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+            "content": "Given the text, Identify and list the medical terms present without providing any additional information or definitions: For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
+        },
+        {
+            "role": "assistant",
+            "content": "trouble-falling-asleep, insomnia, wakeup, morning, rested, daytime-tiredness, fatigue"
         }
     ]
-    str_term_list = await ollama_simple_chat(url, message, "llm_terms", messages=context)
+    str_term_list = await ollama_simple_chat(url, message, "llm_terms", messages=messages)
     str_term_list = str_term_list.lower()
     str_term_list = str_term_list.replace(" ", "")
     term_list: list[str] = str_term_list.split(",")
