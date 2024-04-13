@@ -79,7 +79,8 @@ services:
               capabilities: [gpu]
 
   ollama-node:
-    image: ollama/ollama:latest
+    # image: ollama/ollama:latest
+    build: ./ollama
     container_name: ollama-node
     ports:
       - "11434:11434"

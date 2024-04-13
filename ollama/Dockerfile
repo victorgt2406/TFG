@@ -1,7 +1,11 @@
 FROM ollama/ollama:latest
 
-COPY /entrypoint.sh /entrypoint.sh
+COPY ./Modelfiles /Modelfiles
 
-RUN chmod +x ./entrypoint.sh
+COPY ./start.sh /start-ollama/start.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+WORKDIR /start-ollama
+
+RUN chmod +x ./start.sh
+
+ENTRYPOINT ["./start.sh"]
