@@ -1,19 +1,24 @@
 FROM llama2
 # sets the temperature (0 to 1) 0 less creative 1 more creative
-PARAMETER temperature 0.2
+# PARAMETER temperature 0.2
 
 # Number of tokens
 PARAMETER num_ctx 4096
 
 # sets a custom system message to specify the behavior of the chat assistant
 SYSTEM """
-Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: \"user: Me duele mucho la cabeza.\nassistant: dolor, cabeza\". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan.
+Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en Inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: "user: Me duele mucho la cabeza.\nassistant: dolor, cabeza". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan.
 """
+
+MESSAGE system Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: \"user: Me duele mucho la cabeza.\nassistant: dolor, cabeza\". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan.
 
 # Example 1
 MESSAGE user Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough.
 
 MESSAGE assistant sore-throat, fever, runny-nose, cough
+
+MESSAGE user Ayer, empecé a sentir dolor de garganta y fiebre. Esta mañana, mis síntomas incluían secreción nasal y tos.
+MESSAGE assistant dolor-de-garganta, fiebre, secreción-nasal, tos
 
 # Example 2
 MESSAGE user Given the text, Identify and list the medical terms present without providing any additional information or definitions: For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness.
