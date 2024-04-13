@@ -3,13 +3,13 @@ import json
 import os
 import aiohttp
 from fastapi import APIRouter
-from models import AskModel
+from models import ChatModel
 from utils import get_async_opensearch_client, search
 
 router = APIRouter()
 
 @router.post("/")
-async def ask(req: AskModel):
+async def chat(req: ChatModel):
     message = req.message
     data_str:str = req.model_dump_json()
 

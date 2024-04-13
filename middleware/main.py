@@ -9,7 +9,7 @@ from file_observer import file_observer
 load_dotenv()
 app = FastAPI()
 app_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of app.py
-client_dist_dir = os.path.join(app_dir, 'client', 'dist')  # Path to your client/dist
+client_dist_dir = os.path.join(app_dir, 'client', 'dist')  # Path to client/dist
 
 load_routes(app)
 
