@@ -1,5 +1,7 @@
 import httpx
 import json
+import asyncio
+import xmltodict
 from bs4 import BeautifulSoup
 
 
@@ -45,22 +47,51 @@ async def get_all_eli_urls(url: str) -> list[str]:
         for x in urls:
             all_urls += await get_all_eli_urls(x)
         return all_urls
-            
+    
+
+async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
+    data = []
+    for index, url in enumerate(urls):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{url}/dof/spa/xml", timeout=3600)
+            # print(response.text)
+            res_xml_text = response.text
+            res_dict = xmltodict.parse(res_xml_text)
+            data.append({
+                "_id": url.split("https://www.boe.es/")[-1],
+                **res_dict
+            })
+            print(url.split("https://www.boe.es/")[-1])
+            # print(json.dumps(res_dict,indent=2, ensure_ascii=False))
+        if(index%10 == 0):
+            await asyncio.sleep(5)
+    return data
 
 
 if __name__ == "__main__":
-    import asyncio
-    async def  main():
+    import sys
+    sys.path.append("/home/vic/personal-ws/TFG/middleware")
+    print(sys.path)
+    from utils import index_docs
+    async def  fecth_all_data():
         tipos = ["c", "l", "lo"]
         years = range(1975, 2024)
         data = []
         for tipo in tipos:
             for year in years:
-                data.append(await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}"))
-                await asyncio.sleep(10)
+                data+=await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}")
+                await asyncio.sleep(20)
                 print(f"Year {year} loaded...")
         # To save the JSON data to a file, you can do the following:
         with open('data/data.json', 'w') as file:
             json.dump(data, file)
+    async def download_all_xmls():
+        with open('data/data.json', 'r', encoding="utf-8") as file:
+            urls = json.load(file)
+        data = await get_data_from_eli_urls(urls)
+        # index_docs(data)
+        with open('data/all_data.json', 'w') as file:
+            json.dump(data, file)
 
-    asyncio.run(main())
+    # asyncio.run(fecth_all_data()) 
+    asyncio.run(download_all_xmls()) 
