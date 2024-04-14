@@ -24,32 +24,13 @@ async def chat(req: ChatModel):
     terms = await ollama_get_terms(ollama_url, message)
     print("Terms", terms)
     terms_str = " ".join(terms)
-    # async with aiohttp.ClientSession() as session:
-    #     async with session.post(f"{ollama_url}/get_terms", data=data_str, headers={"Content-Type": "application/json"}) as response:
-    #         if response.status == 200:
-    #             terms = await response.json()
-    #             terms_str = " ".join(terms)
-    #         else:
-    #             return {"error": f"Upstream server responded with status {response.status}"}
 
     # Get docs
     docs = await search(os_client, terms_str)
     print("Docs", docs)
 
     # Conclusions
-    conclusion = await ollama_get_conclusion(ollama_url, message, docs)
-    # conclusion_msg = f"""From these options : {json.dumps(docs)}
-    # Which of them is the best for this situation: {message}"""
-    # data_str = json.dumps({
-    #     "message": conclusion_msg
-    # })
-    # async with aiohttp.ClientSession() as session:
-    #     async with session.post(f"{ollama_url}/ask", data=data_str, headers={"Content-Type": "application/json"}) as response:
-    #         if response.status == 200:
-    #             conclusion:str = await response.json()
-    #             conclusion = conclusion.replace("\n"," ").strip()
-    #         else:
-    #             return {"error": f"Upstream server responded with status {response.status}"}
+    conclusion = await ollama_get_conclusion(ollama_url, message, terms, docs)
 
     res = {
         "docs": docs,

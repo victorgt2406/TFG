@@ -1,13 +1,10 @@
 "Ollama functions"
 
 import json
-from typing import Literal
 import aiohttp
 
-LlmModels = Literal["llm_terms", "llm_assistant"]
 
-
-async def ollama_simple_chat(url: str, message: str, model: LlmModels, messages: list[dict] = []) -> str:
+async def ollama_simple_chat(url: str, message: str, messages: list[dict] = []) -> str:
     "Send a simple text message to the LLM and get text response"
     url += "/api/chat"
     messages.append(
@@ -17,7 +14,7 @@ async def ollama_simple_chat(url: str, message: str, model: LlmModels, messages:
         }
     )
     body = {
-        "model": model,
+        "model": "llama2",
         "messages": messages,
         "stream": False
     }
@@ -39,7 +36,7 @@ async def ollama_get_terms(url: str, message: str) -> list[str]:
     messages = [
         {
             "role": "system",
-            "content": "Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas, como en este ejemplo: \"user: Me duele mucho la cabeza.\nassistant: dolor, cabeza\". Sin explicaciones, interpretaciones, ni información suplementaria. Solo listar los términos como se solicitan."
+            "content": "Tú eres un asistente programado para extraer términos específicos de un texto dado. Te preguntarán tanto en Español como en inglés Tu tarea es identificar términos clave relacionados con el enunciado y listarlos separados por comas. Ahora le dare varios ejemplos"
         },
         {
             "role": "user",
@@ -57,33 +54,41 @@ async def ollama_get_terms(url: str, message: str) -> list[str]:
             "role": "assistant",
             "content": "dolor-de-garganta, fiebre, secreción-nasal, tos"
         },
-        # {
-        #     "role": "user",
-        #     "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
-        # },
-        # {
-        #     "role": "assistant",
-        #     "content": "sore-throat, fever, runny-nose, cough"
-            
-        # },
+        {
+            "role": "system",
+            "content": "Lo estas haciendo genial al identificar el idioma. Sigue asi."
+        },
         {
             "role": "user",
-            "content": "Given the text, Identify and list the medical terms present without providing any additional information or definitions: For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
+            "content": "For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
         },
         {
             "role": "assistant",
-            "content": "trouble-falling-asleep, insomnia, wakeup, morning, rested, daytime-tiredness, fatigue"
+            "content": "insomnia, daytime-tiredness, fatigue"
         }
     ]
-    str_term_list = await ollama_simple_chat(url, message, "llm_terms", messages=messages)
+    str_term_list = await ollama_simple_chat(url, message, messages=messages)
     str_term_list = str_term_list.lower()
     str_term_list = str_term_list.replace(" ", "")
     term_list: list[str] = str_term_list.split(",")
     return term_list
 
 
-async def ollama_get_conclusion(url: str, message: str, docs: list[dict[str, any]]) -> str:
-    conclusion_msg = f"""From these options : {json.dumps(docs)}
-    Which of them is the best for this situation: {message}"""
-    conclusion = await ollama_simple_chat(url, conclusion_msg, "llm_assistant")
+async def ollama_get_conclusion(url: str, message: str, terms: list[str], docs: list[dict[str, any]]) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": "Tú eres un asistente programado para segun un texto y unos documentos json, determinar cual de esos documentos json se adaptan mejor a la situación particular del problema y explicar porque ese documento en concreto es la mejor opción o en caso de que todos los documentos proporcionados sean erróneos también mencionar que no encuentras soluciones fiables."
+        }
+    ]
+
+    conclusion_msg = f"""Message: {
+        message
+    }\nTerms{
+        terms
+    }\nDocuments: {
+        json.dumps(docs, indent=2) if len(
+            docs) > 0 else "0 docs related to this message."
+    }\n"""
+    conclusion = await ollama_simple_chat(url, conclusion_msg, messages=messages)
     return conclusion
