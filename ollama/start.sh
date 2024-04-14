@@ -5,8 +5,8 @@ if [ ! -f /ollama_preconfigurated ]; then
     sleep 5
     echo -e "\nFirst time...\n---\nInitializing Ollama...\n"
     ollama pull llama2
-    ollama create llm_assistant -f /Modelfiles/assistant.Modelfile
-    ollama create llm_terms -f /Modelfiles/terms.Modelfile
+    # ollama create llm_assistant -f /Modelfiles/assistant.Modelfile
+    # ollama create llm_terms -f /Modelfiles/terms.Modelfile
 
     touch /ollama_preconfigurated
 else

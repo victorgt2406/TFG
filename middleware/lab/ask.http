@@ -21,14 +21,14 @@ POST http://localhost:3000/api/chat/
 Content-Type: application/json
 
 {
-    "message": "Given the text, Identify and list the medical terms present without providing any additional information or definitions: For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
+    "message": "For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
 }
 
 
 ###
-POST http://localhost:3000/api/ask/
+POST http://localhost:3000/api/chat/
 Content-Type: application/json
 
 {
-    "message": "Given the text, Identify and list the medical terms present without providing any additional information or definitions: I have a sore throat"
+    "message": "I have a sore throat"
 }
