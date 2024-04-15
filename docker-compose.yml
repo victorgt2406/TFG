@@ -23,6 +23,27 @@ services:
         reservations:
           cpus: "2"
           memory: 4g
+
+  opensearch-dashboard-node:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboard-node
+    ports:
+      - "5601:5601"
+    environment:
+      - OPENSEARCH_HOSTS=https://opensearch-node:9200  # This is crucial for connecting to the OpenSearch node
+    depends_on:
+      - opensearch-node
+    networks:
+      - lsm-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2g
+        reservations:
+          cpus: "0.25"
+          memory: 250M
   
   middleware:
     build: ./middleware
