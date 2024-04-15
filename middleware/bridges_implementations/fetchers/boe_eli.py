@@ -83,14 +83,14 @@ if __name__ == "__main__":
                 await asyncio.sleep(20)
                 print(f"Year {year} loaded...")
         # To save the JSON data to a file, you can do the following:
-        with open('data/data.json', 'w') as file:
+        with open('data/eli_urls.json', 'w') as file:
             json.dump(data, file)
     async def download_all_xmls():
-        with open('data/data.json', 'r', encoding="utf-8") as file:
+        with open('data/eli_urls.json', 'r', encoding="utf-8") as file:
             urls = json.load(file)
         data = await get_data_from_eli_urls(urls)
         # index_docs(data)
-        with open('data/all_data.json', 'w') as file:
+        with open('data/eli_data.json', 'w') as file:
             json.dump(data, file)
 
     # asyncio.run(fecth_all_data()) 
