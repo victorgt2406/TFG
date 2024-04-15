@@ -1,13 +1,15 @@
-# TFG
+# (TFG) Aplicaciones de los Motores de Búsqueda con los LLMs
+Realizado por *Víctor Gutiérrez Tovar*
 
-# Contenedores
-Python
-NodeJS
-Opensearch
-** LLM
+Curso 2023/2024
 
+# Arquitectura
+## Contenedores
+- Opensearch
+- Middleware (Python con fastAPI)
+- Ollama
 
-# .env
+# Variables del entorno `.env`
 Sera necesario crear un archivo .env con la configuración del entorno
 ```bash
 OS_HOST=opensearch-node
