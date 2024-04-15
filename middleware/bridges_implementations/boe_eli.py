@@ -3,7 +3,7 @@ import json
 import asyncio
 import xmltodict
 from bs4 import BeautifulSoup
-from bridges import Fetcher
+from bridges import Bridge
 
 
 def is_eli_url(url:str):
@@ -68,15 +68,12 @@ async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
             await asyncio.sleep(5)
     return data
 
-class BoeEli(Fetcher[dict, str]):
+class BoeEli(Bridge):
     "Fetch raw-data from the database of BOE, the official law Spanish Documents"
     
     def __init__(self) -> None:
         super().__init__("boe_eli")
 
-    async def fetch_data(self, place: str, **args):
-        pass
-        # data = await get_data_from_eli_urls(urls)
 
 
 if __name__ == "__main__":
