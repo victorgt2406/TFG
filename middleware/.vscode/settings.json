@@ -1,5 +1,7 @@
 {
     "cSpell.words": [
-        "opensearchpy"
+        "aiohttp",
+        "opensearchpy",
+        "xmltodict"
     ]
 }

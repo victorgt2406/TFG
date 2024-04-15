@@ -13,10 +13,22 @@ Content-Type: application/json
         {
             "role": "user",
             "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
-        }
+        },
         {
             "role": "assistant",
-            "content": "throat, fever, nose, cough"
+            "content": "sore-throat, fever, runny-nose, cough"
+        },
+        {
+            "role": "user",
+            "content": "Ayer, empecé a sentir dolor de garganta y fiebre. Esta mañana, mis síntomas incluían secreción nasal y tos."
+        },
+        {
+            "role": "assistant",
+            "content": "dolor-de-garganta, fiebre, secreción-nasal, tos"
+        },
+        {
+            "role": "user",
+            "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
         }
     ]
 }

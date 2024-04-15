@@ -1,5 +1,5 @@
 ###
-POST http://localhost:3000/api/ask/
+POST http://localhost:3000/api/chat/
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3000/api/ask/
+POST http://localhost:3000/api/chat/
 Content-Type: application/json
 
 {
@@ -17,18 +17,58 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:3000/api/ask/
+POST http://localhost:3000/api/chat/
 Content-Type: application/json
 
 {
-    "message": "Given the text, Identify and list the medical terms present without providing any additional information or definitions: For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
+    "message": "For several weeks now, I've been having trouble falling asleep. Even when I do, I wake up multiple times during the night. In the morning, I don't feel rested and struggle with daytime tiredness."
 }
 
 
 ###
-POST http://localhost:3000/api/ask/
+POST http://localhost:3000/api/chat/
 Content-Type: application/json
 
 {
-    "message": "Given the text, Identify and list the medical terms present without providing any additional information or definitions: I have a sore throat"
+    "message": "I have a sore throat"
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Recently, I've noticed that my vision blurs when I look at screens for too long. Sometimes, I also get headaches by the end of the day."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Over the past month, I've experienced intermittent joint pain in my knees and elbows. The pain tends to increase with cold weather."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "I've been experiencing frequent heartburn for the past two weeks, especially after eating spicy or fatty foods."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "I have had a persistent cough for the last three days. It gets worse at night and sometimes I feel a wheezing sensation when breathing."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Yesterday, I started feeling dizzy and lightheaded every time I stood up quickly. Today, the symptoms persist."
 }

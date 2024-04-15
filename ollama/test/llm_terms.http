@@ -1,0 +1,35 @@
+###
+POST http://localhost:11434/api/chat
+Content-Type: application/json
+
+{
+    "model": "llm_terms",
+    "stream": false,
+    "messages": [
+        {
+            "role": "user",
+            "content": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+        }
+    ]
+}
+
+###
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+    "model": "llama2",
+    "stream": false,
+    "prompt": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+}
+
+
+###
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+    "model": "llm_terms",
+    "stream": false,
+    "prompt": "Yesterday, I started feeling a sore throat and a fever. This morning, my symptoms included a runny nose and a cough."
+}

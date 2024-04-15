@@ -1,0 +1,71 @@
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Ayer empecé a sentir dolor de garganta y fiebre. Esta mañana, mis síntomas incluyeron congestión nasal y tos."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "La semana pasada, después de probar una comida nueva, experimenté picazón, enrojecimiento en mi piel y una ligera hinchazón alrededor de los labios. También noté urticarias en mis brazos."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Desde hace varias semanas, he tenido problemas para dormir. Aunque logro dormirme, me despierto varias veces durante la noche. Por la mañana, no me siento descansado y lucho con el cansancio diurno."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Tengo dolor de garganta"
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Recientemente, he notado que mi visión se vuelve borrosa cuando miro pantallas durante mucho tiempo. A veces, también tengo dolores de cabeza al final del día."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Durante el último mes, he experimentado dolores articulares intermitentes en mis rodillas y codos. El dolor tiende a aumentar con el clima frío."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "He estado experimentando acidez estomacal frecuente durante las últimas dos semanas, especialmente después de comer alimentos picantes o grasosos."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "He tenido una tos persistente durante los últimos tres días. Empeora por la noche y a veces siento una sensación de silbido al respirar."
+}
+
+###
+POST http://localhost:3000/api/chat/
+Content-Type: application/json
+
+{
+    "message": "Ayer, empecé a sentirme mareado y aturdido cada vez que me levantaba rápidamente. Hoy, los síntomas persisten."
+}

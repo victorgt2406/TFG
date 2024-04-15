@@ -1,4 +1,4 @@
 """
 Models
 """
-from .ask import AskModel
+from .chat import ChatModel
