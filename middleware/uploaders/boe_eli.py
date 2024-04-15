@@ -3,14 +3,15 @@ import json
 import asyncio
 import xmltodict
 from bs4 import BeautifulSoup
-from bridges import Bridge
 
 
-def is_eli_url(url:str):
+def is_eli_url(url: str):
     if not url.startswith("https://www.boe.es/eli/"):
-        raise ValueError(f"URL must start with: 'https://www.boe.es/eli/' not {url}")
+        raise ValueError(
+            f"URL must start with: 'https://www.boe.es/eli/' not {url}")
 
-def is_day_url(url:str) -> bool:
+
+def is_day_url(url: str) -> bool:
     url_split = url.split("/")
     url_date = url_split[6:]
     return len(url_date) == 3
@@ -30,14 +31,17 @@ async def eli_urls(url: str) -> list[str]:
 
     elements = soup.find_all(class_=class_name)
     urls = [element.find('a').get('href') for element in elements]
-        
+
     return urls
+
 
 def eli_path_to_url(path: str):
     return f"https://www.boe.es{path}"
 
+
 def eli_paths_to_urls(paths: list[str]):
     return list(map(eli_path_to_url, paths))
+
 
 async def get_all_eli_urls(url: str) -> list[str]:
     if is_day_url(url):
@@ -48,7 +52,7 @@ async def get_all_eli_urls(url: str) -> list[str]:
         for x in urls:
             all_urls += await get_all_eli_urls(x)
         return all_urls
-    
+
 
 async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
     data = []
@@ -64,16 +68,42 @@ async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
             })
             print(url.split("https://www.boe.es/")[-1])
             # print(json.dumps(res_dict,indent=2, ensure_ascii=False))
-        if(index%10 == 0):
+        if (index % 10 == 0):
             await asyncio.sleep(5)
     return data
 
-class BoeEli(Bridge):
-    "Fetch raw-data from the database of BOE, the official law Spanish Documents"
-    
-    def __init__(self) -> None:
-        super().__init__("boe_eli")
 
+# class BoeEli(Bridge):
+#     "Fetch raw-data from the database of BOE, the official law Spanish Documents"
+
+#     def __init__(self) -> None:
+#         super().__init__("boe_eli")
+
+#     async def update_data(self):
+#         "Updates to OpenSearch all the data from the boe eli. It will update year per year"
+#         # TODO
+#         # Year of the time when executing
+#         now_year = datetime.now().year
+#         # Review the last year. From the max date from the docs in OpenSearch.
+#         latest_year = datetime.now().year
+#         # Almacenamos a este último año.
+
+# # TODO
+# async def latest_year():
+#     os_client = get_async_opensearch_client()
+
+#     body = {
+#         "size": 0,
+#         "aggs": {
+#             "latestDate": {
+#                 "max": {
+#                     "field": "createdDateTime"
+#                 }
+#             }
+#         }
+#     }
+
+#     os_client.search(index="data", body=body)
 
 
 if __name__ == "__main__":
@@ -81,18 +111,20 @@ if __name__ == "__main__":
     sys.path.append("/home/vic/personal-ws/TFG/middleware")
     print(sys.path)
     from utils import index_docs
-    async def  fecth_all_data():
+
+    async def fecth_all_data():
         tipos = ["c", "l", "lo"]
         years = range(1975, 2024)
         data = []
         for tipo in tipos:
             for year in years:
-                data+=await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}")
+                data += await get_all_eli_urls(f"https://www.boe.es/eli/es/{tipo}/{year}")
                 await asyncio.sleep(20)
                 print(f"Year {year} loaded...")
         # To save the JSON data to a file, you can do the following:
         with open('data/eli_urls.json', 'w', encoding="utf-8") as file:
             json.dump(data, file)
+
     async def download_all_xmls():
         with open('data/eli_urls.json', 'r', encoding="utf-8") as file:
             urls = json.load(file)
@@ -101,5 +133,24 @@ if __name__ == "__main__":
         with open('data/eli_data.json', 'w', encoding="utf-8") as file:
             json.dump(data, file)
 
-    # asyncio.run(fecth_all_data()) 
-    asyncio.run(download_all_xmls()) 
+    async def upload_to_opensearch():
+        with open('data/eli_data.json', 'r', encoding="utf-8") as file:
+            docs:list[dict] = json.load(file)
+
+        def divide_list(arr: list, n: int):
+            return [arr[i:i + n] for i in range(0, len(arr), n)]
+
+        div_docs = divide_list(docs, 500)
+        len_div_docs = len(div_docs)
+        for i, div_doc in enumerate(div_docs):
+            index_docs(div_doc)
+            await asyncio.sleep(2)
+            print(f"{i+1}/{len_div_docs} indexed.")
+
+    async def main():
+        await fecth_all_data()
+        await download_all_xmls()
+        await upload_to_opensearch()
+
+    # asyncio.run(main())
+    asyncio.run(upload_to_opensearch())
