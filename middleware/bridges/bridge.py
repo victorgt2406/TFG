@@ -2,36 +2,18 @@
 
 from abc import ABC, abstractmethod
 import time
-from typing import Generic, Type, TypeVar
 
-from .fetcher import Fetcher
-from .saver import Saver
-
-
-# Define type variables for fetcher and saver
-F = TypeVar('F', bound=Fetcher)
-S = TypeVar('S', bound=Saver)
-
-
-class Bridge(ABC, Generic[F, S]):
+class Bridge(ABC):
     """
     Abstract class of bridge
     """
 
-    def __init__(self, name: str, fetcher_class: Type[F], saver_class: Type[S]) -> None:
-
+    def __init__(self, name: str) -> None:
         self.name = name
-        # Fetcher
-        self._fetcher_class: Type[F] = fetcher_class
-        self.fetcher: F = self._fetcher_class()
-        # Saver
-        self._saver_class: Type[S] = saver_class
-        self.saver: S = self._saver_class()
 
+    @abstractmethod
     def setup(self):
-        "Update the credentials to Elasticsearch and Msgraph"
-        self.saver = self._saver_class()
-        self.fetcher = self._fetcher_class()
+        ...
 
     @abstractmethod
     async def update_data(self):
