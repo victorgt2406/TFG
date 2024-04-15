@@ -1,3 +1,4 @@
+"Boe eli store data to filesystem and update it to OpenSearch"
 import httpx
 import json
 import asyncio
@@ -71,39 +72,6 @@ async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
         if (index % 10 == 0):
             await asyncio.sleep(5)
     return data
-
-
-# class BoeEli(Bridge):
-#     "Fetch raw-data from the database of BOE, the official law Spanish Documents"
-
-#     def __init__(self) -> None:
-#         super().__init__("boe_eli")
-
-#     async def update_data(self):
-#         "Updates to OpenSearch all the data from the boe eli. It will update year per year"
-#         # TODO
-#         # Year of the time when executing
-#         now_year = datetime.now().year
-#         # Review the last year. From the max date from the docs in OpenSearch.
-#         latest_year = datetime.now().year
-#         # Almacenamos a este último año.
-
-# # TODO
-# async def latest_year():
-#     os_client = get_async_opensearch_client()
-
-#     body = {
-#         "size": 0,
-#         "aggs": {
-#             "latestDate": {
-#                 "max": {
-#                     "field": "createdDateTime"
-#                 }
-#             }
-#         }
-#     }
-
-#     os_client.search(index="data", body=body)
 
 
 if __name__ == "__main__":
