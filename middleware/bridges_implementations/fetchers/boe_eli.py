@@ -1,4 +1,3 @@
-from typing import List
 import httpx
 import json
 import asyncio
@@ -70,12 +69,14 @@ async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
     return data
 
 class BoeEli(Fetcher[dict, str]):
+    "Fetch raw-data from the database of BOE, the official law Spanish Documents"
     
     def __init__(self) -> None:
         super().__init__("boe_eli")
 
     async def fetch_data(self, place: str, **args):
-        data = await get_data_from_eli_urls(urls)
+        pass
+        # data = await get_data_from_eli_urls(urls)
 
 
 if __name__ == "__main__":
@@ -93,14 +94,14 @@ if __name__ == "__main__":
                 await asyncio.sleep(20)
                 print(f"Year {year} loaded...")
         # To save the JSON data to a file, you can do the following:
-        with open('data/eli_urls.json', 'w') as file:
+        with open('data/eli_urls.json', 'w', encoding="utf-8") as file:
             json.dump(data, file)
     async def download_all_xmls():
         with open('data/eli_urls.json', 'r', encoding="utf-8") as file:
             urls = json.load(file)
         data = await get_data_from_eli_urls(urls)
         # index_docs(data)
-        with open('data/eli_data.json', 'w') as file:
+        with open('data/eli_data.json', 'w', encoding="utf-8") as file:
             json.dump(data, file)
 
     # asyncio.run(fecth_all_data()) 
