@@ -1,8 +1,10 @@
+from typing import List
 import httpx
 import json
 import asyncio
 import xmltodict
 from bs4 import BeautifulSoup
+from bridges import Fetcher
 
 
 def is_eli_url(url:str):
@@ -66,6 +68,14 @@ async def get_data_from_eli_urls(urls: list[str]) -> list[dict]:
         if(index%10 == 0):
             await asyncio.sleep(5)
     return data
+
+class BoeEli(Fetcher[dict, str]):
+    
+    def __init__(self) -> None:
+        super().__init__("boe_eli")
+
+    async def fetch_data(self, place: str, **args):
+        data = await get_data_from_eli_urls(urls)
 
 
 if __name__ == "__main__":
