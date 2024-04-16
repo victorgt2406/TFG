@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import ReactComponent from '../components/ReactComponent';
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<ReactComponent client:load/>
+	</main>
+</Layout>
+
+<style>
+</style>
