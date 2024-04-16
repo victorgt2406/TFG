@@ -29,7 +29,7 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("MDW_PORT") or 3000) # type: ignore
+    port = int(os.getenv("MDW_PORT") or 2002) # type: ignore
 
     # Prepare and start the file watcher in a daemon thread
     watcher_thread = threading.Thread(target=file_observer, args=(), daemon=True)
