@@ -22,19 +22,20 @@ async def chat(req: ChatModel):
 
     # Get terms
     terms = await ollama_get_terms(ollama_url, message)
-    print("Terms", terms)
+    # print("Terms", terms)
     terms_str = " ".join(terms)
 
     # Get docs
     docs = await search(os_client, terms_str)
-    print("Docs", docs)
+    # print("Docs", docs)
 
     # Conclusions
     conclusion = await ollama_get_conclusion(ollama_url, message, terms, docs)
 
     res = {
-        "docs": docs,
+        "message": message,
         "terms": terms,
+        "docs": docs,
         "conclusion": conclusion
     }
     return res
