@@ -1,12 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
 import ReactComponent from '../components/ReactComponent';
+import SimpleChat from '../components/SimpleChat';
 ---
 
 <Layout title="Welcome to Astro.">
 	<main>
 		<ReactComponent client:load/>
+		<SimpleChat client:load/>
 	</main>
 </Layout>
 
