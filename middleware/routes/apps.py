@@ -32,3 +32,20 @@ async def get_apps():
     documents = list(map(lambda x: x["_source"], response['hits']['hits']))
 
     return documents
+
+
+@router.get("/{app}")
+async def get_app(app:str):
+    body = {
+        "size": 1,  # Adjust this size according to your data
+        "query": {
+            "match": {
+                "name": app
+            }
+        }
+    }
+
+    response = await os_client.search(body, "apps")
+    document = response['hits']['hits'][0]["_source"]
+
+    return document
