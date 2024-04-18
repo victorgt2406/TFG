@@ -1,14 +1,17 @@
 import os
 import threading
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
-from routes import load_routes
-from dotenv import load_dotenv
-from file_observer import file_observer
-from fastapi.middleware.cors import CORSMiddleware
 
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+
+from file_observer import file_observer
+from routes import load_routes
+from utils import get_async_opensearch_client
 
 app = FastAPI()
+os_client = get_async_opensearch_client()
 
 # Configure CORS
 app.add_middleware(

@@ -1,4 +1,5 @@
 """
 Models
 """
-from .chat import ChatModel
+from .chat import *
+from .app import *
