@@ -78,6 +78,7 @@ async def ollama_get_terms(url: str, message: str) -> list[str]:
             "content": "insomnia, daytime-tiredness, fatigue"
         }
     ]
+    
     str_term_list = await ollama_simple_chat(url, message, messages=messages)
     str_term_list = str_term_list.lower()
     str_term_list = str_term_list.replace(" ", "")
@@ -85,7 +86,7 @@ async def ollama_get_terms(url: str, message: str) -> list[str]:
     return term_list
 
 
-async def ollama_get_conclusion(url: str, message: str, terms: list[str], docs: list[dict[str, any]]) -> str:
+async def ollama_get_conclusion(url: str, message: str, terms: list[str], docs: list[dict]) -> str:
     messages = [
         {
             "role": "system",

@@ -5,6 +5,19 @@ from fastapi.responses import FileResponse
 from routes import load_routes
 from dotenv import load_dotenv
 from file_observer import file_observer
+from fastapi.middleware.cors import CORSMiddleware
+
+
+app = FastAPI()
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 app = FastAPI()
@@ -29,7 +42,7 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("MDW_PORT") or 3000) # type: ignore
+    port = int(os.getenv("MDW_PORT") or 2002) # type: ignore
 
     # Prepare and start the file watcher in a daemon thread
     watcher_thread = threading.Thread(target=file_observer, args=(), daemon=True)
