@@ -1,20 +1,11 @@
 "Handle create and update applications"
 
-import sys
-import os
-
-# Add the parent directory to sys.path
-currentdir = os.path.dirname(os.path.abspath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
-
-from main import os_client
+# from main import os_client
 from models import AppModel
+from config.opensearch import os_client
 
-# Define the index name
 index_name = "apps"
 
-# Index configuration
 index_body = {
     "settings": {
         "index": {
@@ -66,12 +57,3 @@ async def handle_update_app(settings:dict):
     }
     response = await os_client.update(index=index_name, id=settings.name, body=settings_body)
     print(response)
-    
-
-
-if __name__ == "__main__":
-    import asyncio
-    settings_model:AppModel = {
-        "name": "drugs"
-    }
-    asyncio.run(handle_update_app(settings_model))
