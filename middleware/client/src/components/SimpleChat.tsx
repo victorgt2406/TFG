@@ -22,7 +22,7 @@ export default function () {
 
     // Function to handle the button click
     const handleButtonClick = async () => {
-        const response = await axios.post("http://localhost:2002/api/chat/", {
+        const response = await axios.post("http://localhost:3000/api/chat/", {
             message: inputText,
         });
         console.log(response);
