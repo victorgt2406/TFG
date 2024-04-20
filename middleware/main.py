@@ -1,12 +1,13 @@
 import os
 import threading
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
-from routes import load_routes
-from dotenv import load_dotenv
-from file_observer import file_observer
-from fastapi.middleware.cors import CORSMiddleware
 
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, RedirectResponse
+
+from file_observer import file_observer
+from routes import load_routes
 
 app = FastAPI()
 
@@ -26,16 +27,14 @@ client_dist_dir = os.path.join(app_dir, 'client', 'dist')  # Path to client/dist
 
 load_routes(app)
 
-
-@app.get("/favicon.ico", include_in_schema=False)
-async def get_favicon():
-    "Return the favicon of the server"
-    return FileResponse(os.path.join(client_dist_dir, 'vite.svg'))
-
 # Client catch-all route for SPA
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
     "All routes that does not start with /api/ return the client"
+    if full_path.startswith("api") and not full_path.endswith("/"):
+        return RedirectResponse(url=f"/{full_path}/")
+    else:
+        raise HTTPException(status_code=404)
     if '.' in full_path:
         return FileResponse(os.path.join(client_dist_dir, full_path))
     return FileResponse(os.path.join(client_dist_dir,"index.html"))
