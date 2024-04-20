@@ -28,8 +28,10 @@ async def get_apps():
         }
     }
 
-    response = await os_client.search(body, "apps")
-    documents = list(map(lambda x: x["_source"], response['hits']['hits']))
+    response:dict = await os_client.search(body, "apps")
+    hits = response.get("hits", [])
+    hits = hits.get("hits", [])
+    documents = list(map(lambda x: x["_source"], hits))
 
     return documents
 
