@@ -22,7 +22,7 @@ async def create_app(req: dict):
 @router.get("/")
 async def get_apps():
     body = {
-        "size": 1000,  # Adjust this size according to your data
+        "size": 1000,
         "query": {
             "match_all": {}
         }
@@ -39,7 +39,7 @@ async def get_apps():
 @router.get("/{app}")
 async def get_app(app:str):
     body = {
-        "size": 1,  # Adjust this size according to your data
+        "size": 1,
         "query": {
             "match": {
                 "name": app
