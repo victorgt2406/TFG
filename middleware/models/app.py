@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 class ContextModel(BaseModel):
     "Context"
+    model: Optional[str] = "llama3"
     role: str
     content: str
 
