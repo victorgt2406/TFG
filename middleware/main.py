@@ -33,7 +33,7 @@ async def catch_all(full_path: str):
     "All routes that does not start with /api/ return the client"
     if full_path.startswith("api") and not full_path.endswith("/"):
         return RedirectResponse(url=f"/{full_path}/")
-    else:
+    elif full_path.startswith("api"):
         raise HTTPException(status_code=404)
     if '.' in full_path:
         return FileResponse(os.path.join(client_dist_dir, full_path))
@@ -41,6 +41,7 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
+
     port = int(os.getenv("MDW_PORT") or 2002) # type: ignore
 
     # Prepare and start the file watcher in a daemon thread

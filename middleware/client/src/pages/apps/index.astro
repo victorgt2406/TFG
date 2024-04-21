@@ -1,0 +1,26 @@
+---
+import axios from "axios";
+import Layout from "../../layouts/Layout.astro";
+import App from "../../components/App.astro";
+import type { AppModel } from "../../models/App";
+
+async function fetchApps() {
+    try {
+        const response = await axios.get("http://localhost:3000/api/apps/");
+        return response.data;
+    } catch {
+        console.log("OpenSearch failed connection");
+        return [];
+    }
+}
+const apps = await fetchApps();
+---
+
+<Layout title="Aplicaciones">
+    <main class="container mx-auto px-4">
+        <h1>Aplicaciones</h1>
+        <section>
+            {apps.map((app: AppModel) => <App {...app} />)}
+        </section>
+    </main>
+</Layout>

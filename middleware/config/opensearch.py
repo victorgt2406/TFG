@@ -1,5 +1,4 @@
 "OpenSearch client"
-
 import asyncio
 import os
 from opensearchpy import AsyncOpenSearch
@@ -22,13 +21,32 @@ def get_async_opensearch_client() -> AsyncOpenSearch:
         ssl_assert_hostname = False,
         ssl_show_warn = False
     )
+
+    # Check OpenSearch connection
+    # async def check_os_connection(client):
+    #     "Check connection with OpenSearch"
+    #     try:
+    #         response = (await client.info())["tagline"]
+    #         if(response != "The OpenSearch Project: https://opensearch.org/"):
+    #             print("ERROR: Can not connect to OpenSearch.")
+    #             raise OpenSearchConnectionError()
+    #     except OpenSearchConnectionError as e:
+    #         print(f"ERROR: Can not connect to OpenSearch.\n{e}")
+    #         raise OpenSearchConnectionError() from e
+    #     print("Connected to OpenSearch")
+    # # asyncio.run(check_os_connection(client))
+    # await check_os_connection(client)
+
+    # body = {
+    #     "size": 1000,
+    #     "query": {
+    #         "match_all": {}
+    #     }
+    # }
+
+    # response:dict = await client.search(body, "apps")
+    # print(response)
+
     return client
 
 os_client = get_async_opensearch_client()
-try:
-    response = asyncio.run(os_client.info())["tagline"]
-    if(response != "The OpenSearch Project: https://opensearch.org/"):
-        raise OpenSearchConnectionError()
-except OpenSearchConnectionError as e:
-    print(f"ERROR: Can not connect to OpenSearch.\n{e}")
-    raise OpenSearchConnectionError() from e

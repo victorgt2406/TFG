@@ -1,0 +1,12 @@
+---
+import type { AppModel } from '../models/App';
+
+interface Props extends AppModel {}
+
+const { name, terms, conclusions } = Astro.props;
+---
+<article>
+    <h3>{name}</h3>
+    <p>{terms}</p>
+    <p>{conclusions}</p>
+</articl>
