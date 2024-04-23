@@ -1,15 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import LayoutNav from "../layouts/LayoutNav.astro";
 import SimpleChat from "../components/SimpleChat";
 import DarkModeButton from "../components/DarkModeButton";
 ---
 
-<Layout title="(TFG) Aplicaciones de los Motores de Búsqueda con los LLMs">
-    <main class="container mx-auto px-4">
-        <h1 class="text-primary dark">LSM</h1>
-        <SimpleChat client:load />
-        <DarkModeButton client:load/>
-    </main>
-</Layout>
+<LayoutNav title="(TFG) Aplicaciones de los Motores de Búsqueda con los LLMs">
+    <h1 class="text-primary dark">LSM</h1>
+    <SimpleChat client:load />
+    <DarkModeButton client:load />
+</LayoutNav>
 
 <style></style>

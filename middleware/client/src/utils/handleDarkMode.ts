@@ -5,7 +5,6 @@ export default function handleDarkMode(theme: "dark" | "light" | "system") {
     Cookies.set(COOKIE, theme);
     function applyTheme(theme: "dark" | "light") {
         document.documentElement.className = theme;
-        console.log(`Theme changed to ${theme}`);
     }
     if (theme === "system") {
         const matchMedia = window.matchMedia("(prefers-color-scheme: dark)");
