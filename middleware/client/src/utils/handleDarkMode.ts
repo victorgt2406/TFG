@@ -1,8 +1,10 @@
-const COOKIE = "darkMode";
-import Cookies from 'js-cookie'
+const COOKIE_DARKMODE = "darkMode";
+import Cookies from "js-cookie";
 
-export default function handleDarkMode(theme: "dark" | "light" | "system") {
-    Cookies.set(COOKIE, theme);
+type DarkModeType = "dark" | "light" | "system";
+
+export default function handleDarkMode(theme: DarkModeType) {
+    Cookies.set(COOKIE_DARKMODE, theme);
     function applyTheme(theme: "dark" | "light") {
         document.documentElement.className = theme;
     }
@@ -14,11 +16,10 @@ export default function handleDarkMode(theme: "dark" | "light" | "system") {
         // Listen system dark mode changes
         const handleDarkModeSystem = (e: MediaQueryListEvent) => {
             const updatedTheme = e.matches ? "dark" : "light";
-            const cookieTheme: string | undefined = Cookies.get(COOKIE);
+            const cookieTheme: string | undefined = Cookies.get(COOKIE_DARKMODE);
             if (cookieTheme === "system") {
                 applyTheme(updatedTheme);
-            }
-            else{
+            } else {
                 matchMedia.removeEventListener("change", handleDarkModeSystem);
             }
         };
@@ -29,3 +30,11 @@ export default function handleDarkMode(theme: "dark" | "light" | "system") {
         applyTheme(theme);
     }
 }
+
+function getDarkModeCookie(): DarkModeType {
+    return Cookies.get(COOKIE_DARKMODE) as DarkModeType;
+}
+
+export { getDarkModeCookie, COOKIE_DARKMODE };
+
+export type { DarkModeType };
