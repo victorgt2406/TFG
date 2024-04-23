@@ -1,5 +1,9 @@
+const COOKIE = "darkMode";
+import Cookies from 'js-cookie'
+
 export default function handleDarkMode(theme: "dark" | "light" | "system") {
-    function applyTheme(theme:"dark"|"light"){
+    Cookies.set(COOKIE, theme);
+    function applyTheme(theme: "dark" | "light") {
         document.documentElement.className = theme;
         console.log(`Theme changed to ${theme}`);
     }
@@ -11,13 +15,18 @@ export default function handleDarkMode(theme: "dark" | "light" | "system") {
         // Listen system dark mode changes
         const handleDarkModeSystem = (e: MediaQueryListEvent) => {
             const updatedTheme = e.matches ? "dark" : "light";
-            applyTheme(updatedTheme);
+            const cookieTheme: string | undefined = Cookies.get(COOKIE);
+            if (cookieTheme === "system") {
+                applyTheme(updatedTheme);
+            }
+            else{
+                matchMedia.removeEventListener("change", handleDarkModeSystem);
+            }
         };
         matchMedia.addEventListener("change", handleDarkModeSystem);
-        return () => matchMedia.removeEventListener('change', handleDarkModeSystem);
-    }
-    else {
+        return () =>
+            matchMedia.removeEventListener("change", handleDarkModeSystem);
+    } else {
         applyTheme(theme);
     }
-
 }

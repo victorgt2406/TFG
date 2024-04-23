@@ -9,7 +9,7 @@ import handleDarkMode from "../utils/handleDarkMode";
 
 export default function DarkModeButton() {
     return (
-        <Select onValueChange={(value)=>handleDarkMode(value)}>
+        <Select onValueChange={(value)=>handleDarkMode(value as "dark" | "light" | "system")}>
             <SelectTrigger>
                 <SelectValue placeholder="Theme" />
             </SelectTrigger>
