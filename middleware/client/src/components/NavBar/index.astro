@@ -1,10 +1,11 @@
 ---
 import DarkModeButton from "./DarkModeButton";
 import Settings from "./Settings";
+import AppsSelect from "./AppsSelect";
 ---
 
-<div class="flex flex-row-reverse w-full px-2 text-xl">
+<div class="flex flex-row-reverse w-full text-xs p-2">
     <Settings client:idle />
-    <p>Example text</p>
-    <DarkModeButton client:only />
+    <DarkModeButton client:idle />
+    <AppsSelect client:idle/>
 </div>

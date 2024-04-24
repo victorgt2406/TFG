@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
     Select,
     SelectContent,
@@ -5,23 +6,43 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../../@shadcn/components/ui/select";
-import handleDarkMode, { getDarkModeCookie, type DarkModeType } from "../../utils/handleDarkMode";
+import handleDarkMode, {
+    getDarkModeCookie,
+    type DarkModeType,
+} from "../../utils/handleDarkMode";
 
 export default function DarkModeButton() {
-    const defaultTheme = getDarkModeCookie();
+    const [darkModeValue, setDarkModeValue] = useState<DarkModeType>(
+        "system"
+    );
+
+    useEffect(() => {
+        setDarkModeValue(getDarkModeCookie());
+    }, []);
     return (
-        <Select
-            onValueChange={(value) => handleDarkMode(value as DarkModeType)}
-            defaultValue={defaultTheme}
-        >
-            <SelectTrigger>
-                <SelectValue placeholder="Theme" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
-            </SelectContent>
-        </Select>
+        <div className="w-28 mx-2">
+            <Select
+                onValueChange={(value:DarkModeType) => {
+                    handleDarkMode(value);
+                    setDarkModeValue(value);
+                }}
+                value={darkModeValue}
+            >
+                <SelectTrigger>
+                    <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="light">
+                        Light <i className="bi bi-brightness-high-fill"></i>
+                    </SelectItem>
+                    <SelectItem value="dark">
+                        Dark <i className="bi bi-moon-stars-fill"></i>
+                    </SelectItem>
+                    <SelectItem value="system">
+                        System <i className="bi bi-laptop"></i>
+                    </SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
     );
 }

@@ -1,3 +1,4 @@
+import { Button } from "../../@shadcn/components/ui/button";
 import {
     Popover,
     PopoverContent,
@@ -6,11 +7,17 @@ import {
 
 export default function () {
     return (
-        <Popover>
-            <PopoverTrigger>
-                <i className="bi bi-gear-fill"></i>
-            </PopoverTrigger>
-            <PopoverContent>Place content for the popover here.</PopoverContent>
-        </Popover>
+        <div className="mx-2">
+            <Popover>
+                <PopoverTrigger>
+                    <Button asChild variant="outline">
+                        <i className="bi bi-gear-fill"></i>
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                    Place content for the popover here.
+                </PopoverContent>
+            </Popover>
+        </div>
     );
 }

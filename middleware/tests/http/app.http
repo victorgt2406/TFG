@@ -2,4 +2,4 @@
 GET http://localhost:3000/api/apps/
 
 ###
-GET http://localhost:3000/api/apps/drugs
+GET http://localhost:3000/api/apps/drug
