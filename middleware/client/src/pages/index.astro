@@ -1,11 +1,12 @@
 ---
 import LayoutNav from "../layouts/LayoutNav.astro";
 import SimpleChat from "../components/SimpleChat";
+import Chat from "../components/Chat";
 ---
 
 <LayoutNav title="(TFG) Aplicaciones de los Motores de Búsqueda con los LLMs">
-    <h1 class="text-primary dark">LSM</h1>
-    <SimpleChat client:load />
+    <!-- <SimpleChat client:load /> -->
+    <Chat client:idle/>
 </LayoutNav>
 
 <style></style>
