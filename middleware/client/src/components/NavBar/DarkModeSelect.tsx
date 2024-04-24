@@ -12,8 +12,8 @@ import handleDarkMode, {
 } from "../../utils/handleDarkMode";
 
 export default function DarkModeButton() {
-    const [darkModeValue, setDarkModeValue] = useState<DarkModeType>(
-        "system"
+    const [darkModeValue, setDarkModeValue] = useState<DarkModeType | undefined>(
+        undefined
     );
 
     useEffect(() => {
