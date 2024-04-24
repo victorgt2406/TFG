@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
     Select,
     SelectContent,
@@ -10,7 +9,6 @@ import handleDarkMode, { getDarkModeCookie, type DarkModeType } from "../../util
 
 export default function DarkModeButton() {
     const defaultTheme = getDarkModeCookie();
-    handleDarkMode(defaultTheme);
     return (
         <Select
             onValueChange={(value) => handleDarkMode(value as DarkModeType)}

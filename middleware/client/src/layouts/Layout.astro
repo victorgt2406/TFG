@@ -30,4 +30,12 @@ const { title } = Astro.props;
     </body>
 </html>
 <style is:global></style>
+<script>
+    import handleDarkMode, {
+        getDarkModeCookie,
+    } from "../utils/handleDarkMode";
+
+    const defaultTheme = getDarkModeCookie();
+    handleDarkMode(defaultTheme);
+</script>
 
