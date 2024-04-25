@@ -1,4 +1,5 @@
 import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
+import type { LsmResponseType } from "../../models/LsmResponse";
 import mdwApi from "../../utils/mdwApi";
 import Input from "./Input";
 import Output from "./Output";
@@ -11,9 +12,10 @@ export default function () {
             message,
         });
         if(response.status === 200){
-            alert("lets go!!")
+            const lsmResponse:LsmResponseType = response.data
+            console.log(response.data)
         }
-        console.log(response);
+        // console.log(response);
     }
 
     return (
