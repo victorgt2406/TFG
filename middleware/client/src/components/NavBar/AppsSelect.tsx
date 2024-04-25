@@ -6,16 +6,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../../@shadcn/components/ui/select";
-import axios from "axios";
 import type { AppModel } from "../../models/App";
 import handleApp, { getAppCookie } from "../../utils/handleApp";
+import mdwApi from "../../utils/mdwApi";
 
 export default function AppsSelect({className}:{className?:string}) {
     const [apps, setApps] = useState<string[]>([]);
     const [appValue, setAppValue] = useState<string | undefined>(undefined);
     useEffect(() => {
         async function loadApps() {
-            const response = await axios.get(`http://localhost:3000/api/apps/`);
+            const response = await mdwApi.get("/apps/");
             if (response.status === 200) {
                 const data: AppModel[] = response.data;
                 setApps(data.map((app) => app.name));
