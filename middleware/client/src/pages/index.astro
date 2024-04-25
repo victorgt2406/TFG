@@ -1,14 +1,10 @@
 ---
-import SimpleChat from "../components/SimpleChat";
-import Chat from "../components/Chat/Chat";
-// import Chat from "../components/Chat/index.astro";
+import Chat from "../components/Chat"
 import Layout from "../layouts/Layout.astro";
 import NavBar from "../components/NavBar/index.astro";
 ---
 
 <Layout title="LSM">
-    <!-- <SimpleChat client:load /> -->
-    <!-- <Chat/> -->
     <main class="flex flex-col px-4 h-screen overflow-hidden">
         <NavBar client:load />
         <Chat/ client:load>
