@@ -45,7 +45,7 @@ export default function Message({ role, message }: MyProps) {
         >
             <Card
                 className={`
-                relative max-w-[800px] my-2 ${
+                relative max-w-[1000px] my-1 ${
                     role === "user" ? "border-primary" : ""
                 } ${
                     edit?"w-full":""
