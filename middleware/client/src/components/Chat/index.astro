@@ -1,0 +1,16 @@
+---
+import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
+import Input from "./Input";
+import Output from "./Output";
+import NavBar from "../NavBar/index.astro";
+---
+
+<div class="flex flex-col px-4 h-screen overflow-hidden">
+    <NavBar client:load/>
+    <ScrollArea className="flex-1 p-2" client:load>
+        <Output className="m-1"/>
+    </ScrollArea>
+    <div class="w-full my-1">
+        <Input />
+    </div>
+</div>

@@ -1,8 +1,8 @@
 import Message from "./Message";
 
-export default function () {
+export default function ({className}:{className?:string}) {
     return (
-        <div className="flex flex-col">
+        <div className={`flex flex-col ${className}`}>
             <Message role={"user"} message={"hey"} />
 
             <Message role={"assistant"} message={"welcome"} />
