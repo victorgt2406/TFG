@@ -1,18 +1,9 @@
 ---
-import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
-import Input from "./Input";
-import Output from "./Output";
+import Chat from "./Chat";
 import NavBar from "../NavBar/index.astro";
 ---
 
 <main class="flex flex-col px-4 h-screen overflow-hidden">
     <NavBar client:load />
-    <ScrollArea client:load>
-        <section class="flex justify-center">
-            <Output className="my-1 container p-0" client:load/>
-        </section>
-    </ScrollArea>
-    <section class="container mt-1 mb-2 w-full p-0">
-        <Input />
-    </secti>
+    <Chat/ client:load>
 </main>

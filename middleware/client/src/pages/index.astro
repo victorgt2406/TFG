@@ -1,13 +1,18 @@
 ---
 import SimpleChat from "../components/SimpleChat";
-// import Chat from "../components/Chat";
-import Chat from "../components/Chat/index.astro";
+import Chat from "../components/Chat/Chat";
+// import Chat from "../components/Chat/index.astro";
 import Layout from "../layouts/Layout.astro";
+import NavBar from "../components/NavBar/index.astro";
 ---
 
-<Layout title="(TFG) Aplicaciones de los Motores de Búsqueda con los LLMs">
+<Layout title="LSM">
     <!-- <SimpleChat client:load /> -->
-    <Chat/>
+    <!-- <Chat/> -->
+    <main class="flex flex-col px-4 h-screen overflow-hidden">
+        <NavBar client:load />
+        <Chat/ client:load>
+    </main>
 </Layout>
 
 <style></style>
