@@ -38,11 +38,18 @@ export default function Message({ role, message }: MyProps) {
     const [editedMessage, setEditedMessage] = useState(message);
 
     return (
-        <div className={`${edit ? "w-full max-w-[800px]" : ""}`}>
+        <div
+            className={`w-full flex ${
+                role === "user" ? "flex-row-reverse" : "flex-row"
+            }`}
+        >
             <Card
-                className={`relative my-2 ${
-                    !edit ? "w-full max-w-[800px]" : ""
-                } ${role === "user" ? "border-primary" : ""}
+                className={`
+                relative max-w-[800px] my-2 ${
+                    role === "user" ? "border-primary" : ""
+                } ${
+                    edit?"w-full":""
+                }
             `}
             >
                 <div className="pe-10">

@@ -1,6 +1,5 @@
 import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
 import Input from "./Input";
-import Message from "./Message";
 import Output from "./Output";
 
 export default function () {
