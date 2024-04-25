@@ -43,7 +43,7 @@ export default function Chat() {
             <ScrollArea ref={scrollRef}>
                 <section className="flex justify-center">
                     <Output
-                        className="my-1 container p-0 h-[calc(100vh-106px)]"
+                        className="my-1 container p-0 min-h-[calc(100vh-106px)]"
                         messages={messages}
                     />
                 </section>
