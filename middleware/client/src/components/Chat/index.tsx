@@ -1,8 +1,21 @@
 import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
+import mdwApi from "../../utils/mdwApi";
 import Input from "./Input";
 import Output from "./Output";
 
 export default function () {
+
+    async function handleMessage(message:string){
+        console.log(message)
+        const response = await mdwApi.post("/chat/", {
+            message,
+        });
+        if(response.status === 200){
+            alert("lets go!!")
+        }
+        console.log(response);
+    }
+
     return (
         <>
             <ScrollArea>
@@ -11,7 +24,7 @@ export default function () {
                 </section>
             </ScrollArea>
             <section className="container mt-1 mb-2 w-full p-0">
-                <Input />
+                <Input handleMessage={handleMessage} />
             </section>
         </>
     );
