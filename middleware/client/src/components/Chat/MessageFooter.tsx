@@ -1,19 +1,25 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../@shadcn/components/ui/accordion";
+import React from "react";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "../../@shadcn/components/ui/accordion";
 import type { LsmResponseType } from "../../models/LsmResponse";
 
-export default function MessageFooter({terms, docs}:LsmResponseType) {
+export default function MessageFooter({ terms, docs }: LsmResponseType) {
     return (
         <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="terms">
                 <AccordionTrigger>Terms</AccordionTrigger>
                 <AccordionContent>
-                    {terms}
+                    <pre>{JSON.stringify(terms, undefined, 2)}</pre>
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="docs">
                 <AccordionTrigger>Docs</AccordionTrigger>
                 <AccordionContent>
-                    <pre>{JSON.stringify(docs,undefined,2)}</pre>
+                    <pre>{JSON.stringify(docs, undefined, 2)}</pre>
                 </AccordionContent>
             </AccordionItem>
         </Accordion>

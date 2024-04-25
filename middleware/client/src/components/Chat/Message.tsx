@@ -9,9 +9,10 @@ import {
 import EditingMessage from "./EditingMessage";
 import type { LsmResponseType } from "../../models/LsmResponse";
 import MessageFooter from "./MessageFooter";
+import type { LsmRoleType } from "../../models/LsmRole";
 
 type MyProps = {
-    role: "user" | "assistant" | "system";
+    role: LsmRoleType;
     message: string;
     lsmResponse?: LsmResponseType;
 };
