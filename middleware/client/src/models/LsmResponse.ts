@@ -1,6 +1,7 @@
 type LsmResponseType = {
     message: string;
-    docs: JSON;
+    conclusion: string;
+    docs: any[];
     terms: string[];
 };
 

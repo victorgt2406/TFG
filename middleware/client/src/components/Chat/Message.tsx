@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../@shadcn/components/ui/button";
 import {
     Card,
@@ -6,37 +6,27 @@ import {
     CardFooter,
     CardHeader,
 } from "../../@shadcn/components/ui/card";
-import { TextareaAuto } from "../TextareaAuto";
+import EditingMessage from "./EditingMessage";
+import type { LsmResponseType } from "../../models/LsmResponse";
+import MessageFooter from "./MessageFooter";
 
 type MyProps = {
     role: "user" | "assistant" | "system";
     message: string;
+    lsmResponse?: LsmResponseType;
 };
 
-function EditingMessage({
-    message,
-    setMessage,
-}: {
-    message: string;
-    setMessage: (msg: string) => void;
-}) {
-    const ref = useRef<HTMLTextAreaElement>(null);
-    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setMessage(event.target.value);
-    };
-    return (
-        <TextareaAuto
-            ref={ref}
-            defaultValue={message}
-            onChange={handleChange}
-        />
-    );
-}
-
-export default function Message({ role, message }: MyProps) {
+export default function Message({ role, message, lsmResponse }: MyProps) {
     const [edit, setEdit] = useState(false);
     const [editedMessage, setEditedMessage] = useState(message);
 
+    const footer = lsmResponse ? (
+        <CardFooter>
+            <MessageFooter {...lsmResponse} />
+        </CardFooter>
+    ) : (
+        <></>
+    );
     return (
         <div
             className={`w-full flex ${
@@ -47,9 +37,7 @@ export default function Message({ role, message }: MyProps) {
                 className={`
                 relative max-w-[1000px] my-1 ${
                     role === "user" ? "border-primary" : ""
-                } ${
-                    edit?"w-full":""
-                }
+                } ${edit ? "w-full" : ""}
             `}
             >
                 <div className="pe-10">
@@ -70,6 +58,7 @@ export default function Message({ role, message }: MyProps) {
                             editedMessage
                         )}
                     </CardContent>
+                    {footer}
                 </div>
                 <Button
                     className="absolute bottom-0 right-0 m-1 size-8"
