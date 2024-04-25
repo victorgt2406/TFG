@@ -5,9 +5,9 @@ import {
     PopoverTrigger,
 } from "../../@shadcn/components/ui/popover";
 
-export default function () {
+export default function ({className}:{className?:string}) {
     return (
-        <div className="mx-2">
+        <div className={className}>
             <Popover>
                 <PopoverTrigger>
                     <Button asChild variant="outline">

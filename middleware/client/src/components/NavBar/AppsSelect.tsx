@@ -10,7 +10,7 @@ import axios from "axios";
 import type { AppModel } from "../../models/App";
 import handleApp, { getAppCookie } from "../../utils/handleApp";
 
-export default function AppsSelect() {
+export default function AppsSelect({className}:{className?:string}) {
     const [apps, setApps] = useState<string[]>([]);
     const [appValue, setAppValue] = useState<string | undefined>(undefined);
     useEffect(() => {
@@ -27,7 +27,7 @@ export default function AppsSelect() {
     }, []);
 
     return (
-        <div className="w-28 mx-2">
+        <div className={`w-28 ${className}`}>
             <Select
                 onValueChange={(value) => {
                     handleApp(value);

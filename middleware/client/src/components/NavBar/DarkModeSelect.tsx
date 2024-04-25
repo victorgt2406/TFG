@@ -11,7 +11,7 @@ import handleDarkMode, {
     type DarkModeType,
 } from "../../utils/handleDarkMode";
 
-export default function DarkModeButton() {
+export default function DarkModeButton({className}:{className?:string}) {
     const [darkModeValue, setDarkModeValue] = useState<DarkModeType | undefined>(
         undefined
     );
@@ -20,7 +20,7 @@ export default function DarkModeButton() {
         setDarkModeValue(getDarkModeCookie());
     }, []);
     return (
-        <div className="w-28 mx-2">
+        <div className={`w-28 ${className}`}>
             <Select
                 onValueChange={(value:DarkModeType) => {
                     handleDarkMode(value);
