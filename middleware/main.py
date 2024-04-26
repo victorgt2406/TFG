@@ -1,5 +1,7 @@
+from contextlib import asynccontextmanager
 import os
 import threading
+from config import AsyncOpenSearchSingleton
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
@@ -9,7 +11,12 @@ from fastapi.responses import FileResponse, RedirectResponse
 from file_observer import file_observer
 from routes import load_routes
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await AsyncOpenSearchSingleton.test_connection()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 # Configure CORS
 app.add_middleware(
@@ -41,7 +48,6 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-
     port = int(os.getenv("MDW_PORT") or 2002) # type: ignore
 
     # Prepare and start the file watcher in a daemon thread

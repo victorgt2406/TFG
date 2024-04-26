@@ -38,4 +38,4 @@ class AsyncOpenSearchSingleton:
             print("✅ Connection to OpenSearch successful")
 
 os_client = AsyncOpenSearchSingleton.get_instance()
-asyncio.run(AsyncOpenSearchSingleton.test_connection())
+# asyncio.run(AsyncOpenSearchSingleton.test_connection())

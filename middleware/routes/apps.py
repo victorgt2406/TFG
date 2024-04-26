@@ -21,7 +21,7 @@ async def merge_app(req: dict):
     return await handle_update_app(app)
 
 
-@router.delete("/")
+@router.delete("/{app_name}")
 async def delete_app(app_name: str):
     try:
         await os_client.delete(OS_INDEX,app_name)
@@ -68,7 +68,7 @@ async def get_apps():
     return documents
 
 
-@router.get("/{app}")
+@router.get("/{app_name}")
 async def get_app(app_name: str) -> AppModel:
     body = {
         "size": 1,
