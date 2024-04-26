@@ -43,7 +43,7 @@ index_body = {
 }
 
 async def handle_update_app(req:dict, index_name = "apps"):
-    app:AppModel= AppModel(**req)
+    app:AppModel= AppModel.model_validate(req)
     # Check if index exists:
     apps_exists = await os_client.indices.exists(index_name)
     print(f"{index_name} index exists?: {apps_exists}")

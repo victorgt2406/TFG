@@ -3,3 +3,12 @@ GET http://localhost:3000/api/apps/
 
 ###
 GET http://localhost:3000/api/apps/drug
+
+
+###
+POST http://localhost:3000/api/apps/
+Content-Type: application/json
+
+{
+    "name": "drugs"
+}
