@@ -48,6 +48,8 @@ async def get_app(app:str):
     }
 
     response = await os_client.search(body, "apps")
-    document = response['hits']['hits'][0]["_source"]
-
-    return document
+    if len(response['hits']['hits']) > 0:
+        document = response['hits']['hits'][0]["_source"]
+        return document
+    else:
+        raise HTTPException(status_code=404)

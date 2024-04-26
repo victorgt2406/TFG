@@ -14,6 +14,7 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
+    # allow_origins=["http://localhost:2002", "http://localhost:3000"],
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -21,7 +22,6 @@ app.add_middleware(
 )
 
 load_dotenv()
-app = FastAPI()
 app_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of app.py
 client_dist_dir = os.path.join(app_dir, 'client', 'dist')  # Path to client/dist
 
@@ -33,7 +33,7 @@ async def catch_all(full_path: str):
     "All routes that does not start with /api/ return the client"
     if full_path.startswith("api") and not full_path.endswith("/"):
         return RedirectResponse(url=f"/{full_path}/")
-    else:
+    elif full_path.startswith("api"):
         raise HTTPException(status_code=404)
     if '.' in full_path:
         return FileResponse(os.path.join(client_dist_dir, full_path))
@@ -41,6 +41,7 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
+
     port = int(os.getenv("MDW_PORT") or 2002) # type: ignore
 
     # Prepare and start the file watcher in a daemon thread

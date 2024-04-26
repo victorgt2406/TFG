@@ -1,0 +1,28 @@
+---
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "../@shadcn/components/ui/card";
+import type { AppModel } from "../models/App";
+
+interface Props extends AppModel {}
+
+const { name, terms, conclusions } = Astro.props;
+---
+
+<article>
+    <Card>
+        <CardHeader>
+            <CardTitle>{name}</CardTitle>
+            <CardDescription>Card Description</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <p>{terms}</p>
+            <p>{conclusions}</p>
+        </CardContent>
+    </Card>
+</article>
