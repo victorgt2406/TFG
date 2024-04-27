@@ -16,12 +16,14 @@ class ContextModel(BaseModel):
 class AppModel(BaseModel):
     "App"
     name:str
+    description: Optional[str]
     terms: Optional[list[ContextModel]] = None
     conclusions: Optional[list[ContextModel]] = None
 
 class AppUpdateModel(BaseModel):
-    "App"
+    "Update App"
     orig_name: Optional[str]
     name:str
+    description: Optional[str]
     terms: Optional[list[ContextModel]] = None
     conclusions: Optional[list[ContextModel]] = None
