@@ -1,13 +1,13 @@
 ---
-import Chat from "../components/Chat"
+import Chat from "../components/Chat";
 import Layout from "../layouts/Layout.astro";
-import NavBar from "../components/NavBar/index.astro";
+import NavBar from "../components/NavBar/NavBar.astro";
 ---
 
 <Layout title="LSM">
     <main class="flex flex-col px-4 h-screen overflow-hidden">
         <NavBar />
-        <Chat/ client:load>
+        <Chat client:load />
     </main>
 </Layout>
 
