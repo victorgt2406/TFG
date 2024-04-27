@@ -1,19 +1,23 @@
-from contextlib import asynccontextmanager
+"Middleware application"
+
 import os
 import threading
-from config import AsyncOpenSearchSingleton
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, RedirectResponse
 
+from config import OllamaSingleton, OpenSearchSingleton
 from file_observer import file_observer
 from routes import load_routes
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await AsyncOpenSearchSingleton.test_connection()
+    await OpenSearchSingleton.test_connection()
+    await OllamaSingleton.test_connection()
     yield
 
 app = FastAPI(lifespan=lifespan)

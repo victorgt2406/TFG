@@ -1,8 +1,8 @@
-import asyncio
 import os
 from opensearchpy import AsyncOpenSearch
 
-class AsyncOpenSearchSingleton:
+class OpenSearchSingleton:
+    "OpenSearch singleton"
     _client = None
 
     @classmethod
@@ -33,9 +33,8 @@ class AsyncOpenSearchSingleton:
     async def test_connection(cls):
         client_info = await cls._client.info()
         if client_info["tagline"] != "The OpenSearch Project: https://opensearch.org/":
-            print("❌ Not connected to OpenSearch")
+            print("❌ Not connected to 🔍 OpenSearch")
         else:
-            print("✅ Connection to OpenSearch successful")
+            print("✅ Connection to 🔍 OpenSearch successful")
 
-os_client = AsyncOpenSearchSingleton.get_instance()
-# asyncio.run(AsyncOpenSearchSingleton.test_connection())
+os_client = OpenSearchSingleton.get_instance()

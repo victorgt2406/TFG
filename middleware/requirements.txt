@@ -10,3 +10,4 @@ PyMuPDF
 beautifulsoup4
 xmltodict
 pytest-asyncio
+ollama
