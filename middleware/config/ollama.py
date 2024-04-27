@@ -6,6 +6,13 @@ class OllamaSingleton:
     _client = None
 
     @classmethod
+    def get_url(cls):
+        host = os.getenv("OLLAMA_HOST") or "ollama-node"
+        port = int(os.getenv("OLLAMA_PORT") or 11434)
+
+        return f"{host}:{port}"
+
+    @classmethod
     def get_instance(cls):
         if cls._client is None:
             cls._client = cls._create_client()

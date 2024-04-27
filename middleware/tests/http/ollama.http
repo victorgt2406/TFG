@@ -1,0 +1,15 @@
+###
+POST http://localhost:3000/api/ollama/
+Content-Type: application/json
+
+{
+  "model": "llama2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "why is the sky blue?"
+    }
+  ]
+}
+
+###
