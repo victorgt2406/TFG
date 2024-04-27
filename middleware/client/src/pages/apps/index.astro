@@ -1,9 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import App from "../../components/App.astro";
+import App from "../../components/Apps/App.astro";
 import type { AppModel } from "../../models/App";
 import NavBar from "../../components/NavBar/NavBar.astro"
 import mdwApi from "../../utils/mdwApi";
+import CreateApp from "../../components/Apps/CreateApp";
 
 async function fetchApps() {
     try {
@@ -18,11 +19,14 @@ const apps = await fetchApps();
 ---
 
 <Layout title="Aplicaciones">
+    <NavBar/>
     <main class="container mx-auto px-4">
-        <NavBar/>
-        <h1>Aplicaciones</h1>
+        <h1>Apps</h1>
         <section>
             {apps.map((app: AppModel) => <App {...app} />)}
+        </section>
+        <section class="flex justify-center mt-2">
+            <CreateApp client:idle />
         </section>
     </main>
 </Layout>
