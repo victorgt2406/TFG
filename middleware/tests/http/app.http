@@ -2,4 +2,46 @@
 GET http://localhost:3000/api/apps/
 
 ###
-GET http://localhost:3000/api/apps/drug
+GET http://localhost:3000/api/apps/test
+
+
+###
+POST http://localhost:3000/api/apps/
+Content-Type: application/json
+
+{
+    "name": "test"
+}
+
+###
+POST http://localhost:3000/api/apps/
+Content-Type: application/json
+
+{
+    "name": "test",
+    "terms": [
+        {
+        "model": "llama3",
+        "role": "admin",
+        "content": "admin content"
+        },
+        {
+        "role": "user",
+        "content": "user content"
+        }
+    ],
+    "conclusions": [
+        {
+        "role": "admin",
+        "content": "admin content"
+        },
+        {
+        "model": "llama3",
+        "role": "user",
+        "content": "user content"
+        }
+    ]
+}
+
+###
+DELETE http://localhost:3000/api/apps/test
