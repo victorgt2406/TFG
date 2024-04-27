@@ -25,7 +25,8 @@ const apps = await fetchApps();
         <section>
             {apps.map((app: AppModel) => <App {...app} />)}
         </section>
-        <section class="flex justify-center mt-2">
+        <section class="mt-2 flex flex-col justify-center w-full">
+            <h2>Create App</h2>
             <CreateApp client:idle />
         </section>
     </main>
