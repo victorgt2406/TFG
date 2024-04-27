@@ -4,7 +4,7 @@ import type { AppModel } from "../../models/App";
 
 export default function ({name, description, terms, conclusions}:AppModel) {
     return (
-        <Card className="relative pr-12">
+        <Card className="relative pr-12 mt-2">
             <CardHeader>
                 <CardTitle>{name}</CardTitle>
                 <CardDescription>{description}</CardDescription>
