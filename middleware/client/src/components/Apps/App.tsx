@@ -58,7 +58,7 @@ export default function App({
 
     return (
         <Card className="relative mt-2">
-            <CardHeader>
+            <CardHeader className="pr-20">
                 <CardTitle>{name}</CardTitle>
                 <CardDescription>{description}</CardDescription>
             </CardHeader>
@@ -70,13 +70,21 @@ export default function App({
                     handleUpdateConclusions={handleUpdateConclusions}
                 />
             </CardContent>
+            <div className="absolute top-0 right-0 m-2">
             <Button
-                className="absolute top-0 right-0 m-2 h-8 w-8"
+                className="h-8 w-8 me-1"
+                size="icon"
+            >
+                <i className="bi bi-floppy"></i>
+            </Button>
+            <Button
+                className="h-8 w-8"
                 size="icon"
                 variant="destructive"
             >
-                <i className="bi bi-x"></i>
+                <i className="bi bi-trash3"></i>
             </Button>
+            </div>
         </Card>
     );
 }
