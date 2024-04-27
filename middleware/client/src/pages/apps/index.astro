@@ -8,7 +8,7 @@ import mdwApi from "../../utils/mdwApi";
 import CreateApp from "../../components/Apps/CreateApp";
 import Apps from "../../components/Apps"
 
-async function fetchApps() {
+async function fetchApps():Promise<AppModel[]> {
     try {
         const response = await mdwApi.get("apps/");
         return response.data;

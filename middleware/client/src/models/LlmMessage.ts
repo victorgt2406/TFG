@@ -1,8 +1,7 @@
 import type { LlmRoleType } from "./LlmRole";
 
-type LlmMessage = {
-    model?: string;
+type LlmMessageType = {
     role: LlmRoleType;
     content: string;
 };
-export type { LlmMessage };
+export type { LlmMessageType };

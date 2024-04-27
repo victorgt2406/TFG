@@ -1,10 +1,10 @@
-import type { LlmMessage } from "./LlmMessage";
+import type { LlmMessageType } from "./LlmMessage";
 
 type AppModel =  {
     name: string;
     description?: string;
-    terms?: LlmMessage[];
-    conclusions?: LlmMessage[];
+    terms?: LlmMessageType[];
+    conclusions?: LlmMessageType[];
 }
 
 export type { AppModel };
