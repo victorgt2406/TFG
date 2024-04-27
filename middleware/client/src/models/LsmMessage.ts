@@ -1,8 +1,8 @@
 import type { LsmResponseType } from "./LsmResponse";
-import type { LsmRoleType } from "./LsmRole";
+import type { LlmRoleType } from "./LlmRole";
 
 type LsmMessageType = {
-    role: LsmRoleType;
+    role: LlmRoleType;
     message: string;
     lsmResponse?: LsmResponseType;
 };

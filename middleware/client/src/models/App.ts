@@ -1,9 +1,9 @@
-import type { ContextModel } from "./Context";
+import type { LlmMessage } from "./LlmMessage";
 
 type AppModel =  {
     name: string;
-    terms?: ContextModel[];
-    conclusions?: ContextModel[];
+    terms?: LlmMessage[];
+    conclusions?: LlmMessage[];
 }
 
 export type { AppModel };
