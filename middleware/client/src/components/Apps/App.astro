@@ -1,9 +1,9 @@
 ---
+import { Button } from "../../@shadcn/components/ui/button";
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "../../@shadcn/components/ui/card";
@@ -11,18 +11,23 @@ import type { AppModel } from "../../models/App";
 
 interface Props extends AppModel {}
 
-const { name, terms, conclusions } = Astro.props;
+const { name, terms, conclusions, description } = Astro.props;
 ---
 
 <article>
-    <Card>
+    <Card className="relative pr-12">
         <CardHeader>
             <CardTitle>{name}</CardTitle>
-            <CardDescription>Card Description</CardDescription>
+            <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>
             <p>{terms}</p>
             <p>{conclusions}</p>
         </CardContent>
+        <Button
+            className="absolute top-0 right-0 m-2 h-8 w-8"
+            size="icon"
+            variant="destructive"><i class="bi bi-x"></i></Button
+        >
     </Card>
 </article>
