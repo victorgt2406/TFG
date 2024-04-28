@@ -2,6 +2,9 @@
 GET http://localhost:3000/api/apps/
 
 ###
+GET http://localhost:3000/api/apps/example
+
+###
 GET http://localhost:3000/api/apps/test
 
 

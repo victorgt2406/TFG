@@ -11,10 +11,11 @@ import { toast } from "sonner";
 type MyProps = {
     // app: AppModel;
     messages: LlmMessageType[];
+    setMessages: React.Dispatch<React.SetStateAction<LlmMessageType[]>>;
 };
 
-export default function AppContent({ messages: defaultMessages }: MyProps) {
-    const [messages, setMessages] = useState(defaultMessages);
+export default function AppContent({ messages, setMessages }: MyProps) {
+    // const [messages, setMessages] = useState(defaultMessages);
 
     function handleNewMessage() {
         setMessages((prevMessages) => {
@@ -77,7 +78,7 @@ export default function AppContent({ messages: defaultMessages }: MyProps) {
                     );
                 })}
             <div className="flex justify-center mt-3">
-                <Button onClick={handleNewMessage}>Create New Message</Button>
+                <Button onClick={handleNewMessage} className="w-18 h-18 text-2xl"><i className="bi bi-plus"></i><i className=" bi bi-chat-left-text-fill"></i></Button>
             </div>
         </AccordionContent>
     );
