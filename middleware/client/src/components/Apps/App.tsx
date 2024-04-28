@@ -16,36 +16,43 @@ import {
 import type { AppModel } from "../../models/App";
 import mdwApi from "../../utils/mdwApi";
 import AppContent from "./AppContent";
+import { toast } from "sonner";
 
 export default function App({
     name,
     description,
     terms: defaultTerms,
     conclusions: defaultConclusions,
-    model
+    model,
 }: Required<AppModel>) {
-
+    const [isSaving, setSaving] = useState(false);
     const [terms, setTerms] = useState(defaultTerms);
     const [conclusions, setConclusions] = useState(defaultConclusions);
 
-    async function handleSave(){
-        const app:AppModel = {
+    async function handleSave() {
+        setSaving(true);
+        const app: AppModel = {
             name,
             description,
             terms,
-            conclusions
-        }
-        console.log({...app})
-        const response = await mdwApi.post("/apps/",{
+            conclusions,
+        };
+        console.log({ ...app });
+        const response = await mdwApi.post("/apps/", {
             name,
             description,
             terms,
-            conclusions
-        })
+            conclusions,
+        });
+        setSaving(false);
         console.log(response);
+        if (response.status === 200)
+            toast.info("The app was successfully saved");
+        else toast.warning("The app was successfully saved");
+        
     }
 
-    async function handleDelete(){
+    async function handleDelete() {
         const response = await mdwApi.delete(`/apps/${name}`);
         console.log(response);
     }
@@ -65,6 +72,7 @@ export default function App({
                             setMessages={setTerms}
                             name={name}
                             model={model}
+                            section="terms"
                         />
                     </AccordionItem>
                     <AccordionItem value="conclusion">
@@ -74,16 +82,27 @@ export default function App({
                             setMessages={setConclusions}
                             name={name}
                             model={model}
+                            section="conclusions"
                         />
                     </AccordionItem>
                 </Accordion>
                 {/* <AppContent conclusions={conclusions} terms={terms} /> */}
             </CardContent>
             <div className="absolute top-0 right-0 m-2">
-                <Button className="h-8 w-8 me-1" size="icon" onClick={handleSave}>
-                    <i className="bi bi-floppy"></i>
+                <Button
+                    className="h-8 w-8 me-1"
+                    size="icon"
+                    onClick={handleSave}
+                >
+                    <i className={`bi ${isSaving?"bi-arrow-clockwise animate-spin":"bi-floppy"}`}></i>
                 </Button>
-                <Button className="h-8 w-8" size="icon" variant="destructive" onClick={handleDelete}>
+                <Button
+                    className="h-8 w-8"
+                    size="icon"
+                    variant="destructive"
+                    onClick={handleDelete}
+                    disabled={isSaving}
+                >
                     <i className="bi bi-trash3"></i>
                 </Button>
             </div>

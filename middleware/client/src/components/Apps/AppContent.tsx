@@ -8,47 +8,56 @@ import { toast } from "sonner";
 import { TextareaAuto } from "../TextareaAuto";
 import mdwApi from "../../utils/mdwApi";
 import type { ChatModel } from "../../models/Chat";
+import { Textarea } from "../../@shadcn/components/ui/textarea";
 
 type MyProps = {
     messages: LlmMessageType[];
     setMessages: React.Dispatch<React.SetStateAction<LlmMessageType[]>>;
     name: string;
     model?: string;
+    section: "terms" | "conclusions";
 };
 
-export default function AppContent({ messages, setMessages, model, name }: MyProps) {
+export default function AppContent({
+    messages,
+    setMessages,
+    model,
+    name,
+}: MyProps) {
     const testTextRef = useRef<HTMLTextAreaElement>(null);
     const [isTesting, setTesting] = useState(false);
-
+    const [testResponse, setTestResponse] = useState("");
 
     function handleNewMessage() {
         setMessages((prevMessages) => {
             const newMessage: LlmMessageType = {
                 role: "user",
-                content: ""
+                content: "",
             };
-            // console.log([...prevMessages, newMessage]);
             return [...prevMessages, newMessage];
         });
-        // console.log(newMessages)
     }
 
     async function handleTest() {
         setTesting(true);
+        setTestResponse("");
         const newMessage: LlmMessageType = {
             role: "user",
-            content: testTextRef.current?.value?testTextRef.current?.value:""
-        }
-        const chat:ChatModel = {
-            model: model?model:"llama3",
-            messages : [...messages, newMessage],
-            stream: false
-        }
-        const response = await mdwApi.post("/ollama/",chat)
+            content: testTextRef.current?.value
+                ? testTextRef.current?.value
+                : "",
+        };
+        const chat: ChatModel = {
+            model: model ? model : "llama3",
+            messages: [...messages, newMessage],
+            stream: false,
+        };
+        const response = await mdwApi.post("/ollama/", chat);
         const message = response.data.message.content;
-        console.log(response)
-        toast.info(`The LLM response: ${message}`)
+        console.log(response);
+        toast.info(`The LLM response: ${message}`);
         setTesting(false);
+        setTestResponse(message);
     }
 
     function handleMove(origIndex: number, move: number) {
@@ -56,8 +65,8 @@ export default function AppContent({ messages, setMessages, model, name }: MyPro
         if (index >= 0 && index < messages.length) {
             setMessages((prevMessages) => {
                 const newMessages = [...prevMessages];
-                const temp = newMessages[origIndex]
-                newMessages[origIndex] = newMessages[index]
+                const temp = newMessages[origIndex];
+                newMessages[origIndex] = newMessages[index];
                 newMessages[index] = temp;
                 // console.log([...newMessages]);
                 return newMessages;
@@ -73,7 +82,7 @@ export default function AppContent({ messages, setMessages, model, name }: MyPro
         // console.log([...newMessages]);
     }
 
-    function handleUpdate(index:number, newMessage: LlmMessageType) {
+    function handleUpdate(index: number, newMessage: LlmMessageType) {
         setMessages((prevMessages) => {
             const newMessages = [...prevMessages];
             newMessages[index] = newMessage;
@@ -82,28 +91,48 @@ export default function AppContent({ messages, setMessages, model, name }: MyPro
         });
     }
 
+    function OpenSearchTest(){
+
+    }
+
     return (
         <AccordionContent className="p-2">
-            {messages
-                .map((msg, index) => {
-                    // console.log(msg);
-                    return (
-                        <ContextMessage
-                            handleDelete={handleDelete}
-                            key={index}
-                            role={msg.role}
-                            content={msg.content}
-                            index={index}
-                            handleUpdate={handleUpdate}
-                            handleMove={handleMove}
-                        />
-                    );
-                })}
-            <div className="flex justify-center items-center mt-3">
-                <TextareaAuto ref={testTextRef} className="me-2"/>
-                <Button onClick={handleTest} className="me-2 p-7" variant={"outline"} disabled={isTesting}>Test <i className={`ms-2 bi ${isTesting?"bi-arrow-clockwise animate-spin":"bi-send"}`}></i></Button>
-                <Button onClick={handleNewMessage} className="p-7"><i className="bi bi-plus"></i><i className=" bi bi-chat-left-text-fill"></i></Button>
+            {messages.map((msg, index) => (
+                <ContextMessage
+                    handleDelete={handleDelete}
+                    key={index}
+                    role={msg.role}
+                    content={msg.content}
+                    index={index}
+                    handleUpdate={handleUpdate}
+                    handleMove={handleMove}
+                />
+            ))}
+            <div className="flex justify-center items-center mt-8">
+                <TextareaAuto ref={testTextRef} placeholder="Test message" />
+                <Textarea className="resize-none overflow-hidden mx-2 disabled:opacity-100 max-w-[300px]" value={testResponse} placeholder="response" disabled></Textarea>
+                <Button
+                    onClick={handleTest}
+                    className="me-2 p-7"
+                    variant={"secondary"}
+                    disabled={isTesting}
+                >
+                    Test{" "}
+                    <i
+                        className={`ms-2 bi ${
+                            isTesting
+                                ? "bi-arrow-clockwise animate-spin"
+                                : "bi-send"
+                        }`}
+                    ></i>
+                </Button>
+                <Button onClick={handleNewMessage} className="p-7">
+                    <i className="bi bi-plus"></i>
+                    <i className=" bi bi-chat-left-text-fill"></i>
+                </Button>
             </div>
+            
+            
         </AccordionContent>
     );
 }
