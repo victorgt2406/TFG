@@ -10,40 +10,45 @@ import type { LlmRoleType } from "../../models/LlmRole";
 import { TextareaAuto } from "../TextareaAuto";
 import { Button } from "../../@shadcn/components/ui/button";
 import type { LlmMessageType } from "../../models/LlmMessage";
-import { toast } from "sonner";
+// import type { LlmMessageIndexType } from "./AppContent";
 
 type MyProps = LlmMessageType & {
-    handleUpdateContent: (content?: LlmMessageType) => Promise<void>;
+    index: number;
+    handleUpdate: (index: number, content: LlmMessageType) => void;
+    handleDelete: (index: number) => void;
+    handleMove: (index: number, move: number) => void;
 };
 
 export default function ContextMessage({
-    role: defaultRole,
-    content: defaultContent,
-    handleUpdateContent,
+    role,
+    content,
+    index,
+    handleUpdate,
+    handleMove,
+    handleDelete,
 }: MyProps) {
-    const [role, setRole] = useState<LlmRoleType>(defaultRole);
+    // const [role, setRole] = useState<LlmRoleType>(defaultRole);
     const contentRef = useRef<HTMLTextAreaElement>(null);
 
-    async function handleSave() {
-        const content = contentRef.current ? contentRef.current?.value : "";
-        await handleUpdateContent({
-            role,
-            content,
-        });
-        console.log("save")
+    function getContent(): string {
+        return contentRef.current?.value ? contentRef.current?.value : "";
     }
 
-    async function handleDelete() {
-        await handleUpdateContent(undefined);
-        console.log("delete")
+    function handleChange(role: LlmRoleType, content:string) {
+        handleUpdate(index, {
+            content,
+            role,
+        });
     }
 
     return (
-        <>
+        <div className="mb-2">
             <div className="flex mb-3">
                 <Select
                     onValueChange={(value) => {
-                        setRole(value as LlmRoleType);
+                        const role = value as LlmRoleType;
+                        const content = getContent();
+                        handleChange(role, content)
                     }}
                     value={role}
                 >
@@ -56,14 +61,39 @@ export default function ContextMessage({
                         <SelectItem value={"system"}>System</SelectItem>
                     </SelectContent>
                 </Select>
-                <Button className="mx-2" onClick={handleSave}>
-                    <i className="bi bi-floppy"></i>
+                <Button
+                    className="h-8 w-8 mx-1"
+                    size="icon"
+                    variant="secondary"
+                    onClick={() => handleMove(index, -1)}
+                >
+                    <i className="bi bi-chevron-up"></i>
                 </Button>
-                <Button variant="destructive" onClick={handleDelete}>
-                    <i className="bi bi-trash3"></i>
+                <Button
+                    className="h-8 w-8 me-1"
+                    size="icon"
+                    variant="secondary"
+                    onClick={() => handleMove(index, 1)}
+                >
+                    <i className="bi bi-chevron-down"></i>
+                </Button>
+                <Button
+                    className="h-8 w-8"
+                    size="icon"
+                    variant="destructive"
+                    onClick={() => handleDelete(index)}
+                >
+                    <i className="bi bi-x"></i>
                 </Button>
             </div>
-            <TextareaAuto ref={contentRef} defaultValue={defaultContent} />
-        </>
+            <TextareaAuto
+                ref={contentRef}
+                value={content}
+                onChange={() => {
+                    const content = getContent();
+                    handleChange(role, content)
+                }}
+            />
+        </div>
     );
 }
