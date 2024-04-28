@@ -22,6 +22,7 @@ export default function App({
     description,
     terms: defaultTerms,
     conclusions: defaultConclusions,
+    model
 }: Required<AppModel>) {
 
     const [terms, setTerms] = useState(defaultTerms);
@@ -62,6 +63,8 @@ export default function App({
                         <AppContent
                             messages={terms}
                             setMessages={setTerms}
+                            name={name}
+                            model={model}
                         />
                     </AccordionItem>
                     <AccordionItem value="conclusion">
@@ -69,6 +72,8 @@ export default function App({
                         <AppContent
                             messages={conclusions}
                             setMessages={setConclusions}
+                            name={name}
+                            model={model}
                         />
                     </AccordionItem>
                 </Accordion>
