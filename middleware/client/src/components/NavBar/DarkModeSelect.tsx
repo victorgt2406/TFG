@@ -6,24 +6,24 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../../@shadcn/components/ui/select";
-import handleDarkMode, {
-    getDarkModeCookie,
-    type DarkModeType,
-} from "../../utils/handleDarkMode";
+import handleTheme, {
+    getTheme,
+    type ThemeType,
+} from "../../utils/handleTheme";
 
 export default function DarkModeButton({className}:{className?:string}) {
-    const [darkModeValue, setDarkModeValue] = useState<DarkModeType | undefined>(
+    const [darkModeValue, setDarkModeValue] = useState<ThemeType | undefined>(
         undefined
     );
 
     useEffect(() => {
-        setDarkModeValue(getDarkModeCookie());
+        setDarkModeValue(getTheme());
     }, []);
     return (
         <div className={`w-28 ${className}`}>
             <Select
-                onValueChange={(value:DarkModeType) => {
-                    handleDarkMode(value);
+                onValueChange={(value:ThemeType) => {
+                    handleTheme(value);
                     setDarkModeValue(value);
                 }}
                 value={darkModeValue}

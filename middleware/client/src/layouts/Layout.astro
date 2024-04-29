@@ -24,17 +24,17 @@ const { title } = Astro.props;
         />
         <title>{title}</title>
         <ViewTransitions />
+        <script>
+            import handleTheme, {
+                getTheme,
+            } from "../utils/handleTheme";
+    
+            const theme = getTheme();
+            handleTheme(theme);
+        </script>
     </head>
     <body>
         <slot />
         <Toaster client:idle />
     </body><style is:global></style>
-    <script>
-        import handleDarkMode, {
-            getDarkModeCookie,
-        } from "../utils/handleDarkMode";
-
-        const defaultTheme = getDarkModeCookie();
-        handleDarkMode(defaultTheme);
-    </script>
 </html>

@@ -1,10 +1,11 @@
-const COOKIE_DARKMODE = "darkMode";
+const GLOBAL_THEME = "theme";
 import Cookies from "js-cookie";
 
-type DarkModeType = "dark" | "light" | "system";
+type ThemeType = "dark" | "light" | "system";
 
-export default function handleDarkMode(theme: DarkModeType) {
-    Cookies.set(COOKIE_DARKMODE, theme);
+export default function handleTheme(theme: ThemeType) {
+    localStorage.setItem(GLOBAL_THEME, theme);
+    // Cookies.set(COOKIE_DARKMODE, theme);
     function applyTheme(theme: "dark" | "light") {
         document.documentElement.className = theme;
     }
@@ -16,7 +17,7 @@ export default function handleDarkMode(theme: DarkModeType) {
         // Listen system dark mode changes
         const handleDarkModeSystem = (e: MediaQueryListEvent) => {
             const updatedTheme = e.matches ? "dark" : "light";
-            const cookieTheme: string | undefined = Cookies.get(COOKIE_DARKMODE);
+            const cookieTheme: string | undefined = Cookies.get(GLOBAL_THEME);
             if (cookieTheme === "system") {
                 applyTheme(updatedTheme);
             } else {
@@ -31,10 +32,14 @@ export default function handleDarkMode(theme: DarkModeType) {
     }
 }
 
-function getDarkModeCookie(): DarkModeType {
-    return Cookies.get(COOKIE_DARKMODE) as DarkModeType;
+function getTheme(): ThemeType {
+    // return Cookies.get(COOKIE_DARKMODE) as DarkModeType;
+    const theme = localStorage.getItem(GLOBAL_THEME);
+    if (theme) {
+        return theme as ThemeType;
+    } else return "system";
 }
 
-export { getDarkModeCookie, COOKIE_DARKMODE };
+export { getTheme, GLOBAL_THEME };
 
-export type { DarkModeType };
+export type { ThemeType };
