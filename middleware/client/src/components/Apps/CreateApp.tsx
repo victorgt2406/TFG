@@ -3,9 +3,6 @@ import { Button } from "../../@shadcn/components/ui/button";
 import { Input } from "../../@shadcn/components/ui/input";
 import { Label } from "../../@shadcn/components/ui/label";
 import { TextareaAuto } from "../TextareaAuto";
-import mdwApi from "../../utils/mdwApi";
-import type { AppModel } from "../../models/App";
-import { toast } from "sonner";
 
 type MyProps = {
     handleCreate: (name: string, description?: string) => void;
@@ -25,13 +22,6 @@ export default function ({ handleCreate }: MyProps) {
                 ? descriptionRef.current.value
                 : undefined;
         if (name) {
-            // const content: AppModel = {
-            //     name,
-            //     description,
-            // };
-            // const response = await mdwApi.post("/apps/", content);
-            // console.log(response)
-            // toast("App created")
             handleCreate(name, description);
         }
     }

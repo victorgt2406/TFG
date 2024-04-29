@@ -22,11 +22,9 @@ export default function Apps() {
         if (response.status === 200) {
             toast.info(`The App ${name} was deleted`);
             // handle apps
-            const filteredApps = apps.filter((value)=>value.name !== name);
+            const filteredApps = apps.filter((value) => value.name !== name);
             setApps(filteredApps);
-            
-        }
-        else console.log(response);
+        } else console.log(response);
     }
     async function handleCreate(name: string, description?: string) {
         const content: AppModel = {
@@ -37,9 +35,8 @@ export default function Apps() {
         if (response.status === 200) {
             toast.info(`The App ${name} was created`);
             // handle apps
-            setApps([...apps, {name}]);
-        }
-        else console.log(response);
+            setApps([...apps, { name }]);
+        } else console.log(response);
     }
 
     const transformedApps: Required<AppModel>[] = [];
@@ -57,8 +54,8 @@ export default function Apps() {
 
     return (
         <main className="container mx-auto px-4">
-            <h1>Apps</h1>
-            <section>
+            <h1 className="text-3xl">Apps</h1>
+            <section className="my-5">
                 {/* <Apps apps={apps} /> */}
                 {transformedApps.map((app) => (
                     <App
@@ -68,9 +65,15 @@ export default function Apps() {
                     />
                 ))}
             </section>
-            <section className="mt-2 flex flex-col justify-center w-full">
-                <h2>Create App</h2>
-                <CreateApp handleCreate={(name, description)=>handleCreate(name, description)}/>
+            <section className="flex w-full justify-center mb-20">
+                <div className="w-full max-w-[400px] flex flex-col">
+                    <h2 className="text-2xl">Create App</h2>
+                    <CreateApp
+                        handleCreate={(name, description) =>
+                            handleCreate(name, description)
+                        }
+                    />
+                </div>
             </section>
         </main>
     );
