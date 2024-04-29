@@ -20,9 +20,9 @@ async function fetchApps():Promise<AppModel[]> {
 const apps = await fetchApps();
 ---
 
-<Layout title="Aplicaciones">
+<Layout title="Apps">
     <NavBar/>
-    <main class="container mx-auto px-4">
+    <!-- <main class="container mx-auto px-4">
         <h1>Apps</h1>
         <section>
             <Apps apps={apps} client:idle/>
@@ -31,5 +31,6 @@ const apps = await fetchApps();
             <h2>Create App</h2>
             <CreateApp client:idle />
         </section>
-    </main>
+    </main> -->
+    <Apps client:idle/>
 </Layout>

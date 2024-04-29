@@ -7,7 +7,11 @@ import mdwApi from "../../utils/mdwApi";
 import type { AppModel } from "../../models/App";
 import { toast } from "sonner";
 
-export default function () {
+type MyProps = {
+    handleCreate: (name: string, description?: string) => void;
+};
+
+export default function ({ handleCreate }: MyProps) {
     const nameRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -21,13 +25,14 @@ export default function () {
                 ? descriptionRef.current.value
                 : undefined;
         if (name) {
-            const content: AppModel = {
-                name,
-                description,
-            };
-            const response = await mdwApi.post("/apps/", content);
-            console.log(response)
-            toast("App created")
+            // const content: AppModel = {
+            //     name,
+            //     description,
+            // };
+            // const response = await mdwApi.post("/apps/", content);
+            // console.log(response)
+            // toast("App created")
+            handleCreate(name, description);
         }
     }
 
@@ -45,7 +50,11 @@ export default function () {
                     className="w-full"
                 />
             </div>
-            <Button variant="default" className="mt-4" onClick={()=>handleCreateApp()}>
+            <Button
+                variant="default"
+                className="mt-4"
+                onClick={handleCreateApp}
+            >
                 Create App
             </Button>
         </>

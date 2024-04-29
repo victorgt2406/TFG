@@ -18,13 +18,18 @@ import mdwApi from "../../utils/mdwApi";
 import AppContent from "./AppContent";
 import { toast } from "sonner";
 
+type MyProps = Required<AppModel> & {
+    handleDelete:()=>void
+}
+
 export default function App({
     name,
     description,
     terms: defaultTerms,
     conclusions: defaultConclusions,
     model,
-}: Required<AppModel>) {
+    handleDelete
+}: MyProps) {
     const [isSaving, setSaving] = useState(false);
     const [terms, setTerms] = useState(defaultTerms);
     const [conclusions, setConclusions] = useState(defaultConclusions);
@@ -52,10 +57,10 @@ export default function App({
         
     }
 
-    async function handleDelete() {
-        const response = await mdwApi.delete(`/apps/${name}`);
-        console.log(response);
-    }
+    // async function handleDelete() {
+    //     const response = await mdwApi.delete(`/apps/${name}`);
+    //     console.log(response);
+    // }
 
     return (
         <Card className="relative mt-2">
