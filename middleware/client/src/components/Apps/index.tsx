@@ -65,7 +65,8 @@ export default function Apps() {
                     />
                 ))}
             </section>
-            <section className="flex w-full justify-center mb-20">
+            <hr/>
+            <section className="mt-5 flex w-full justify-center mb-20">
                 <div className="w-full max-w-[400px] flex flex-col">
                     <h2 className="text-2xl">Create App</h2>
                     <CreateApp

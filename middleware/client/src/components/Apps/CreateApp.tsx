@@ -23,6 +23,8 @@ export default function ({ handleCreate }: MyProps) {
                 : undefined;
         if (name) {
             handleCreate(name, description);
+            if (nameRef.current) nameRef.current.value = "";
+            if (descriptionRef.current) descriptionRef.current.value = "";
         }
     }
 
