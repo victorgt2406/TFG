@@ -37,13 +37,12 @@ export default function AppsSelect({className}:{className?:string}) {
                 // defaultValue={defaultApp}
             >
                 <SelectTrigger>
-                    <SelectValue className="capitalize" placeholder={"Apps"} />
+                    <SelectValue placeholder={"Apps"} />
                 </SelectTrigger>
                 <SelectContent>
                     {apps.map((app, index) => {
                         return (
                             <SelectItem
-                                className="capitalize"
                                 value={app}
                                 key={"select-app-" + index}
                             >
