@@ -2,6 +2,8 @@
 import { Toaster } from "../@shadcn/components/ui/sonner";
 import "../styles/globals.css";
 import { ViewTransitions } from "astro:transitions";
+import handleApp from "../utils/handleApp";
+import handleTheme from "../utils/handleTheme";
 
 interface Props {
     title: string;
@@ -24,17 +26,18 @@ const { title } = Astro.props;
         />
         <title>{title}</title>
         <ViewTransitions />
-        <script>
-            import handleTheme, {
-                getTheme,
-            } from "../utils/handleTheme";
-    
-            const theme = getTheme();
-            handleTheme(theme);
-        </script>
     </head>
-    <body>
+    <body onload={""}>
         <slot />
         <Toaster client:idle />
-    </body><style is:global></style>
+        <style is:global></style>
+        <script>
+            import handleTheme, { getTheme } from "../utils/handleTheme";
+            function loadTheme(){
+                const theme = getTheme();
+                handleTheme(theme);
+            }
+            document.addEventListener('astro:page-load', loadTheme);
+        </script>
+    </body>
 </html>
