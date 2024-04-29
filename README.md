@@ -22,6 +22,17 @@ This cicle can be explain in the next steps:
 - Middleware  **fastAPI**
 - LLM **Ollama**
 
+# Getting started
+## Requirements
+- A System with a Docker Engine installed.
+## Set up:
+1. Clone the repository
+2. In the relative root where the repository was cloned execute:
+```bash
+docker compose up -d
+```
+3. Open a browser and paste this url: `http://localhost:2002`
+
 # Variables del entorno `.env`
 It will be required to declare a .env file, this is a example to getting started.
 ```bash
