@@ -9,6 +9,7 @@ export default function Apps({ apps }: { apps: AppModel[] }) {
             description: app.description ? app.description : "",
             terms: app.terms ? app.terms : [],
             conclusions: app.conclusions ? app.conclusions : [],
+            model: app.model ? app.model  : "llama3" 
         };
         transformedApps.push(transformedApp);
     });
