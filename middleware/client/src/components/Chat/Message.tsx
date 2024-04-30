@@ -34,7 +34,7 @@ export default function Message({ role, message, lsmResponse }: MyProps) {
             setMessage={setEditedMessage}
         />
     ) : (
-        <>{editedMessage === "..."?<span className={buttonVariants({ variant: "ghost" })}><i className="bi bi-arrow-clockwise animate-spin"></i></span>:editedMessage}</>
+        <>{message === "..."?<span className={buttonVariants({ variant: "ghost" })}><i className="bi bi-arrow-clockwise animate-spin"></i></span>:message}</>
     )
 
     return (

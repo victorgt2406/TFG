@@ -45,7 +45,7 @@ export default function Chat() {
         }
     }
 
-    async function getTerms(
+    async function queryLLM(
         model: string,
         messages: LlmMessageType[],
         stream: boolean
@@ -67,12 +67,19 @@ export default function Chat() {
         return undefined;
     }
 
+    async function fetchDocs(query: string) {
+        const response = await mdwApi.post("/search/", {
+            query,
+        });
+        if (response.status === 200) {
+            return response.data as any[];
+        } else {
+            return undefined;
+        }
+    }
+
     async function handleMessage(message: string) {
         const appName = getApp();
-        const userMessage: LlmMessageType = {
-            role: "user",
-            content: message,
-        };
         const lsmResponse: LsmResponseType = {
             message,
             conclusion: "",
@@ -90,18 +97,43 @@ export default function Chat() {
             const terms = app?.terms || [];
             const conclusions = app?.conclusions || [];
             const model = app?.model || "llama3";
+
             // Getting terms
-            terms.push(userMessage);
-            const responseTerms = await getTerms(model, terms, false);
-            console.log(responseTerms);
-            if (responseTerms) {
-                lsmResponse.terms = responseTerms.replace(" ","").split(",");
-                setMessages([
-                    ...messages,
-                    { message, role: "user" },
-                    { message: "...", role: "assistant", lsmResponse },
-                ]);
-            }
+            terms.push({
+                role: "user",
+                content: message,
+            });
+            const responseTerms = (await queryLLM(model, terms, false)) || "";
+            const cleanTerms = responseTerms.replace(" ", "").split(",");
+            lsmResponse.terms = cleanTerms;
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: "...", role: "assistant", lsmResponse },
+            ]);
+
+            // Getting docs
+            const responseDocs = (await fetchDocs(cleanTerms.join(" "))) || [];
+            lsmResponse.docs = responseDocs;
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: "loading response", role: "assistant", lsmResponse },
+            ]);
+
+            // Getting conclusion
+            conclusions.push({
+                role: "user",
+                content: `User: ${message}\nTerms: ${JSON.stringify(cleanTerms)}\nDocs: ${JSON.stringify(responseDocs)}`,
+            });
+            const responseConclusion = (await queryLLM(model, conclusions, false)) || "";
+            lsmResponse.conclusion = responseConclusion;
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: responseConclusion, role: "assistant", lsmResponse },
+            ]);
+            toast("Question answered "+ responseConclusion)
         }
     }
 
