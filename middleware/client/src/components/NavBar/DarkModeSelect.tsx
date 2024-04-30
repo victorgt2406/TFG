@@ -9,19 +9,19 @@ import {
 import handleTheme, { getTheme, type ThemeType } from "../../utils/handleTheme";
 
 export default function DarkModeButton({ className }: { className?: string }) {
-    const [darkModeValue, setDarkModeValue] = useState<ThemeType>("system");
+    const [theme, setTheme] = useState<ThemeType | undefined>(undefined);
 
     useEffect(() => {
-        setDarkModeValue(getTheme());
+        setTheme(getTheme());
     }, []);
     return (
         <div className={`w-28 ${className}`}>
             <Select
                 onValueChange={(value: ThemeType) => {
                     handleTheme(value);
-                    setDarkModeValue(value);
+                    setTheme(value);
                 }}
-                value={darkModeValue}
+                value={theme}
             >
                 <SelectTrigger>
                     <SelectValue placeholder={"Theme"} />

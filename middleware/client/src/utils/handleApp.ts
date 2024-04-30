@@ -1,21 +1,28 @@
-const COOKIE_APP = "app";
-import axios from "axios";
-import Cookies from "js-cookie";
+const GLOBAL_APP = "app";
+import { toast } from "sonner";
+// import Cookies from "js-cookie";
 import type { AppModel } from "../models/App";
+import mdwApi from "./mdwApi";
 
 export default async function handleApp(appName: string) {
-    const response = await axios.get(
-        `http://localhost:3000/api/apps/${appName}`
-    );
+    const response = await mdwApi(`/apps/${appName}`);
     // Check if exists
-    if (response.status === 200) {
-        const app: AppModel = response.data;
-        Cookies.set(COOKIE_APP, app.name);
+    if (response.status === 200 && response.data.name === appName) {
+        // const app: AppModel = response.data;
+        // Cookies.set(GLOBAL_APP, appName);
+        localStorage.setItem(GLOBAL_APP, appName);
+    }
+    else{
+        toast.error("Error handling app change")
     }
 }
 
-function getAppCookie(): string | undefined {
-    return Cookies.get(COOKIE_APP);
+function getApp(): string | undefined {
+    // return Cookies.get(GLOBAL_APP);
+    const app = localStorage.getItem(GLOBAL_APP)
+        ? localStorage.getItem(GLOBAL_APP)!
+        : undefined;
+    return app;
 }
 
-export { getAppCookie, COOKIE_APP };
+export { getApp, GLOBAL_APP };

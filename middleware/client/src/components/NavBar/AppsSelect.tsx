@@ -7,7 +7,7 @@ import {
     SelectValue,
 } from "../../@shadcn/components/ui/select";
 import type { AppModel } from "../../models/App";
-import handleApp, { getAppCookie } from "../../utils/handleApp";
+import handleApp, { getApp } from "../../utils/handleApp";
 import mdwApi from "../../utils/mdwApi";
 
 export default function AppsSelect({className}:{className?:string}) {
@@ -21,7 +21,7 @@ export default function AppsSelect({className}:{className?:string}) {
                 setApps(data.map((app) => app.name));
             }
         }
-        setAppValue(getAppCookie());
+        setAppValue(getApp());
         // load all apps from api
         loadApps();
     }, []);
