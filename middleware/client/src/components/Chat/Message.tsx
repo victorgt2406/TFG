@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../@shadcn/components/ui/button";
+import { Button, buttonVariants } from "../../@shadcn/components/ui/button";
 import {
     Card,
     CardContent,
@@ -28,6 +28,15 @@ export default function Message({ role, message, lsmResponse }: MyProps) {
     ) : (
         <></>
     );
+    const messageComponent = edit ? (
+        <EditingMessage
+            message={editedMessage}
+            setMessage={setEditedMessage}
+        />
+    ) : (
+        <>{editedMessage === "..."?<span className={buttonVariants({ variant: "ghost" })}><i className="bi bi-arrow-clockwise animate-spin"></i></span>:editedMessage}</>
+    )
+
     return (
         <div
             className={`w-full flex ${
@@ -50,14 +59,7 @@ export default function Message({ role, message, lsmResponse }: MyProps) {
                         {role}
                     </CardHeader>
                     <CardContent className="py-2 px-3">
-                        {edit ? (
-                            <EditingMessage
-                                message={editedMessage}
-                                setMessage={setEditedMessage}
-                            />
-                        ) : (
-                            editedMessage
-                        )}
+                        {messageComponent}
                     </CardContent>
                     {footer}
                 </div>
