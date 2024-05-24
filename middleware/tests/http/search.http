@@ -3,7 +3,8 @@ POST http://localhost:3000/api/search/
 Content-Type: application/json
 
 {
-    "query": "back-pain"
+    "query": "back-pain",
+    "index": "data"
 }
 
 ###

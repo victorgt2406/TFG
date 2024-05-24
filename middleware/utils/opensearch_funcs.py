@@ -3,6 +3,7 @@ OpenSearch functions to fetch and store data
 """
 import os
 import json
+from fastapi import HTTPException
 from opensearchpy import OpenSearch, AsyncOpenSearch
 from opensearchpy.exceptions import ConnectionError as OpenSearchConnectionError
 
@@ -47,7 +48,8 @@ def get_async_opensearch_client() -> AsyncOpenSearch:
 
 async def search(os_client: AsyncOpenSearch, terms: str, index: str = "data"):
     "Search the text terms using OpenSearch inside the `index` indicated"
-    
+    if not await os_client.indices.exists(index):
+        return None
     body = {
         "size": 3,
         "query": {
@@ -63,7 +65,7 @@ async def search(os_client: AsyncOpenSearch, terms: str, index: str = "data"):
     res = list(map(
         lambda doc: {
             "_id": doc["_id"],
-            "_score": doc["_score"],
+            "score": doc["_score"],
             **doc["_source"]
         },
         response["hits"]["hits"]
@@ -111,9 +113,8 @@ def docs_to_bulkop_string(documents: list[dict]):
     return bulk_op_string
 
 
-def index_docs(docs: list[dict]) -> None:
+def index_docs(docs: list[dict], os_client = get_opensearch_client()) -> None:
     "index docs to Opensearch"
-    os_client = get_opensearch_client()
     try:
         os_client.bulk(docs_to_bulkop_string(docs))
     except OpenSearchConnectionError:
