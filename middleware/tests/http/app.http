@@ -21,7 +21,7 @@ POST http://localhost:3000/api/apps/
 Content-Type: application/json
 
 {
-    "name": "test",
+    "name": "test2",
     "terms": [
         {
         "model": "llama3",

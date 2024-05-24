@@ -1,8 +1,6 @@
 "Create application uses for the LSM"
-
-from pydantic import ValidationError
-from models import AppModel, AppUpdateModel
 from fastapi import APIRouter, HTTPException
+from models import AppModel, AppUpdateModel
 from utils import handle_update_app
 from config.opensearch import os_client
 
@@ -12,47 +10,44 @@ OS_INDEX_ID = "name"
 
 
 @router.post("/")
-async def merge_app(req: dict):
-    try:
-        app: AppModel = AppModel.model_validate(req)
-    except ValidationError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-
+async def merge_app(app: AppModel):
     return await handle_update_app(app)
 
 
 @router.delete("/{app_name}")
 async def delete_app(app_name: str):
-    try:
-        await os_client.delete(OS_INDEX,app_name)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-    return
-
+    if not await os_client.indices.exists(OS_INDEX):
+        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+    
+    if await os_client.exists(OS_INDEX, app_name) and await os_client.indices.exists(app_name):
+        await os_client.delete(OS_INDEX, app_name)
+        await os_client.indices.delete(app_name)
+        return True
+    else:
+        raise HTTPException(404, f"The app \"{app_name}\" does not exists.")
 
 
 @router.patch("/")
-async def update_app(req: dict):
-    try:
-        req_app: AppUpdateModel = AppUpdateModel.model_validate(req)
-    except ValidationError as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
-    
-    if "orig_name" in req_app:
-        orig_name = req_app.orig_name
-        name = req_app.name
+async def update_app(app: AppUpdateModel):
+    if not await os_client.indices.exists(OS_INDEX):
+        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+    if "orig_name" in app:
+        orig_name = app.orig_name
+        name = app.name
         app:AppModel = await get_app(orig_name)
         app.name = name
         merge_app(app)
     else:
-        await get_app(req_app.name) # Check if it exists, so it can be updated
-        merge_app(req_app)
+        await get_app(app.name) # Check if it exists, so it can be updated
+        merge_app(app)
 
-    return await handle_update_app(req_app)
+    return await handle_update_app(app)
 
 
 @router.get("/")
 async def get_apps():
+    if not await os_client.indices.exists(OS_INDEX):
+        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
     body = {
         "size": 1000,
         "query": {
@@ -70,6 +65,8 @@ async def get_apps():
 
 @router.get("/{app_name}")
 async def get_app(app_name: str) -> AppModel:
+    if not await os_client.indices.exists(OS_INDEX):
+        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
     body = {
         "size": 1,
         "query": {
