@@ -45,11 +45,7 @@ export default function Chat() {
         }
     }
 
-    async function queryLLM(
-        model: string,
-        messages: LlmMessageType[],
-        stream: boolean
-    ) {
+    async function queryLLM(model: string, messages: LlmMessageType[], stream: boolean) {
         const body: OllamaChat = {
             model,
             messages,
@@ -88,11 +84,7 @@ export default function Chat() {
         };
         if (appName) {
             // input message
-            setMessages([
-                ...messages,
-                { message, role: "user" },
-                { message: "...", role: "assistant", lsmResponse },
-            ]);
+            setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
             const app = await fetchApp(appName);
             const terms = app?.terms || [];
             const conclusions = app?.conclusions || [];
@@ -106,11 +98,7 @@ export default function Chat() {
             const responseTerms = (await queryLLM(model, terms, false)) || "";
             const cleanTerms = responseTerms.replace(" ", "").split(",");
             lsmResponse.terms = cleanTerms;
-            setMessages([
-                ...messages,
-                { message, role: "user" },
-                { message: "...", role: "assistant", lsmResponse },
-            ]);
+            setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
 
             // Getting docs
             const responseDocs = (await fetchDocs(cleanTerms.join(" "))) || [];
@@ -124,7 +112,9 @@ export default function Chat() {
             // Getting conclusion
             conclusions.push({
                 role: "user",
-                content: `User: ${message}\nTerms: ${JSON.stringify(cleanTerms)}\nDocs: ${JSON.stringify(responseDocs)}`,
+                content: `User: ${message}\nTerms: ${JSON.stringify(cleanTerms)}\nDocs: ${JSON.stringify(
+                    responseDocs
+                )}`,
             });
             const responseConclusion = (await queryLLM(model, conclusions, false)) || "";
             lsmResponse.conclusion = responseConclusion;
@@ -133,7 +123,7 @@ export default function Chat() {
                 { message, role: "user" },
                 { message: responseConclusion, role: "assistant", lsmResponse },
             ]);
-            toast("Question answered "+ responseConclusion)
+            toast("Question answered " + responseConclusion);
         }
     }
 
@@ -148,10 +138,7 @@ export default function Chat() {
         <>
             <ScrollArea ref={scrollRef}>
                 <section className="flex justify-center px-4">
-                    <Output
-                        className="my-1 container p-0 min-h-[calc(100vh-106px)]"
-                        messages={messages}
-                    />
+                    <Output className="my-1 container p-0 min-h-[calc(100vh-106px)]" messages={messages} />
                 </section>
             </ScrollArea>
             <section className="container mt-1 mb-2 w-full px-4">

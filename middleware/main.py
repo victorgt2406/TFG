@@ -56,7 +56,10 @@ async def catch_all(full_path: str):
         else:
             return FileResponse(os.path.join(client_dist_dir, full_path))
     try:
-        return FileResponse(os.path.join(client_dist_dir, f"{full_path}{"" if not full_path else "/"}index.html"))
+        def get_web():
+            return f"{full_path}{'' if not full_path else '/'}index.html"
+
+        return FileResponse(os.path.join(client_dist_dir, get_web()))
     except Exception as e:
         # return FileResponse(os.path.join(client_dist_dir,"404/index.html"))
         raise HTTPException(status_code=404) from e
