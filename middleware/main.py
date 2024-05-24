@@ -25,7 +25,6 @@ app = FastAPI(lifespan=lifespan)
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=["http://localhost:2002", "http://localhost:3000"],
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
@@ -33,6 +32,7 @@ app.add_middleware(
 )
 
 load_dotenv()
+
 # Get the directory of app.py
 app_dir = os.path.dirname(os.path.abspath(__file__))
 client_dist_dir = os.path.join(
@@ -46,15 +46,24 @@ load_routes(app)
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
     "All routes that does not start with /api/ return the client"
+
+    # Routes with /api but not end with / redirect them
     if full_path.startswith("api") and not full_path.endswith("/"):
         return RedirectResponse(url=f"/{full_path}/")
+    
+    # Other cases starting with api, the route does not exists
     elif full_path.startswith("api"):
         raise HTTPException(status_code=404)
+    
+    # In case of a file it has a dot ( . )
     if "." in full_path:
+        # Fixing issues with favicon.ico from some browsers
         if full_path == "favicon.ico":
             return FileResponse(os.path.join(client_dist_dir, "favicon.svg"))
         else:
             return FileResponse(os.path.join(client_dist_dir, full_path))
+        
+    # it will try to return the web if is not possible it means it does not exists
     try:
         def get_web():
             return f"{full_path}{'' if not full_path else '/'}index.html"
@@ -66,7 +75,7 @@ async def catch_all(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("MDW_PORT") or 2002)  # type: ignore
+    port = int(os.getenv("MDW_PORT") or "2002")
 
     # Prepare and start the file watcher in a daemon thread
     watcher_thread = threading.Thread(
