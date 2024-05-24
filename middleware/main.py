@@ -14,6 +14,7 @@ from file_observer import file_observer
 from routes import load_routes
 
 
+# Test async connections to search engine and LLM
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await OpenSearchSingleton.test_connection()
