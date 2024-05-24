@@ -48,12 +48,12 @@ async def handle_update_app(req:dict, index_name = "apps"):
     # Check if metadata apps index exists:
     if not await os_client.indices.exists(index_name):
         await os_client.indices.create(index=index_name, body=index_body)
-        print(f"Metadata of apps will be stored at {index_name} index.")
+        print(f"Metadata apps index, called: {index_name} was created.")
     
     # Check if app.name index exists:
     if not await os_client.indices.exists(name):
         await os_client.indices.create(index=name)
-        print(f"Application {name} created.")
+        print(f"{name} index created.")
     settings_body = {
         "doc": app.model_dump(),
         "doc_as_upsert": True

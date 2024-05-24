@@ -24,7 +24,9 @@ class AppModel(BaseModel):
 class AppUpdateModel(BaseModel):
     "Update App"
     orig_name: Optional[str]
+    model: Optional[str] = "llama3"
     name:str
     description: Optional[str] = ""
     terms: Optional[list[ContextModel]] = None
     conclusions: Optional[list[ContextModel]] = None
+    ignore_fields: Optional[list[str]] = []

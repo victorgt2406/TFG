@@ -18,10 +18,12 @@ async def merge_app(app: AppModel):
 async def delete_app(app_name: str):
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
-    
+
     if await os_client.exists(OS_INDEX, app_name) and await os_client.indices.exists(app_name):
         await os_client.delete(OS_INDEX, app_name)
+        print(f"{app_name} metadata was deleted.")
         await os_client.indices.delete(app_name)
+        print(f"{app_name} index was deleted.")
         return True
     else:
         raise HTTPException(404, f"The app \"{app_name}\" does not exists.")
@@ -29,19 +31,32 @@ async def delete_app(app_name: str):
 
 @router.patch("/")
 async def update_app(app: AppUpdateModel):
+    if app.name == app.orig_name:
+        raise HTTPException(400, "VALUE ERROR. The name_orig and name are equal.")
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
-    if "orig_name" in app:
+    if app.orig_name:
         orig_name = app.orig_name
         name = app.name
-        app:AppModel = await get_app(orig_name)
-        app.name = name
-        merge_app(app)
-    else:
-        await get_app(app.name) # Check if it exists, so it can be updated
-        merge_app(app)
-
-    return await handle_update_app(app)
+        if not await os_client.exists(OS_INDEX, orig_name):
+            raise HTTPException(404, f"The app {orig_name} is not founded at \"{OS_INDEX}\" index.")
+        # Reindex the data
+        await os_client.reindex({
+            "source": {
+                "index": orig_name
+            },
+            "dest": {
+                "index": name
+            }
+        })
+        # delete the orig app
+        print(f"{orig_name} index data was indexed to {name}.")
+        await delete_app(orig_name)
+    elif not await os_client.exists(OS_INDEX, app.name):
+        raise HTTPException(404, f"The app {app.name} is not founded at \"{OS_INDEX}\" index.")
+    app_dict:dict = app.model_dump()
+    del app_dict["orig_name"]
+    return await handle_update_app(app_dict)
 
 
 @router.get("/")
@@ -65,8 +80,14 @@ async def get_apps():
 
 @router.get("/{app_name}")
 async def get_app(app_name: str) -> AppModel:
+    "Returns the metadata of an Application"
+
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+
+    if not await os_client.exists(OS_INDEX, app_name):
+        raise HTTPException(404, f"The app {app_name} is not founded at \"{OS_INDEX}\" index.")
+
     body = {
         "size": 1,
         "query": {

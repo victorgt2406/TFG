@@ -1,4 +1,4 @@
-###
+### GETS
 GET http://localhost:3000/api/apps/
 
 ###
@@ -8,7 +8,7 @@ GET http://localhost:3000/api/apps/example
 GET http://localhost:3000/api/apps/test
 
 
-###
+### CREATE APP
 POST http://localhost:3000/api/apps/
 Content-Type: application/json
 
@@ -16,7 +16,7 @@ Content-Type: application/json
     "name": "test"
 }
 
-###
+### 
 POST http://localhost:3000/api/apps/
 Content-Type: application/json
 
@@ -46,5 +46,39 @@ Content-Type: application/json
     ]
 }
 
-###
+### Update apps
+PATCH http://localhost:3000/api/apps/
+Content-Type: application/json
+
+{
+    "orig_name": "test",
+    "name": "test5",
+    "terms": [
+        {
+        "model": "llama3",
+        "role": "admin",
+        "content": "admin content"
+        },
+        {
+        "role": "user",
+        "content": "user content"
+        }
+    ],
+    "conclusions": [
+        {
+        "role": "admin",
+        "content": "admin content"
+        },
+        {
+        "model": "llama3",
+        "role": "user",
+        "content": "user content"
+        }
+    ]
+}
+
+### DELETE APPS
 DELETE http://localhost:3000/api/apps/test
+
+### 
+DELETE http://localhost:3000/api/apps/test2
