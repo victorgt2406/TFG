@@ -1,12 +1,14 @@
 "Create application uses for the LSM"
-import json
 import io
-import pandas as pd
+import json
+
 import numpy as np
+import pandas as pd
 from fastapi import APIRouter, HTTPException, UploadFile
-from models import AppModel, AppUpdateModel
-from utils import handle_update_app
+
 from config.opensearch import os_client
+from models import AppModel, AppUpdateModel
+from utils import handle_update_app, index_docs_auto
 
 router = APIRouter()
 OS_INDEX = "apps"
@@ -20,24 +22,32 @@ async def merge_app(app: AppModel):
 
 
 @router.post("/upload/{app_name}")
-async def upload_data(app_name: str,file: UploadFile):
+async def upload_data(app_name: str, file: UploadFile):
     "Upload data to the app index"
+    if not await os_client.indices.exists(OS_INDEX):
+        raise HTTPException(400, f"OpenSearch index \"{
+                            OS_INDEX}\" is not created.")
     filename = file.filename
     contents = await file.read()
-    if filename: 
+    if filename:
+        data_dict = []
+        # Convert json to dict
         if filename.endswith(".json"):
-            json_data = json.loads(contents)
-            return {"data": json_data}
+            data_dict = json.loads(contents)
+            # index_docs(data_dict, os_client, app_name)
+        # Convert csv to dict
         elif filename.endswith(".csv"):
-            file_like = io.BytesIO(contents)
-            df = pd.read_csv(file_like)
+            content_as_file = io.BytesIO(contents)
+            df = pd.read_csv(content_as_file)
             # Setting null where nan
             df = df.where(pd.notnull(df), None)
             df = df.astype(object).replace(np.nan, None)
             data_dict = df.to_dict(orient='records')
-            return {"data": data_dict}
         else:
-            raise HTTPException(status_code=400, detail="Invalid file type. Just allowed .json and .csv")
+            raise HTTPException(
+                status_code=400, detail="Invalid file type. Just allowed .json and .csv")
+        # index docs to OpenSearch
+        await index_docs_auto(data_dict, os_client, app_name)
     else:
         raise HTTPException(status_code=400, detail="Unknown filetype")
 
@@ -46,7 +56,8 @@ async def upload_data(app_name: str,file: UploadFile):
 async def delete_app(app_name: str):
     "Deletes the app chosen"
     if not await os_client.indices.exists(OS_INDEX):
-        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+        raise HTTPException(400, f"OpenSearch index \"{
+                            OS_INDEX}\" is not created.")
 
     if await os_client.exists(OS_INDEX, app_name) and await os_client.indices.exists(app_name):
         await os_client.delete(OS_INDEX, app_name)
@@ -64,10 +75,12 @@ async def update_app(app: AppUpdateModel):
 
     # Verificamos que podamos realizar la operación
     if app.name == app.orig_name:
-        raise HTTPException(400, "VALUE ERROR. The name_orig and name are equal.")
+        raise HTTPException(
+            400, "VALUE ERROR. The name_orig and name are equal.")
     if not await os_client.indices.exists(OS_INDEX):
-        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
-    
+        raise HTTPException(400, f"OpenSearch index \"{
+                            OS_INDEX}\" is not created.")
+
     # En caso de querer renombrar la aplicación
     if app.orig_name:
         orig_name = app.orig_name
@@ -75,8 +88,9 @@ async def update_app(app: AppUpdateModel):
 
         # Verificamos que orig_app exista
         if not await os_client.exists(OS_INDEX, orig_name):
-            raise HTTPException(404, f"The app {orig_name} is not founded at \"{OS_INDEX}\" index.")
-        
+            raise HTTPException(404, f"The app {orig_name} is not founded at \"{
+                                OS_INDEX}\" index.")
+
         # Reindex los datos al nuevo índice
         await os_client.reindex({
             "source": {
@@ -93,8 +107,9 @@ async def update_app(app: AppUpdateModel):
 
     # En caso solo de actualizar la app sin renombrar
     elif not await os_client.exists(OS_INDEX, app.name):
-        raise HTTPException(404, f"The app {app.name} is not founded at \"{OS_INDEX}\" index.")
-    app_dict:dict = app.model_dump()
+        raise HTTPException(404, f"The app {app.name} is not founded at \"{
+                            OS_INDEX}\" index.")
+    app_dict: dict = app.model_dump()
     del app_dict["orig_name"]
     return await handle_update_app(app_dict)
 
@@ -102,9 +117,10 @@ async def update_app(app: AppUpdateModel):
 @router.get("/")
 async def get_apps():
     "Returns all the metadata every application"
-    
+
     if not await os_client.indices.exists(OS_INDEX):
-        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+        raise HTTPException(400, f"OpenSearch index \"{
+                            OS_INDEX}\" is not created.")
     body = {
         "size": 1000,
         "query": {
@@ -125,10 +141,12 @@ async def get_app(app_name: str) -> AppModel:
     "Returns the metadata of an application"
 
     if not await os_client.indices.exists(OS_INDEX):
-        raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+        raise HTTPException(400, f"OpenSearch index \"{
+                            OS_INDEX}\" is not created.")
 
     if not await os_client.exists(OS_INDEX, app_name):
-        raise HTTPException(404, f"The app {app_name} is not founded at \"{OS_INDEX}\" index.")
+        raise HTTPException(404, f"The app {app_name} is not founded at \"{
+                            OS_INDEX}\" index.")
 
     body = {
         "size": 1,

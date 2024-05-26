@@ -1,6 +1,7 @@
 """
 OpenSearch functions to fetch and store data
 """
+import asyncio
 import os
 import json
 from fastapi import HTTPException
@@ -46,7 +47,7 @@ def get_async_opensearch_client() -> AsyncOpenSearch:
     return client
 
 
-async def search(os_client: AsyncOpenSearch, terms: str, index: str = "data"):
+async def search(os_client: AsyncOpenSearch, terms: str, index: str):
     "Search the text terms using OpenSearch inside the `index` indicated"
     if not await os_client.indices.exists(index):
         return None
@@ -73,7 +74,7 @@ async def search(os_client: AsyncOpenSearch, terms: str, index: str = "data"):
     return res
 
 
-def docs_to_bulkop_string(documents: list[dict]):
+def docs_to_bulkop_string(documents: list[dict], index:str):
     """
     Transforms a list of dictionaries into a bulk operation string for OpenSearch,
     where each document contains '_id' and '_index' keys.
@@ -88,7 +89,7 @@ def docs_to_bulkop_string(documents: list[dict]):
 
     for doc in documents:
         # Basic metadata
-        doc_index = doc.get("_index", "data")
+        doc_index = doc.get("_index", index)
         doc_id = doc.get("_id", None)
 
         # Prepare action metadata
@@ -113,9 +114,21 @@ def docs_to_bulkop_string(documents: list[dict]):
     return bulk_op_string
 
 
-def index_docs(docs: list[dict], os_client = get_opensearch_client()) -> None:
+async def index_docs(docs: list[dict], os_client:AsyncOpenSearch, index:str) -> None:
     "index docs to Opensearch"
     try:
-        os_client.bulk(docs_to_bulkop_string(docs))
+        await os_client.bulk(docs_to_bulkop_string(docs, index))
     except OpenSearchConnectionError:
         print("Error when connecting to OpenSearch")
+
+async def index_docs_auto(docs: list[dict], os_client: AsyncOpenSearch, index: str):
+    def divide_list(arr: list, n: int):
+        return [arr[i:i + n] for i in range(0, len(arr), n)]
+
+    div_docs = divide_list(docs, 500)
+    len_div_docs = len(div_docs)
+    
+    for i, div_doc in enumerate(div_docs):
+        index_docs(div_doc, os_client, index)
+        await asyncio.sleep(2)
+        print(f"{i+1}/{len_div_docs} indexed.")
