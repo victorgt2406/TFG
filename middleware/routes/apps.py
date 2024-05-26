@@ -1,5 +1,9 @@
 "Create application uses for the LSM"
-from fastapi import APIRouter, HTTPException
+import json
+import io
+import pandas as pd
+import numpy as np
+from fastapi import APIRouter, HTTPException, UploadFile
 from models import AppModel, AppUpdateModel
 from utils import handle_update_app
 from config.opensearch import os_client
@@ -13,6 +17,30 @@ OS_INDEX_ID = "name"
 async def merge_app(app: AppModel):
     "Creates the app or updates it for convenience"
     return await handle_update_app(app)
+
+
+@router.post("/upload/{app_name}")
+async def upload_data(app_name: str,file: UploadFile):
+    "Upload data to the app index"
+    filename = file.filename
+    contents = await file.read()
+    if filename: 
+        if filename.endswith(".json"):
+            json_data = json.loads(contents)
+            return {"data": json_data}
+        elif filename.endswith(".csv"):
+            file_like = io.BytesIO(contents)
+            df = pd.read_csv(file_like)
+            # Setting null where nan
+            df = df.where(pd.notnull(df), None)
+            df = df.astype(object).replace(np.nan, None)
+            print(df.head(100))
+            data_dict = df.to_dict(orient='records')
+            return {"data": data_dict}
+        else:
+            raise HTTPException(status_code=400, detail="Invalid file type. Just allowed .json and .csv")
+    else:
+        raise HTTPException(status_code=400, detail="Unknown filetype")
 
 
 @router.delete("/{app_name}")
