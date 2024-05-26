@@ -34,7 +34,6 @@ async def upload_data(app_name: str,file: UploadFile):
             # Setting null where nan
             df = df.where(pd.notnull(df), None)
             df = df.astype(object).replace(np.nan, None)
-            print(df.head(100))
             data_dict = df.to_dict(orient='records')
             return {"data": data_dict}
         else:
