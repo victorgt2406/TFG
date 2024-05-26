@@ -11,11 +11,13 @@ OS_INDEX_ID = "name"
 
 @router.post("/")
 async def merge_app(app: AppModel):
+    "Creates the app or updates it for convenience"
     return await handle_update_app(app)
 
 
 @router.delete("/{app_name}")
 async def delete_app(app_name: str):
+    "Deletes the app chosen"
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
 
@@ -31,9 +33,11 @@ async def delete_app(app_name: str):
 
 @router.patch("/")
 async def update_app(app: AppUpdateModel):
+    "Method to update the application with the complexity of renaming the name which is used as the id"
+
+    # Verificamos que podamos realizar la operación
     if app.name == app.orig_name:
         raise HTTPException(400, "VALUE ERROR. The name_orig and name are equal.")
-    # Verificamos que este creado el índice de apps para los metadatos
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
     
@@ -41,7 +45,7 @@ async def update_app(app: AppUpdateModel):
     if app.orig_name:
         orig_name = app.orig_name
         name = app.name
-        
+
         # Verificamos que orig_app exista
         if not await os_client.exists(OS_INDEX, orig_name):
             raise HTTPException(404, f"The app {orig_name} is not founded at \"{OS_INDEX}\" index.")
