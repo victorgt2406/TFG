@@ -74,6 +74,8 @@ async def update_app(app: AppUpdateModel):
 
 @router.get("/")
 async def get_apps():
+    "Returns all the metadata every application"
+    
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
     body = {
@@ -93,7 +95,7 @@ async def get_apps():
 
 @router.get("/{app_name}")
 async def get_app(app_name: str) -> AppModel:
-    "Returns the metadata of an Application"
+    "Returns the metadata of an application"
 
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
