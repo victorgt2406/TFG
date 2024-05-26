@@ -33,14 +33,20 @@ async def delete_app(app_name: str):
 async def update_app(app: AppUpdateModel):
     if app.name == app.orig_name:
         raise HTTPException(400, "VALUE ERROR. The name_orig and name are equal.")
+    # Verificamos que este creado el índice de apps para los metadatos
     if not await os_client.indices.exists(OS_INDEX):
         raise HTTPException(400, f"OpenSearch index \"{OS_INDEX}\" is not created.")
+    
+    # En caso de querer renombrar la aplicación
     if app.orig_name:
         orig_name = app.orig_name
         name = app.name
+        
+        # Verificamos que orig_app exista
         if not await os_client.exists(OS_INDEX, orig_name):
             raise HTTPException(404, f"The app {orig_name} is not founded at \"{OS_INDEX}\" index.")
-        # Reindex the data
+        
+        # Reindex los datos al nuevo índice
         await os_client.reindex({
             "source": {
                 "index": orig_name
@@ -49,9 +55,12 @@ async def update_app(app: AppUpdateModel):
                 "index": name
             }
         })
-        # delete the orig app
         print(f"{orig_name} index data was indexed to {name}.")
+
+        # borramos el indice original
         await delete_app(orig_name)
+
+    # En caso solo de actualizar la app sin renombrar
     elif not await os_client.exists(OS_INDEX, app.name):
         raise HTTPException(404, f"The app {app.name} is not founded at \"{OS_INDEX}\" index.")
     app_dict:dict = app.model_dump()
