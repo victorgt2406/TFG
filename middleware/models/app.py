@@ -19,7 +19,7 @@ class AppModel(BaseModel):
     description: Optional[str] = ""
     terms: Optional[list[ContextModel]] = None
     conclusions: Optional[list[ContextModel]] = None
-    ignore_fields: Optional[list[str]] = []
+    ignore_fields: Optional[list[str]] = None
 
 class AppUpdateModel(BaseModel):
     "Update App"
@@ -29,4 +29,4 @@ class AppUpdateModel(BaseModel):
     description: Optional[str] = ""
     terms: Optional[list[ContextModel]] = None
     conclusions: Optional[list[ContextModel]] = None
-    ignore_fields: Optional[list[str]] = []
+    ignore_fields: Optional[list[str]] = None

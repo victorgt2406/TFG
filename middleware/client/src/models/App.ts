@@ -6,6 +6,7 @@ type AppModel =  {
     description?: string;
     terms?: LlmMessageType[];
     conclusions?: LlmMessageType[];
+    ignore_fields?: string[];
 }
 
 export type { AppModel };

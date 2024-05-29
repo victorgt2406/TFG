@@ -48,6 +48,7 @@ export default function Apps() {
             terms: app.terms ? app.terms : [],
             conclusions: app.conclusions ? app.conclusions : [],
             model: app.model ? app.model : "llama3",
+            ignore_fields: app.ignore_fields ? app.ignore_fields : []
         };
         transformedApps.push(transformedApp);
     });

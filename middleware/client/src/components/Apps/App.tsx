@@ -4,9 +4,10 @@ import { Button } from "../../@shadcn/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../@shadcn/components/ui/card";
 import type { AppModel } from "../../models/App";
 import mdwApi from "../../utils/mdwApi";
-import AppContent from "./AppContent";
+import ContextMessages from "./ContextMessages";
 import { toast } from "sonner";
 import UploadDataButton from "./UploadDataButton";
+import Fields from "./Fields";
 
 type MyProps = Required<AppModel> & {
     handleDelete: () => void;
@@ -17,12 +18,14 @@ export default function App({
     description,
     terms: defaultTerms,
     conclusions: defaultConclusions,
+    ignore_fields: defaultIgnoreFields,
     model,
     handleDelete,
 }: MyProps) {
     const [isSaving, setSaving] = useState(false);
     const [isUploadingData, setUploadingData] = useState(false);
     const [terms, setTerms] = useState(defaultTerms);
+    const [ignoreFields, setIgnoreFields] = useState(defaultIgnoreFields);
     const [conclusions, setConclusions] = useState(defaultConclusions);
 
     async function handleSave() {
@@ -32,14 +35,10 @@ export default function App({
             description,
             terms,
             conclusions,
+            ignore_fields: ignoreFields
         };
         console.log({ ...app });
-        const response = await mdwApi.post("/apps/", {
-            name,
-            description,
-            terms,
-            conclusions,
-        });
+        const response = await mdwApi.post("/apps/", app);
         setSaving(false);
         console.log(response);
         if (response.status === 200) toast.info("The app was successfully saved");
@@ -81,17 +80,21 @@ export default function App({
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="terms">
                         <AccordionTrigger>Terms</AccordionTrigger>
-                        <AppContent messages={terms} setMessages={setTerms} name={name} model={model} section="terms" />
+                        <ContextMessages messages={terms} setMessages={setTerms} name={name} model={model} section="terms" />
                     </AccordionItem>
                     <AccordionItem value="conclusion">
                         <AccordionTrigger>Conclusion</AccordionTrigger>
-                        <AppContent
+                        <ContextMessages
                             messages={conclusions}
                             setMessages={setConclusions}
                             name={name}
                             model={model}
                             section="conclusions"
                         />
+                    </AccordionItem>
+                    <AccordionItem value="fields">
+                        <AccordionTrigger>Fields</AccordionTrigger>
+                        <Fields name={name} ignoreFields={ignoreFields} setIgnoreFields={setIgnoreFields}/>
                     </AccordionItem>
                 </Accordion>
             </CardContent>

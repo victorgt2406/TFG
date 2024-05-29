@@ -19,7 +19,7 @@ type MyProps = {
     section: "terms" | "conclusions";
 };
 
-export default function AppContent({ messages, setMessages, model, name }: MyProps) {
+export default function ContextMessages({ messages, setMessages, model, name }: MyProps) {
     const testTextRef = useRef<HTMLTextAreaElement>(null);
     const [isTesting, setTesting] = useState(false);
     const [testResponse, setTestResponse] = useState("");
