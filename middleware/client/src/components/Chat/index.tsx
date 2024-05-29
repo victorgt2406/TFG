@@ -52,7 +52,7 @@ export default function Chat() {
             stream,
         };
         console.log(body);
-        const response = await mdwApi.post("/ollama/", body);
+        const response = await mdwApi.post("/llm/", body);
         if (response.status === 200) {
             console.log(response);
             const responseMsg: string = response.data.message.content;
@@ -63,9 +63,10 @@ export default function Chat() {
         return undefined;
     }
 
-    async function fetchDocs(query: string) {
-        const response = await mdwApi.post("/search/", {
+    async function fetchDocs(appName:string, query: string, ignore_fields:string[]) {
+        const response = await mdwApi.post(`/search/${appName}`, {
             query,
+            ignore_fields
         });
         if (response.status === 200) {
             return response.data as any[];
@@ -89,19 +90,23 @@ export default function Chat() {
             const terms = app?.terms || [];
             const conclusions = app?.conclusions || [];
             const model = app?.model || "llama3";
+            const ignore_fields = app?.ignore_fields || [];
+
+            console.log("APP data", app);
 
             // Getting terms
             terms.push({
                 role: "user",
                 content: message,
             });
+            
             const responseTerms = (await queryLLM(model, terms, false)) || "";
             const cleanTerms = responseTerms.replace(" ", "").split(",");
             lsmResponse.terms = cleanTerms;
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
 
             // Getting docs
-            const responseDocs = (await fetchDocs(cleanTerms.join(" "))) || [];
+            const responseDocs = (await fetchDocs(appName, cleanTerms.join(" "), ignore_fields)) || [];
             lsmResponse.docs = responseDocs;
             setMessages([
                 ...messages,
