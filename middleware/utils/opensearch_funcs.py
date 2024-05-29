@@ -132,3 +132,4 @@ async def index_docs_auto(docs: list[dict], os_client: AsyncOpenSearch, index: s
         index_docs(div_doc, os_client, index)
         await asyncio.sleep(2)
         print(f"{i+1}/{len_div_docs} indexed.")
+    return len(docs)

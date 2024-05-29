@@ -47,7 +47,7 @@ async def upload_data(app_name: str, file: UploadFile):
             raise HTTPException(
                 status_code=400, detail="Invalid file type. Just allowed .json and .csv")
         # index docs to OpenSearch
-        await index_docs_auto(data_dict, os_client, app_name)
+        return await index_docs_auto(data_dict, os_client, app_name)
     else:
         raise HTTPException(status_code=400, detail="Unknown filetype")
 
