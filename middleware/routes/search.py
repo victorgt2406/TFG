@@ -1,4 +1,5 @@
 "Search route"
+from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from config import OpenSearchSingleton
@@ -10,13 +11,13 @@ router = APIRouter()
 
 class SearchModel(BaseModel):
     query: str
-    index: str
+    ignore_fields: Optional[list[str]] = None
 
-@router.post("/")
-async def search(req:SearchModel):
+@router.post("/{index}")
+async def search(index:str, req:SearchModel):
     query = req.query
-    index = req.index
-    response = await search_os(os_client, query, index)
+    ignore_fields = req.ignore_fields
+    response = await search_os(os_client, query, index, ignore_fields)
     if response == None:
         raise HTTPException(404, "OPENSEARCH INDEX NOT FOUND")
     return response

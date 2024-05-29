@@ -8,6 +8,7 @@ from fastapi import HTTPException
 from opensearchpy import OpenSearch, AsyncOpenSearch
 from opensearchpy.exceptions import ConnectionError as OpenSearchConnectionError
 
+
 def get_opensearch_client() -> OpenSearch:
     "Returns a pre-configured synced OpenSearch client"
     host = os.getenv("OS_HOST") or "opensearch-node"
@@ -26,6 +27,7 @@ def get_opensearch_client() -> OpenSearch:
         ssl_show_warn=False
     )
     return client
+
 
 def get_async_opensearch_client() -> AsyncOpenSearch:
     "Returns a pre-configured async OpenSearch client"
@@ -47,16 +49,48 @@ def get_async_opensearch_client() -> AsyncOpenSearch:
     return client
 
 
-async def search(os_client: AsyncOpenSearch, terms: str, index: str):
+async def get_fields(os_client: AsyncOpenSearch, index: str) -> list[str] | None:
+    if not await os_client.indices.exists(index):
+        return None
+    response = await os_client.indices.get_mapping(index=index)
+    mapping: dict = response[index]["mappings"]["properties"]
+    return list(
+        map(
+            lambda x: x[0],
+            dict(filter(lambda x: x[1]["type"] ==
+                 "text", mapping.items())).items()
+        )
+    )
+
+
+async def search(os_client: AsyncOpenSearch, terms: str, index: str, ignore_fields: list[str] | None = None):
     "Search the text terms using OpenSearch inside the `index` indicated"
     if not await os_client.indices.exists(index):
         return None
+    fields = await get_fields(os_client, index)
+    if not fields:
+        return None
+
+    search_fields = list(
+        filter(lambda x: x not in ignore_fields, fields)
+    ) if ignore_fields else ["*"]
+    # body = {
+    #     "size": 3,
+    #     "query": {
+    #         "query_string": {
+    #             "query": terms,
+    #             "default_field": "*"
+    #         }
+    #     }
+    # }
+
     body = {
-        "size": 3,
+        "size": 5,
         "query": {
-            "query_string": {
+            "multi_match": {
                 "query": terms,
-                "default_field": "*"
+                "fields": search_fields
+                # "fields": ['activity', 'brand_names']
             }
         }
     }
@@ -74,7 +108,7 @@ async def search(os_client: AsyncOpenSearch, terms: str, index: str):
     return res
 
 
-def docs_to_bulkop_string(documents: list[dict], index:str):
+def docs_to_bulkop_string(documents: list[dict], index: str):
     """
     Transforms a list of dictionaries into a bulk operation string for OpenSearch,
     where each document contains "_id" and "_index" keys.
@@ -114,12 +148,13 @@ def docs_to_bulkop_string(documents: list[dict], index:str):
     return bulk_op_string
 
 
-async def index_docs(docs: list[dict], os_client:AsyncOpenSearch, index:str) -> None:
+async def index_docs(docs: list[dict], os_client: AsyncOpenSearch, index: str) -> None:
     "index docs to Opensearch"
     try:
         await os_client.bulk(docs_to_bulkop_string(docs, index))
     except OpenSearchConnectionError:
         print("Error when connecting to OpenSearch")
+
 
 async def index_docs_auto(docs: list[dict], os_client: AsyncOpenSearch, index: str):
     def divide_list(arr: list, n: int):
@@ -127,7 +162,7 @@ async def index_docs_auto(docs: list[dict], os_client: AsyncOpenSearch, index: s
 
     div_docs = divide_list(docs, 500)
     len_div_docs = len(div_docs)
-    
+
     for i, div_doc in enumerate(div_docs):
         await index_docs(div_doc, os_client, index)
         await asyncio.sleep(2)
@@ -135,14 +170,9 @@ async def index_docs_auto(docs: list[dict], os_client: AsyncOpenSearch, index: s
 
     response = await os_client.indices.get_mapping(index=index)
 
-    mapping:dict = response[index]["mappings"]["properties"]
+    mapping: dict = response[index]["mappings"]["properties"]
     fields = list(map(lambda x: x[0], mapping.items()))
-    print(fields)
-    # print("Fields of the index:")
-    # for field, properties in mapping.items():
-    #     print(f"{field}: {properties}")
 
-    
     response = {
         "total_docs": len(docs),
         "fields": fields
