@@ -5,7 +5,7 @@ import mdwApi from "../../utils/mdwApi";
 import Input from "./Input";
 import Output from "./Output";
 import type { LsmMessageType } from "../../models/LsmMessage";
-import { getApp } from "../../utils/handleApp";
+import { getAppName } from "../../utils/setAppName";
 import type { AppModel } from "../../models/App";
 import type { OllamaChat } from "../../models/OllamaChat";
 import type { LlmMessageType } from "../../models/LlmMessage";
@@ -18,7 +18,7 @@ export default function Chat() {
 
     useEffect(()=>{
         async function loadApp(){
-            const appName = getApp()
+            const appName = getAppName()
             if(appName)
             setApp(await fetchApp(appName))
         }
