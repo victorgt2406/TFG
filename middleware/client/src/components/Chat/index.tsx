@@ -5,49 +5,29 @@ import mdwApi from "../../utils/mdwApi";
 import Input from "./Input";
 import Output from "./Output";
 import type { LsmMessageType } from "../../models/LsmMessage";
-import { getAppName } from "../../utils/handleApp";
 import type { AppModel } from "../../models/App";
 import type { OllamaChat } from "../../models/OllamaChat";
 import type { LlmMessageType } from "../../models/LlmMessage";
 import { toast } from "sonner";
+import { globalAppName } from "../../utils/globals";
+import { useStore } from '@nanostores/react';
 
 export default function Chat() {
     const [messages, setMessages] = useState<LsmMessageType[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [app, setApp] = useState<AppModel | undefined>(undefined);
 
-    const appName = app?.name || "Select an App";
-    const appDescription = app?.description || "You can create a new one in the app section.";
+    const appName = app?.name || "Select an App!";
+    const gAppName = useStore(globalAppName)
+    const appDescription = app?.description || ""
     // const setAppName = useStore((state) => state.setApp);
 
     useEffect(() => {
         async function loadApp() {
-            const appName = getAppName();
-            if (appName) setApp(await fetchApp(appName));
+            if (gAppName) setApp(await fetchApp(gAppName));
         }
         loadApp();
-    }, []);
-
-    // async function handleMessage(message: string) {
-    //     console.log(message);
-    //     setMessages([
-    //         ...messages,
-    //         { message, role: "user" },
-    //     ]);
-    //     const response = await mdwApi.post("/chat/", {
-    //         message,
-    //     });
-    //     if (response.status === 200) {
-    //         const lsmResponse: LsmResponseType = response.data;
-    //         const assistantMessage = lsmResponse.conclusion;
-    //         setMessages([
-    //             ...messages,
-    //             { message, role: "user" },
-    //             { message: assistantMessage, lsmResponse, role: "assistant" }
-    //         ]);
-    //         // console.log(response.data)
-    //     }
-    // }
+    }, [gAppName]);
 
     async function fetchApp(appName: string) {
         const response = await mdwApi.get(`/apps/${appName}`);
@@ -119,7 +99,7 @@ export default function Chat() {
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
 
             // Getting docs
-            const responseDocs = (await fetchDocs(appName, cleanTerms.join(" "), ignore_fields)) || [];
+            const responseDocs = (await fetchDocs(appName!, cleanTerms.join(" "), ignore_fields)) || [];
             lsmResponse.docs = responseDocs;
             setMessages([
                 ...messages,
@@ -168,3 +148,4 @@ export default function Chat() {
         </>
     );
 }
+

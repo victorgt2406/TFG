@@ -1,9 +1,11 @@
 const KEY_APP = "app";
 import { toast } from "sonner";
 import mdwApi from "./mdwApi";
+import { globalAppName } from "./globals";
 
 export default async function handleApp(appName: string) {
     localStorage.setItem(KEY_APP, appName);
+    globalAppName.set(appName)
     const lastAppName = getAppName();
     
     const response = await mdwApi(`/apps/${appName}`);
@@ -12,6 +14,7 @@ export default async function handleApp(appName: string) {
         toast.error("Error handling app change");
         if(lastAppName) {
             localStorage.setItem(KEY_APP, lastAppName)
+            globalAppName.set(lastAppName)
         };
     }
 }
