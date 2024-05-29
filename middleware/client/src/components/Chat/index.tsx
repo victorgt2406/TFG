@@ -14,6 +14,16 @@ import { toast } from "sonner";
 export default function Chat() {
     const [messages, setMessages] = useState<LsmMessageType[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [app, setApp] = useState<AppModel | undefined>(undefined);
+
+    useEffect(()=>{
+        async function loadApp(){
+            const appName = getApp()
+            if(appName)
+            setApp(await fetchApp(appName))
+        }
+        loadApp();
+    },[])
 
     // async function handleMessage(message: string) {
     //     console.log(message);
@@ -76,17 +86,17 @@ export default function Chat() {
     }
 
     async function handleMessage(message: string) {
-        const appName = getApp();
+        // const appName = getApp();
         const lsmResponse: LsmResponseType = {
             message,
             conclusion: "",
             docs: [],
             terms: [],
         };
-        if (appName) {
+        if (app) {
             // input message
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
-            const app = await fetchApp(appName);
+            // const app = await fetchApp(appName);
             const terms = app?.terms || [];
             const conclusions = app?.conclusions || [];
             const model = app?.model || "llama3";
@@ -139,9 +149,16 @@ export default function Chat() {
         }
     }, [messages]);
 
+    const appName = app?.name || "Select an application!!"
+    const appDescription = app?.description || "You can create a new one in the app section."
+
     return (
         <>
             <ScrollArea ref={scrollRef}>
+                <section className="flex  flex-col justify-center items-center">
+                    <h1 className="mb-4 text-4xl font-semibold uppercase">{appName}</h1>
+                    <p className="text-lg">{appDescription}</p>
+                </section>
                 <section className="flex justify-center px-4">
                     <Output className="my-1 container p-0 min-h-[calc(100vh-106px)]" messages={messages} />
                 </section>

@@ -23,7 +23,7 @@ class AppModel(BaseModel):
 
 class AppUpdateModel(BaseModel):
     "Update App"
-    orig_name: Optional[str]
+    orig_name: Optional[str] = None
     model: Optional[str] = "llama3"
     name:str
     description: Optional[str] = ""

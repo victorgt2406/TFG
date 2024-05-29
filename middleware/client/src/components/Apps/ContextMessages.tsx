@@ -87,26 +87,6 @@ export default function ContextMessages({ messages, setMessages, model, name }: 
 
     function OpenSearchTest() {}
 
-    // async function handleUploadData(filename: string, data: string) {
-    //     const formData = new FormData();
-    //     const blobData = new Blob([data], { type: "text/plain" });
-
-    //     formData.append("file", blobData, filename);
-
-    //     try {
-    //         const response = await mdwApi.post(`/apps/upload/${name}`, formData, {
-    //             headers: {
-    //                 "Content-Type": "multipart/form-data",
-    //             },
-    //         });
-    //         console.log(response)
-    //         toast(`Uploaded ${response.data} documents.`)
-    //     } catch (error) {
-    //         toast("Error uploading file")
-    //         // console.error("Error uploading file:", error.response ? error.response.data : error.message);
-    //     }
-    // }
-
     return (
         <AccordionContent className="p-2">
             {messages.map((msg, index) => (
