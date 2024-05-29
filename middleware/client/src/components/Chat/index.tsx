@@ -5,7 +5,7 @@ import mdwApi from "../../utils/mdwApi";
 import Input from "./Input";
 import Output from "./Output";
 import type { LsmMessageType } from "../../models/LsmMessage";
-import { getAppName } from "../../utils/setAppName";
+import { getAppName } from "../../utils/handleApp";
 import type { AppModel } from "../../models/App";
 import type { OllamaChat } from "../../models/OllamaChat";
 import type { LlmMessageType } from "../../models/LlmMessage";
@@ -16,14 +16,17 @@ export default function Chat() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [app, setApp] = useState<AppModel | undefined>(undefined);
 
-    useEffect(()=>{
-        async function loadApp(){
-            const appName = getAppName()
-            if(appName)
-            setApp(await fetchApp(appName))
+    const appName = app?.name || "Select an App";
+    const appDescription = app?.description || "You can create a new one in the app section.";
+    // const setAppName = useStore((state) => state.setApp);
+
+    useEffect(() => {
+        async function loadApp() {
+            const appName = getAppName();
+            if (appName) setApp(await fetchApp(appName));
         }
         loadApp();
-    },[])
+    }, []);
 
     // async function handleMessage(message: string) {
     //     console.log(message);
@@ -73,10 +76,10 @@ export default function Chat() {
         return undefined;
     }
 
-    async function fetchDocs(appName:string, query: string, ignore_fields:string[]) {
+    async function fetchDocs(appName: string, query: string, ignore_fields: string[]) {
         const response = await mdwApi.post(`/search/${appName}`, {
             query,
-            ignore_fields
+            ignore_fields,
         });
         if (response.status === 200) {
             return response.data as any[];
@@ -109,7 +112,7 @@ export default function Chat() {
                 role: "user",
                 content: message,
             });
-            
+
             const responseTerms = (await queryLLM(model, terms, false)) || "";
             const cleanTerms = responseTerms.replace(" ", "").split(",");
             lsmResponse.terms = cleanTerms;
@@ -148,10 +151,6 @@ export default function Chat() {
             scrollElement.scrollTop = scrollElement.scrollHeight;
         }
     }, [messages]);
-
-    const appName = app?.name || "Select an application!!"
-    const appDescription = app?.description || "You can create a new one in the app section."
-
     return (
         <>
             <ScrollArea ref={scrollRef}>

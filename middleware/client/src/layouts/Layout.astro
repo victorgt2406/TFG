@@ -30,12 +30,17 @@ const { title } = Astro.props;
         <Toaster client:idle />
         <style is:global></style>
         <script>
+            import handleApp, { getAppName } from "../utils/handleApp";
             import handleTheme, { getTheme } from "../utils/handleTheme";
-            function loadTheme(){
+            function prepareWebPage() {
+                // load theme
                 const theme = getTheme();
                 handleTheme(theme);
+                // load app
+                const appName = getAppName();
+                if (appName) handleApp(appName);
             }
-            document.addEventListener('astro:page-load', loadTheme);
+            document.addEventListener("astro:page-load", prepareWebPage);
         </script>
     </body>
 </html>

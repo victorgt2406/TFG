@@ -7,7 +7,7 @@ import {
     SelectValue,
 } from "../../@shadcn/components/ui/select";
 import type { AppModel } from "../../models/App";
-import setAppName, { getAppName } from "../../utils/setAppName";
+import handleApp, { getAppName } from "../../utils/handleApp";
 import mdwApi from "../../utils/mdwApi";
 
 export default function AppsSelect({className}:{className?:string}) {
@@ -30,7 +30,7 @@ export default function AppsSelect({className}:{className?:string}) {
         <div className={`w-28 ${className}`}>
             <Select
                 onValueChange={(value) => {
-                    setAppName(value);
+                    handleApp(value);
                     setAppValue(value);
                 }}
                 value={appValue}
