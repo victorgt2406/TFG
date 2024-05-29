@@ -55,7 +55,22 @@ export default function Apps() {
     return (
         <main className="container mx-auto px-4">
             <h1 className="text-3xl">Apps</h1>
-            <section className="my-5">
+            
+            {/* create app */}
+            <section className="my-5 flex w-full justify-center ">
+                <div className="w-full max-w-[700px] flex flex-col">
+                    <h2 className="text-2xl">Create App</h2>
+                    <CreateApp
+                        handleCreate={(name, description) =>
+                            handleCreate(name, description)
+                        }
+                    />
+                </div>
+            </section>
+            <hr/>
+
+            {/* all apps */}
+            <section className="my-5 mb-20">
                 {/* <Apps apps={apps} /> */}
                 {transformedApps.map((app) => (
                     <App
@@ -64,17 +79,6 @@ export default function Apps() {
                         handleDelete={() => handleDelete(app.name)}
                     />
                 ))}
-            </section>
-            <hr/>
-            <section className="mt-5 flex w-full justify-center mb-20">
-                <div className="w-full max-w-[400px] flex flex-col">
-                    <h2 className="text-2xl">Create App</h2>
-                    <CreateApp
-                        handleCreate={(name, description) =>
-                            handleCreate(name, description)
-                        }
-                    />
-                </div>
             </section>
         </main>
     );

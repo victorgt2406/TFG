@@ -87,25 +87,25 @@ export default function AppContent({ messages, setMessages, model, name }: MyPro
 
     function OpenSearchTest() {}
 
-    async function handleUploadData(filename: string, data: string) {
-        const formData = new FormData();
-        const blobData = new Blob([data], { type: "text/plain" });
+    // async function handleUploadData(filename: string, data: string) {
+    //     const formData = new FormData();
+    //     const blobData = new Blob([data], { type: "text/plain" });
 
-        formData.append("file", blobData, filename);
+    //     formData.append("file", blobData, filename);
 
-        try {
-            const response = await mdwApi.post(`/apps/upload/${name}`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            console.log(response)
-            toast(`Uploaded ${response.data} documents.`)
-        } catch (error) {
-            toast("Error uploading file")
-            // console.error("Error uploading file:", error.response ? error.response.data : error.message);
-        }
-    }
+    //     try {
+    //         const response = await mdwApi.post(`/apps/upload/${name}`, formData, {
+    //             headers: {
+    //                 "Content-Type": "multipart/form-data",
+    //             },
+    //         });
+    //         console.log(response)
+    //         toast(`Uploaded ${response.data} documents.`)
+    //     } catch (error) {
+    //         toast("Error uploading file")
+    //         // console.error("Error uploading file:", error.response ? error.response.data : error.message);
+    //     }
+    // }
 
     return (
         <AccordionContent className="p-2">
@@ -123,7 +123,7 @@ export default function AppContent({ messages, setMessages, model, name }: MyPro
             <div className="mt-8">
                 <div className="flex justify-center mt-2">
                     {/* add data */}
-                    <UploadData handleUploadData={handleUploadData} className="p-7" variant={"secondary"}/>
+                    {/* <UploadData handleUploadData={handleUploadData} className="p-7" variant={"secondary"}/> */}
                     {/* Create new message */}
                     <Button onClick={handleNewMessage} className="p-7 ms-2">
                         New message

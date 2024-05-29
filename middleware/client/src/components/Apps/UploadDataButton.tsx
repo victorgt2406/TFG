@@ -1,13 +1,14 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../../@shadcn/components/ui/button";
 
 type MyProps = {
     handleUploadData: (filename: string, data: string) => Promise<void>;
     className: string;
-    variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined
+    variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined,
+    children: React.ReactNode
 };
 
-export default function UploadDataButton({ handleUploadData, className, variant }: MyProps) {
+export default function UploadDataButton({ handleUploadData, className, variant, children }: MyProps) {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -27,8 +28,7 @@ export default function UploadDataButton({ handleUploadData, className, variant 
         <div>
             <input type="file" id="fileInput" style={{ display: "none" }} onChange={handleFileChange} />
             <Button onClick={handleButtonClick} className={className} variant={variant}>
-                Load File
-                <i className="ms-2 bi bi-file-earmark-arrow-up-fill"></i>
+                {children}
             </Button>
         </div>
     );

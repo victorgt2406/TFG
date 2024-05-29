@@ -22,15 +22,5 @@ const apps = await fetchApps();
 
 <Layout title="Apps">
     <NavBar/>
-    <!-- <main class="container mx-auto px-4">
-        <h1>Apps</h1>
-        <section>
-            <Apps apps={apps} client:idle/>
-        </section>
-        <section class="mt-2 flex flex-col justify-center w-full">
-            <h2>Create App</h2>
-            <CreateApp client:idle />
-        </section>
-    </main> -->
     <Apps client:idle/>
 </Layout>

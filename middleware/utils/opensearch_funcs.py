@@ -17,7 +17,7 @@ def get_opensearch_client() -> OpenSearch:
     auth = (user, password)
 
     client = OpenSearch(
-        hosts=[{'host': host, 'port': port}],
+        hosts=[{"host": host, "port": port}],
         http_compress=True,  # enables gzip compression for request bodies
         http_auth=auth,
         use_ssl=True,
@@ -36,7 +36,7 @@ def get_async_opensearch_client() -> AsyncOpenSearch:
     auth = (user, password)
 
     client = AsyncOpenSearch(
-        hosts=[{'host': host, 'port': port}],
+        hosts=[{"host": host, "port": port}],
         http_compress=True,  # enables gzip compression for request bodies
         http_auth=auth,
         use_ssl=True,
@@ -77,7 +77,7 @@ async def search(os_client: AsyncOpenSearch, terms: str, index: str):
 def docs_to_bulkop_string(documents: list[dict], index:str):
     """
     Transforms a list of dictionaries into a bulk operation string for OpenSearch,
-    where each document contains '_id' and '_index' keys.
+    where each document contains "_id" and "_index" keys.
 
     Parameters:
     documents (list): A list of dictionaries, each representing a document.
@@ -87,10 +87,10 @@ def docs_to_bulkop_string(documents: list[dict], index:str):
     """
     bulk_op_lines = []
 
-    for doc in documents:
+    for i, doc in enumerate(documents):
         # Basic metadata
         doc_index = doc.get("_index", index)
-        doc_id = doc.get("_id", None)
+        doc_id = doc.get("_id", i+1)
 
         # Prepare action metadata
         action_meta = {"update": {"_index": doc_index, "_id": doc_id}}
@@ -109,7 +109,7 @@ def docs_to_bulkop_string(documents: list[dict], index:str):
         bulk_op_lines.append(json.dumps(action_meta))
         bulk_op_lines.append(json.dumps(doc_data))
     # Convert each element to JSON and join with newline characters
-    bulk_op_string = '\n'.join(bulk_op_lines)
+    bulk_op_string = "\n".join(bulk_op_lines)
 
     return bulk_op_string
 
@@ -129,7 +129,22 @@ async def index_docs_auto(docs: list[dict], os_client: AsyncOpenSearch, index: s
     len_div_docs = len(div_docs)
     
     for i, div_doc in enumerate(div_docs):
-        index_docs(div_doc, os_client, index)
+        await index_docs(div_doc, os_client, index)
         await asyncio.sleep(2)
         print(f"{i+1}/{len_div_docs} indexed.")
-    return len(docs)
+
+    response = await os_client.indices.get_mapping(index=index)
+
+    mapping:dict = response[index]["mappings"]["properties"]
+    fields = list(map(lambda x: x[0], mapping.items()))
+    print(fields)
+    # print("Fields of the index:")
+    # for field, properties in mapping.items():
+    #     print(f"{field}: {properties}")
+
+    
+    response = {
+        "total_docs": len(docs),
+        "fields": fields
+    }
+    return response
