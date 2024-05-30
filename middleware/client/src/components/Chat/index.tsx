@@ -139,7 +139,7 @@ export default function Chat() {
                     <p className="text-lg">{appDescription}</p>
                 </section>
                 <section className="flex justify-center px-4">
-                    <Output className="my-1 container p-0 min-h-[calc(100vh-106px)]" messages={messages} />
+                    <Output className="my-1 container p-0 min-h-[calc(100vh-218px)]" messages={messages} />
                 </section>
             </ScrollArea>
             <section className="container mt-1 mb-2 w-full px-4">
