@@ -46,10 +46,10 @@ export default function App({
             conclusions,
             ignore_fields,
         };
-        console.log({ ...app });
+        // console.log({ ...app });
 
         const response = await mdwApi.patch("/apps/", app);
-        console.log(response);
+        // console.log(response);
 
         if (response.status === 200) toast.info(`The app ${name} was successfully updated.`);
         else toast.error(`The app ${name} was NOT updated.<br><i>${response.data.detail}</i>`);

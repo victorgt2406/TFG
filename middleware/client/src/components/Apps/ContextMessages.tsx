@@ -45,7 +45,7 @@ export default function ContextMessages({ messages, setMessages, model, name }: 
             messages: [...messages, newMessage],
             stream: false,
         };
-        const response = await mdwApi.post("/ollama/", chat);
+        const response = await mdwApi.post("/llm/", chat);
         const message = response.data.message.content;
         console.log(response);
         toast.info(`The LLM response: ${message}`);
