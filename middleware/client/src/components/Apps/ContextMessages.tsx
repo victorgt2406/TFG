@@ -9,7 +9,6 @@ import { TextareaAuto } from "../TextareaAuto";
 import mdwApi from "../../utils/mdwApi";
 import type { ChatModel } from "../../models/Chat";
 import { Textarea } from "../../@shadcn/components/ui/textarea";
-import UploadData from "./UploadDataButton";
 
 type MyProps = {
     messages: LlmMessageType[];

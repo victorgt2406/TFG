@@ -1,17 +1,15 @@
 import { useRef, useState } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../@shadcn/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionTrigger } from "../../@shadcn/components/ui/accordion";
 import { Button } from "../../@shadcn/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../@shadcn/components/ui/card";
-import type { AppModel } from "../../models/App";
+import { Card, CardContent, CardHeader } from "../../@shadcn/components/ui/card";
+import type { AppModel, UpdateAppModel } from "../../models/App";
 import mdwApi from "../../utils/mdwApi";
 import ContextMessages from "./ContextMessages";
 import { toast } from "sonner";
-import UploadDataButton from "./UploadDataButton";
+import UploadButton from "./UploadButton";
 import Fields from "./Fields";
 import { Input } from "../../@shadcn/components/ui/input";
 import { TextareaAuto } from "../TextareaAuto";
-import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
-import { Tooltip } from "@radix-ui/react-tooltip";
 import SimpleTooltip from "../SimpleTooltip";
 
 type MyProps = Required<AppModel> & {
@@ -40,7 +38,7 @@ export default function App({
 
     async function handleSave() {
         setSaving(true);
-        const app: AppModel = {
+        const app: UpdateAppModel = {
             orig_name: orig_name === name ? undefined : orig_name,
             name,
             description,
@@ -165,11 +163,11 @@ export default function App({
                     </Button>
                 </SimpleTooltip>
                 <SimpleTooltip tip="Upload data">
-                    <UploadDataButton handleUploadData={handleUploadData} className="h-8 w-8 me-3" variant={"outline"}>
+                    <UploadButton handleUploadData={handleUploadData} className="h-8 w-8 me-3" variant={"outline"}>
                         <i
                             className={`bi ${isUploadingData ? "bi-arrow-clockwise animate-spin" : "bi-database-fill-up"}`}
                         />
-                    </UploadDataButton>
+                    </UploadButton>
                 </SimpleTooltip>
                 <Button
                     className="h-8 w-8 me-1"

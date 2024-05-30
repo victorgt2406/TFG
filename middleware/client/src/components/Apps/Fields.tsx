@@ -36,7 +36,7 @@ export default function Fields({ name, ignoreFields, setIgnoreFields }: MyProps)
     useEffect(() => {
         async function loadAppFields() {
             const response = await mdwApi.get("/search/fields/" + name);
-            console.log(response)
+            
             if (response.status === 200) {
                 const fields = response.data as string[];
                 setFields(fields);

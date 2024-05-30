@@ -52,8 +52,8 @@ def get_async_opensearch_client() -> AsyncOpenSearch:
 async def get_fields(os_client: AsyncOpenSearch, index: str) -> list[str] | None:
     if not await os_client.indices.exists(index):
         return None
-    response = await os_client.indices.get_mapping(index=index)
-    mapping: dict = response[index]["mappings"]["properties"]
+    response:dict = await os_client.indices.get_mapping(index=index)
+    mapping: dict = response[index]["mappings"].get("properties", {})
     return list(
         map(
             lambda x: x[0],

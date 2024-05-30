@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Button } from "../../@shadcn/components/ui/button";
+import { Button, type ButtonProps } from "../../@shadcn/components/ui/button";
 
 type MyProps = {
     handleUploadData: (filename: string, data: string) => Promise<void>;
-    className: string;
-    variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined,
-    children: React.ReactNode
+    className?: string;
+    variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined;
+    children?: React.ReactNode;
+    onClick?: (() => void) | (() => Promise<void>);
 };
 
-export default function UploadDataButton({ handleUploadData, className, variant, children }: MyProps) {
+export default function UploadButton({ handleUploadData, className, variant, children, onClick }: MyProps) {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -23,13 +24,14 @@ export default function UploadDataButton({ handleUploadData, className, variant,
     };
     const handleButtonClick = () => {
         document.getElementById("fileInput")!.click();
+        if (onClick) onClick();
     };
     return (
-        <div>
+        <>
             <input type="file" id="fileInput" style={{ display: "none" }} onChange={handleFileChange} />
             <Button onClick={handleButtonClick} className={className} variant={variant}>
                 {children}
             </Button>
-        </div>
+        </>
     );
 }

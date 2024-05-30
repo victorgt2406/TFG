@@ -26,11 +26,13 @@ export default function Apps() {
             setApps(filteredApps);
         } else console.log(response);
     }
-    async function handleCreate(name: string, description?: string) {
-        const content: AppModel = {
-            name,
-            description,
-        };
+    // async function handleCreate(name: string, description?: string) {
+    //     const content: AppModel = {
+    //         name,
+    //         description,
+    //     };
+    async function handleCreate(content: AppModel) {
+        const name = content.name;
         const response = await mdwApi.post("/apps/", content);
         if (response.status === 200) {
             toast.info(`The App ${name} was created`);
@@ -48,7 +50,7 @@ export default function Apps() {
             terms: app.terms ? app.terms : [],
             conclusions: app.conclusions ? app.conclusions : [],
             model: app.model ? app.model : "llama3",
-            ignore_fields: app.ignore_fields ? app.ignore_fields : []
+            ignore_fields: app.ignore_fields ? app.ignore_fields : [],
         };
         transformedApps.push(transformedApp);
     });
@@ -56,29 +58,23 @@ export default function Apps() {
     return (
         <main className="container mx-auto px-4">
             <h1 className="text-3xl">Apps</h1>
-            
+
             {/* create app */}
             <section className="my-5 flex w-full justify-center ">
                 <div className="w-full max-w-[700px] flex flex-col">
                     <h2 className="text-2xl">Create App</h2>
-                    <CreateApp
-                        handleCreate={(name, description) =>
-                            handleCreate(name, description)
-                        }
-                    />
+                    {/* <CreateApp handleCreate={(name, description) => handleCreate(name, description)} /> */}
+                    {/* <CreateApp handleCreate={(content) => handleCreate(content)} /> */}
+                    <CreateApp handleCreate={handleCreate} />
                 </div>
             </section>
-            <hr/>
+            <hr />
 
             {/* all apps */}
             <section className="my-5 mb-20">
                 {/* <Apps apps={apps} /> */}
                 {transformedApps.map((app) => (
-                    <App
-                        key={app.name}
-                        {...app}
-                        handleDelete={() => handleDelete(app.name)}
-                    />
+                    <App key={app.name} {...app} handleDelete={() => handleDelete(app.name)} />
                 ))}
             </section>
         </main>
