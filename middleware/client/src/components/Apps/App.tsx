@@ -47,12 +47,14 @@ export default function App({
             ignore_fields,
         };
         console.log({ ...app });
-        const response = await mdwApi.patch("/apps/", app);
-        setSaving(false);
-        console.log(response);
-        if (response.status === 200) toast.info("The app was successfully saved");
-        else toast.warning("The app was successfully saved");
 
+        const response = await mdwApi.patch("/apps/", app);
+        console.log(response);
+
+        if (response.status === 200) toast.info(`The app ${name} was successfully updated.`);
+        else toast.error(`The app ${name} was NOT updated.<br><i>${response.data.detail}</i>`);
+        
+        setSaving(false);
         setOrigName(name);
     }
 
@@ -60,7 +62,7 @@ export default function App({
         // loader animation on
         setUploadingData(true);
 
-        alert("hey")
+        alert("hey");
         const formData = new FormData();
         const blobData = new Blob([data], { type: "text/plain" });
 
@@ -159,14 +161,21 @@ export default function App({
                         onClick={handleExportConfig}
                         disabled={isSaving || isUploadingData}
                     >
-                        <i className="bi bi-filetype-json"/>
-                        <i className="bi bi-arrow-down"/>
+                        <i className="bi bi-filetype-json" />
+                        <i className="bi bi-arrow-down" />
                     </Button>
                 </SimpleTooltip>
                 <SimpleTooltip tip="Upload data">
-                    <UploadButton handleUploadData={handleUploadData} className="h-8 w-8 me-3" variant={"outline"} id={"upload-to-"+name}>
+                    <UploadButton
+                        handleUploadData={handleUploadData}
+                        className="h-8 w-8 me-3"
+                        variant={"outline"}
+                        id={"upload-to-" + name}
+                    >
                         <i
-                            className={`bi ${isUploadingData ? "bi-arrow-clockwise animate-spin" : "bi-database-fill-up"}`}
+                            className={`bi ${
+                                isUploadingData ? "bi-arrow-clockwise animate-spin" : "bi-database-fill-up"
+                            }`}
                         />
                     </UploadButton>
                 </SimpleTooltip>

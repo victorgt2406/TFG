@@ -90,6 +90,9 @@ async def update_app(app: AppUpdateModel):
         if not await os_client.exists(OS_INDEX, orig_name):
             raise HTTPException(404, f"The app {orig_name} is not founded at \"{
                                 OS_INDEX}\" index.")
+        
+        if orig_name != orig_name.lower() or name != name.lower():
+            raise HTTPException(400, f"{name} must be lowercase!")
 
         # Reindex los datos al nuevo índice
         await os_client.reindex({
