@@ -11,6 +11,8 @@ import Fields from "./Fields";
 import { Input } from "../../@shadcn/components/ui/input";
 import { TextareaAuto } from "../TextareaAuto";
 import { ScrollArea } from "../../@shadcn/components/ui/scroll-area";
+import { Tooltip } from "@radix-ui/react-tooltip";
+import SimpleTooltip from "../SimpleTooltip";
 
 type MyProps = Required<AppModel> & {
     handleDelete: () => void;
@@ -28,7 +30,7 @@ export default function App({
     const [isSaving, setSaving] = useState(false);
     const [isUploadingData, setUploadingData] = useState(false);
     const [terms, setTerms] = useState(defaultTerms);
-    const [ignoreFields, setIgnoreFields] = useState(defaultIgnoreFields);
+    const [ignore_fields, setIgnoreFields] = useState(defaultIgnoreFields);
     const [conclusions, setConclusions] = useState(defaultConclusions);
     const [description, setDescription] = useState(defaultDescription);
     const [name, setName] = useState(defaultName);
@@ -44,7 +46,7 @@ export default function App({
             description,
             terms,
             conclusions,
-            ignore_fields: ignoreFields,
+            ignore_fields,
         };
         console.log({ ...app });
         const response = await mdwApi.patch("/apps/", app);
@@ -79,6 +81,28 @@ export default function App({
         }
         // loader animation off
         setUploadingData(false);
+    }
+
+    function handleExportConfig() {
+        const app: AppModel = {
+            name,
+            description,
+            terms,
+            conclusions,
+            ignore_fields,
+        };
+        // Object to json string
+        const json_data = JSON.stringify(app, null, 4);
+        // Convert string to file
+        const blob = new Blob([json_data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        // Create link to download the file
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${name}_config.json`;
+        a.click();
+        // Delete link
+        URL.revokeObjectURL(url);
     }
 
     return (
@@ -123,29 +147,40 @@ export default function App({
                     </AccordionItem>
                     <AccordionItem value="fields">
                         <AccordionTrigger>Fields</AccordionTrigger>
-                        <Fields name={name} ignoreFields={ignoreFields} setIgnoreFields={setIgnoreFields} />
+                        <Fields name={name} ignoreFields={ignore_fields} setIgnoreFields={setIgnoreFields} />
                     </AccordionItem>
                 </Accordion>
             </CardContent>
             <div className="absolute top-0 right-0 m-2 flex">
-                <UploadDataButton handleUploadData={handleUploadData} className="h-8 w-25 me-3" variant={"secondary"}>
-                    Upload data
-                    <i
-                        className={`ms-2 bi ${
-                            isUploadingData ? "bi-arrow-clockwise animate-spin" : "bi-file-earmark-arrow-up-fill"
-                        }`}
-                    ></i>
-                </UploadDataButton>
+                <SimpleTooltip tip="Export configuration">
+                    <Button
+                        className="h-8 w-10 me-1"
+                        size="icon"
+                        variant="outline"
+                        onClick={handleExportConfig}
+                        disabled={isSaving || isUploadingData}
+                    >
+                        <i className="bi bi-filetype-json"/>
+                        <i className="bi bi-arrow-down"/>
+                    </Button>
+                </SimpleTooltip>
+                <SimpleTooltip tip="Upload data">
+                    <UploadDataButton handleUploadData={handleUploadData} className="h-8 w-8 me-3" variant={"outline"}>
+                        <i
+                            className={`bi ${isUploadingData ? "bi-arrow-clockwise animate-spin" : "bi-database-fill-up"}`}
+                        />
+                    </UploadDataButton>
+                </SimpleTooltip>
                 <Button
                     className="h-8 w-8 me-1"
                     size="icon"
                     variant="secondary"
                     onClick={handleDelete}
-                    disabled={isSaving}
+                    disabled={isSaving || isUploadingData}
                 >
                     <i className="bi bi-trash3"></i>
                 </Button>
-                <Button className="h-8 w-8" size="icon" onClick={handleSave}>
+                <Button className="h-8 w-8" size="icon" onClick={handleSave} disabled={isSaving || isUploadingData}>
                     <i className={`bi ${isSaving ? "bi-arrow-clockwise animate-spin" : "bi-floppy"}`}></i>
                 </Button>
             </div>
