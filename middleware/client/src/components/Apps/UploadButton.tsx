@@ -7,9 +7,10 @@ type MyProps = {
     variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined;
     children?: React.ReactNode;
     onClick?: (() => void) | (() => Promise<void>);
+    id: string;
 };
 
-export default function UploadButton({ handleUploadData, className, variant, children, onClick }: MyProps) {
+export default function UploadButton({ handleUploadData, className, variant, children, onClick, id }: MyProps) {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -23,12 +24,12 @@ export default function UploadButton({ handleUploadData, className, variant, chi
         }
     };
     const handleButtonClick = () => {
-        document.getElementById("fileInput")!.click();
+        document.getElementById(id)!.click();
         if (onClick) onClick();
     };
     return (
         <>
-            <input type="file" id="fileInput" style={{ display: "none" }} onChange={handleFileChange} />
+            <input type="file" id={id} style={{ display: "none" }} onChange={handleFileChange} />
             <Button onClick={handleButtonClick} className={className} variant={variant}>
                 {children}
             </Button>

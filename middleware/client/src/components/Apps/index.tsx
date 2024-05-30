@@ -38,7 +38,10 @@ export default function Apps() {
             toast.info(`The App ${name} was created`);
             // handle apps
             setApps([...apps, { name }]);
-        } else console.log(response);
+        } else {
+            console.log(response)
+            toast.error(`The App ${name} was NOT created`);
+        };
     }
 
     const transformedApps: Required<AppModel>[] = [];
@@ -57,21 +60,22 @@ export default function Apps() {
 
     return (
         <main className="container mx-auto px-4">
-            <h1 className="text-3xl">Apps</h1>
-
             {/* create app */}
-            <section className="my-5 flex w-full justify-center ">
-                <div className="w-full max-w-[700px] flex flex-col">
-                    <h2 className="text-2xl">Create App</h2>
+            <section className="my-5">
+                {/* max-w-[700px] */}
+                <h1 className="text-3xl">Create App</h1>
+                <div className="w-full flex flex-col p-5">
                     {/* <CreateApp handleCreate={(name, description) => handleCreate(name, description)} /> */}
                     {/* <CreateApp handleCreate={(content) => handleCreate(content)} /> */}
                     <CreateApp handleCreate={handleCreate} />
                 </div>
             </section>
+            
             <hr />
 
             {/* all apps */}
             <section className="my-5 mb-20">
+                <h1 className="text-3xl">Apps</h1>
                 {/* <Apps apps={apps} /> */}
                 {transformedApps.map((app) => (
                     <App key={app.name} {...app} handleDelete={() => handleDelete(app.name)} />

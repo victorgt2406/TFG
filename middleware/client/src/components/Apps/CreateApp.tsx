@@ -60,8 +60,11 @@ export default function ({ handleCreate }: MyProps) {
                     variant="secondary"
                     className="col-span-1"
                     handleUploadData={handleImportApp}
-                >
+                    id={"import-app"}
+                >                    
                     Import app
+                    <i className="bi bi-filetype-json ms-1"/>
+                    <i className="bi bi-arrow-up"/>
                 </UploadButton>
             </div>
         </>

@@ -60,6 +60,7 @@ export default function App({
         // loader animation on
         setUploadingData(true);
 
+        alert("hey")
         const formData = new FormData();
         const blobData = new Blob([data], { type: "text/plain" });
 
@@ -163,7 +164,7 @@ export default function App({
                     </Button>
                 </SimpleTooltip>
                 <SimpleTooltip tip="Upload data">
-                    <UploadButton handleUploadData={handleUploadData} className="h-8 w-8 me-3" variant={"outline"}>
+                    <UploadButton handleUploadData={handleUploadData} className="h-8 w-8 me-3" variant={"outline"} id={"upload-to-"+name}>
                         <i
                             className={`bi ${isUploadingData ? "bi-arrow-clockwise animate-spin" : "bi-database-fill-up"}`}
                         />
