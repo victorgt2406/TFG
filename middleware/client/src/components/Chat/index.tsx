@@ -10,7 +10,7 @@ import type { OllamaChat } from "../../models/OllamaChat";
 import type { LlmMessageType } from "../../models/LlmMessage";
 import { toast } from "sonner";
 import { globalAppName } from "../../utils/globals";
-import { useStore } from '@nanostores/react';
+import { useStore } from "@nanostores/react";
 
 export default function Chat() {
     const [messages, setMessages] = useState<LsmMessageType[]>([]);
@@ -18,8 +18,8 @@ export default function Chat() {
     const [app, setApp] = useState<AppModel | undefined>(undefined);
 
     const appName = app?.name || "Select an App!";
-    const gAppName = useStore(globalAppName)
-    const appDescription = app?.description || ""
+    const gAppName = useStore(globalAppName);
+    const appDescription = app?.description || "";
     // const setAppName = useStore((state) => state.setApp);
 
     useEffect(() => {
@@ -72,7 +72,7 @@ export default function Chat() {
         // const appName = getApp();
         const lsmResponse: LsmResponseType = {
             message,
-            conclusion: "",
+            conclusion: "...",
             docs: [],
             terms: [],
         };
@@ -101,17 +101,13 @@ export default function Chat() {
             // Getting docs
             const responseDocs = (await fetchDocs(appName!, cleanTerms.join(" "), ignore_fields)) || [];
             lsmResponse.docs = responseDocs;
-            setMessages([
-                ...messages,
-                { message, role: "user" },
-                { message: "loading response", role: "assistant", lsmResponse },
-            ]);
+            setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
 
             // Getting conclusion
             conclusions.push({
                 role: "user",
-                content: `User: ${message}\nTerms: ${JSON.stringify(cleanTerms)}\nDocs: ${JSON.stringify(
-                    responseDocs
+                content: `User message: ${message}\nTerms of the message: ${JSON.stringify(cleanTerms)}\nJson Documents: ${JSON.stringify(
+                    responseDocs, null, 4
                 )}`,
             });
             const responseConclusion = (await queryLLM(model, conclusions, false)) || "";
@@ -148,4 +144,3 @@ export default function Chat() {
         </>
     );
 }
-
