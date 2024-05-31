@@ -9,6 +9,7 @@ import handleSearch from "../../utils/handleSearch";
 import stringToTerms from "../../utils/stringToTerrms";
 import Markdown from "react-markdown";
 import 'github-markdown-css'
+import createConclusionQuery from "../../utils/createConclusionQuery";
 
 export default function TestApp({
     conclusions: conclusionsContext,
@@ -49,7 +50,8 @@ export default function TestApp({
 
     async function handleConclusion() {
         setConclusionTesting(true);
-        const response = await handleLlm([...conclusionsContext, {role: "user", content: `**Docs**: ${JSON.stringify(docs,null, 4)}\n**User Message**: "${msg}"`}])
+        // const response = await handleLlm([...conclusionsContext, {role: "user", content: `**Docs**: ${JSON.stringify(docs,null, 4)}\n**User Message**: "${msg}"`}])
+        const response = await handleLlm([...conclusionsContext, {role: "user", content: createConclusionQuery(msg, docs)}])
         if (response) {
             setConclusion(response)
         }
@@ -100,7 +102,8 @@ export default function TestApp({
                 </Button>
             </div>
             <Markdown className="markdown-body">
-                {"```text\n"+conclusion+"\n```"}
+                {conclusion}
+                {/* {"```text\n"+conclusion+"\n```"} */}
             </Markdown>
         </AccordionContent>
     );
