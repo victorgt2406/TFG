@@ -11,6 +11,7 @@ import type { LsmResponseType } from "../../models/LsmResponse";
 import MessageFooter from "./MessageFooter";
 import type { LlmRoleType } from "../../models/LlmRole";
 import Markdown from 'react-markdown'
+import 'github-markdown-css'
 
 type MyProps = {
     role: LlmRoleType;
@@ -35,7 +36,7 @@ export default function Message({ role, message, lsmResponse }: MyProps) {
             setMessage={setEditedMessage}
         />
     ) : (
-        <>{message === "..."?<span className={buttonVariants({ variant: "ghost" })}><i className="bi bi-arrow-clockwise animate-spin"></i></span>:<Markdown>{message}</Markdown>}</>
+        <>{message === "..."?<span className={buttonVariants({ variant: "ghost" })}><i className="bi bi-arrow-clockwise animate-spin"></i></span>:<Markdown className="markdown-body">{message}</Markdown>}</>
     )
 
     return (

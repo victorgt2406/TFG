@@ -11,6 +11,7 @@ import Fields from "./Fields";
 import { Input } from "../../@shadcn/components/ui/input";
 import { TextareaAuto } from "../TextareaAuto";
 import SimpleTooltip from "../SimpleTooltip";
+import TestApp from "./TestApp";
 
 type MyProps = Required<AppModel> & {
     handleDelete: () => void;
@@ -53,7 +54,7 @@ export default function App({
 
         if (response.status === 200) toast.info(`The app ${name} was successfully updated.`);
         else toast.error(`The app ${name} was NOT updated.<br><i>${response.data.detail}</i>`);
-        
+
         setSaving(false);
         setOrigName(name);
     }
@@ -149,6 +150,10 @@ export default function App({
                     <AccordionItem value="fields">
                         <AccordionTrigger>Fields</AccordionTrigger>
                         <Fields name={name} ignoreFields={ignore_fields} setIgnoreFields={setIgnoreFields} />
+                    </AccordionItem>
+                    <AccordionItem value="test">
+                        <AccordionTrigger>Test</AccordionTrigger>
+                        <TestApp conclusions={conclusions} terms={terms} ignore_fields={ignore_fields} name={name} />
                     </AccordionItem>
                 </Accordion>
             </CardContent>

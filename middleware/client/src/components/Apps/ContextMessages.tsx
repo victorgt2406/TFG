@@ -110,7 +110,7 @@ export default function ContextMessages({ messages, setMessages, model, name }: 
                         <i className=" bi bi-chat-left-text-fill"></i>
                     </Button>
                 </div>
-                <div className="flex justify-center items-center my-2">
+                {/* <div className="flex justify-center items-center my-2">
                     <TextareaAuto ref={testTextRef} placeholder="Test message" />
                     <Textarea
                         className="resize-none overflow-hidden mx-2 disabled:opacity-100 max-w-[300px]"
@@ -118,11 +118,10 @@ export default function ContextMessages({ messages, setMessages, model, name }: 
                         placeholder="response"
                         disabled
                     ></Textarea>
-                    {/* Test message */}
                     <Button onClick={handleTest} className="me-2 p-7" variant={"secondary"} disabled={isTesting}>
                         Test <i className={`ms-2 bi ${isTesting ? "bi-arrow-clockwise animate-spin" : "bi-send"}`}></i>
                     </Button>
-                </div>
+                </div> */}
             </div>
         </AccordionContent>
     );

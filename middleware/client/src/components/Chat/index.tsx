@@ -6,7 +6,7 @@ import Input from "./Input";
 import Output from "./Output";
 import type { LsmMessageType } from "../../models/LsmMessage";
 import type { AppModel } from "../../models/App";
-import type { OllamaChat } from "../../models/OllamaChat";
+import type { LlmChat } from "../../models/LlmChat";
 import type { LlmMessageType } from "../../models/LlmMessage";
 import { toast } from "sonner";
 import { globalAppName } from "../../utils/globals";
@@ -39,7 +39,7 @@ export default function Chat() {
     }
 
     async function queryLLM(model: string, messages: LlmMessageType[], stream: boolean) {
-        const body: OllamaChat = {
+        const body: LlmChat = {
             model,
             messages,
             stream,

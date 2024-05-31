@@ -1,9 +1,9 @@
 import type { LlmMessageType } from "./LlmMessage";
 
-type OllamaChat = {
+type LlmChat = {
     model: string;
     messages: LlmMessageType[];
     stream: boolean;
 }
 
-export type {OllamaChat};
+export type {LlmChat};
