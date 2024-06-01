@@ -11,6 +11,10 @@ import type { LlmMessageType } from "../../models/LlmMessage";
 import { toast } from "sonner";
 import { globalAppName } from "../../utils/globals";
 import { useStore } from "@nanostores/react";
+import handleLlm from "../../utils/handleLlm";
+import stringToTerms from "../../utils/stringToTerrms";
+import handleSearch from "../../utils/handleSearch";
+import createConclusionQuery from "../../utils/createConclusionQuery";
 
 export default function Chat() {
     const [messages, setMessages] = useState<LsmMessageType[]>([]);
@@ -38,35 +42,35 @@ export default function Chat() {
         }
     }
 
-    async function queryLLM(model: string, messages: LlmMessageType[], stream: boolean) {
-        const body: LlmChat = {
-            model,
-            messages,
-            stream,
-        };
-        console.log(body);
-        const response = await mdwApi.post("/llm/", body);
-        if (response.status === 200) {
-            console.log(response);
-            const responseMsg: string = response.data.message.content;
-            return responseMsg;
-        } else {
-            toast.error("Error when loading terms");
-        }
-        return undefined;
-    }
+    // async function queryLLM(model: string, messages: LlmMessageType[], stream: boolean) {
+    //     const body: LlmChat = {
+    //         model,
+    //         messages,
+    //         stream,
+    //     };
+    //     console.log(body);
+    //     const response = await mdwApi.post("/llm/", body);
+    //     if (response.status === 200) {
+    //         console.log(response);
+    //         const responseMsg: string = response.data.message.content;
+    //         return responseMsg;
+    //     } else {
+    //         toast.error("Error when loading terms");
+    //     }
+    //     return undefined;
+    // }
 
-    async function fetchDocs(appName: string, query: string, ignore_fields: string[]) {
-        const response = await mdwApi.post(`/search/${appName}`, {
-            query,
-            ignore_fields,
-        });
-        if (response.status === 200) {
-            return response.data as any[];
-        } else {
-            return undefined;
-        }
-    }
+    // async function fetchDocs(appName: string, query: string, ignore_fields: string[]) {
+    //     const response = await mdwApi.post(`/search/${appName}`, {
+    //         query,
+    //         ignore_fields,
+    //     });
+    //     if (response.status === 200) {
+    //         return response.data as any[];
+    //     } else {
+    //         return undefined;
+    //     }
+    // }
 
     async function handleMessage(message: string) {
         // const appName = getApp();
@@ -79,7 +83,8 @@ export default function Chat() {
         if (app) {
             // input message
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
-            // const app = await fetchApp(appName);
+            // get last config of the app
+            const app = await fetchApp(appName);
             const terms = app?.terms || [];
             const conclusions = app?.conclusions || [];
             const model = app?.model || "llama3";
@@ -93,24 +98,29 @@ export default function Chat() {
                 content: message,
             });
 
-            const responseTerms = (await queryLLM(model, terms, false)) || "";
-            const cleanTerms = responseTerms.replace(" ", "").split(",");
+            // const responseTerms = (await queryLLM(model, terms, false)) || "";
+            const responseTerms = (await handleLlm(terms, model, false)) || "";
+            // const cleanTerms = responseTerms.replace(" ", "").split(",");
+            const cleanTerms = stringToTerms(responseTerms);
             lsmResponse.terms = cleanTerms;
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
 
             // Getting docs
-            const responseDocs = (await fetchDocs(appName!, cleanTerms.join(" "), ignore_fields)) || [];
+            // const responseDocs = (await fetchDocs(appName!, cleanTerms.join(" "), ignore_fields)) || [];
+            const responseDocs = (await handleSearch(appName!, cleanTerms.join(" "), ignore_fields)) || [];
             lsmResponse.docs = responseDocs;
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
 
             // Getting conclusion
             conclusions.push({
                 role: "user",
-                content: `User message: ${message}\nTerms of the message: ${JSON.stringify(cleanTerms)}\nJson Documents: ${JSON.stringify(
-                    responseDocs, null, 4
-                )}`,
+                // content: `User message: ${message}\nTerms of the message: ${JSON.stringify(
+                //     cleanTerms
+                // )}\nJson Documents: ${JSON.stringify(responseDocs, null, 4)}`,
+                content: createConclusionQuery(message, responseDocs)
             });
-            const responseConclusion = (await queryLLM(model, conclusions, false)) || "";
+            // const responseConclusion = (await queryLLM(model, conclusions, false)) || "";
+            const responseConclusion = (await handleLlm(conclusions, model, false)) || "";
             lsmResponse.conclusion = responseConclusion;
             setMessages([
                 ...messages,
