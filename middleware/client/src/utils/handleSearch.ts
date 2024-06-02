@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import mdwApi from "./mdwApi";
 
 
@@ -9,6 +10,8 @@ export default async function handleSearch(appName: string, query: string, ignor
     if (response.status === 200) {
         return response.data as any[];
     } else {
+        toast.error(`Could not search for docs.<br>
+        Probably there was not any data uploaded or not any matches`)
         return undefined;
     }
 }

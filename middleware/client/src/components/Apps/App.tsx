@@ -62,8 +62,7 @@ export default function App({
     async function handleUploadData(filename: string, data: string) {
         // loader animation on
         setUploadingData(true);
-
-        alert("hey");
+        
         const formData = new FormData();
         const blobData = new Blob([data], { type: "text/plain" });
 
@@ -77,6 +76,7 @@ export default function App({
             });
             console.log(response);
             toast(`Uploaded ${response.data.total_docs} documents.`);
+            setIgnoreFields([...ignore_fields]);
         } catch (error) {
             toast("Error uploading file");
             // console.error("Error uploading file:", error.response ? error.response.data : error.message);

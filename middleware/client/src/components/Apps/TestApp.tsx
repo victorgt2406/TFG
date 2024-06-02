@@ -8,6 +8,7 @@ import handleLlm from "../../utils/handleLlm";
 import handleSearch from "../../utils/handleSearch";
 import stringToTerms from "../../utils/stringToTerrms";
 import Markdown from "react-markdown";
+import remarkGfm from 'remark-gfm'
 import 'github-markdown-css'
 import createConclusionQuery from "../../utils/createConclusionQuery";
 
@@ -91,7 +92,7 @@ export default function TestApp({
                     <i className={`ms-2 bi ${docsTesting ? "bi-arrow-clockwise animate-spin" : "bi-send"}`}></i>
                 </Button>
             </div>
-            <Markdown className="markdown-body">
+            <Markdown remarkPlugins={[remarkGfm]} className="markdown-body">
                 {"```json\n"+JSON.stringify(docs,null, 4)+"\n```"}
             </Markdown>
             <div className="w-full grid grid-cols-5 gap-1.5 my-2 items-center">
@@ -101,9 +102,8 @@ export default function TestApp({
                     <i className={`ms-2 bi ${conclusionTesting ? "bi-arrow-clockwise animate-spin" : "bi-send"}`}></i>
                 </Button>
             </div>
-            <Markdown className="markdown-body">
+            <Markdown remarkPlugins={[remarkGfm]} className="markdown-body">
                 {conclusion}
-                {/* {"```text\n"+conclusion+"\n```"} */}
             </Markdown>
         </AccordionContent>
     );
