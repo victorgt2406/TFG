@@ -5,6 +5,9 @@ const isDev = import.meta.env.DEV;
 const mdwApi = axios.create({
     baseURL: isDev ? "http://localhost:3000/api" : "/api",
     timeout: 180 * 1000,
+    validateStatus: function (status) {
+        return status < 500;
+    },
 });
 
 export default mdwApi;

@@ -1,12 +1,13 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Textarea } from "../../@shadcn/components/ui/textarea";
 import { Button } from "../../@shadcn/components/ui/button";
 
 type MyProps = {
-    handleMessage: (message: string) => void;
+    handleMessage: (message: string) => Promise<void>;
 };
 
 export default function Input({ handleMessage }: MyProps) {
+    const [isLoading, setLoading] = useState(false);
     const text = useRef<HTMLTextAreaElement>(null);
 
     const handleInput = () => {
@@ -17,10 +18,12 @@ export default function Input({ handleMessage }: MyProps) {
         }
     };
 
-    function handleClick(){
-        const message = text.current?.value
-        if(message){
-            handleMessage(message);
+    async function handleClick() {
+        const message = text.current?.value;
+        if (message) {
+            setLoading(true);
+            await handleMessage(message);
+            setLoading(false);
         }
     }
 
@@ -33,10 +36,17 @@ export default function Input({ handleMessage }: MyProps) {
                 placeholder="Type your message here."
             />
             <Button
+                disabled={isLoading}
                 className="absolute bottom-0 right-0 m-1 size-8"
                 onClick={handleClick}
             >
-                <i className="bi bi-send"></i>
+                <i
+                    className={`bi ${
+                        isLoading
+                            ? "bi-arrow-clockwise animate-spin"
+                            : "bi-send"
+                    }`}
+                ></i>
             </Button>
         </div>
     );

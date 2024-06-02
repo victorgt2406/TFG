@@ -1,14 +1,14 @@
-###
+### GETS
 GET http://localhost:3000/api/apps/
 
 ###
 GET http://localhost:3000/api/apps/example
 
 ###
-GET http://localhost:3000/api/apps/test
+GET http://localhost:3000/api/apps/test2
 
 
-###
+### CREATE APP
 POST http://localhost:3000/api/apps/
 Content-Type: application/json
 
@@ -16,12 +16,12 @@ Content-Type: application/json
     "name": "test"
 }
 
-###
+### 
 POST http://localhost:3000/api/apps/
 Content-Type: application/json
 
 {
-    "name": "test",
+    "name": "test2",
     "terms": [
         {
         "model": "llama3",
@@ -46,5 +46,63 @@ Content-Type: application/json
     ]
 }
 
-###
+### Update apps
+PATCH http://localhost:3000/api/apps/
+Content-Type: application/json
+
+{
+    "orig_name": "test",
+    "name": "test5",
+    "terms": [
+        {
+        "model": "llama3",
+        "role": "admin",
+        "content": "admin content"
+        },
+        {
+        "role": "user",
+        "content": "user content"
+        }
+    ],
+    "conclusions": [
+        {
+        "role": "admin",
+        "content": "admin content"
+        },
+        {
+        "model": "llama3",
+        "role": "user",
+        "content": "user content"
+        }
+    ]
+}
+
+### DELETE APPS
 DELETE http://localhost:3000/api/apps/test
+
+### 
+DELETE http://localhost:3000/api/apps/test2
+
+
+### Upload file csv
+POST http://localhost:3000/api/apps/upload/some
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="drugs.csv"
+Content-Type: text/csv
+
+< data/drugs.csv
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+
+### Upload file json
+POST http://localhost:3000/api/apps/upload/some
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="drugs.json"
+Content-Type: application/json
+
+< data/drugs.json
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

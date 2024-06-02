@@ -1,0 +1,25 @@
+###
+POST http://localhost:3000/api/search/
+Content-Type: application/json
+
+{
+    "query": "back-pain",
+    "index": "data"
+}
+
+###
+POST http://localhost:3000/api/search/drugs
+Content-Type: application/json
+
+{
+    "query": "back-pain"
+}
+
+###
+POST http://localhost:3000/api/search/drugs
+Content-Type: application/json
+
+{
+    "query": "back-pain",
+    "ignore_fields": ["side_effects"]
+}

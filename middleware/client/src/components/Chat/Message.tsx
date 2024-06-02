@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../@shadcn/components/ui/button";
+import { Button, buttonVariants } from "../../@shadcn/components/ui/button";
 import {
     Card,
     CardContent,
@@ -10,6 +10,8 @@ import EditingMessage from "./EditingMessage";
 import type { LsmResponseType } from "../../models/LsmResponse";
 import MessageFooter from "./MessageFooter";
 import type { LlmRoleType } from "../../models/LlmRole";
+import Markdown from 'react-markdown'
+import 'github-markdown-css'
 
 type MyProps = {
     role: LlmRoleType;
@@ -28,6 +30,15 @@ export default function Message({ role, message, lsmResponse }: MyProps) {
     ) : (
         <></>
     );
+    const messageComponent = edit ? (
+        <EditingMessage
+            message={editedMessage}
+            setMessage={setEditedMessage}
+        />
+    ) : (
+        <>{message === "..."?<span className={buttonVariants({ variant: "ghost" })}><i className="bi bi-arrow-clockwise animate-spin"></i></span>:<Markdown className="markdown-body">{message}</Markdown>}</>
+    )
+
     return (
         <div
             className={`w-full flex ${
@@ -50,14 +61,7 @@ export default function Message({ role, message, lsmResponse }: MyProps) {
                         {role}
                     </CardHeader>
                     <CardContent className="py-2 px-3">
-                        {edit ? (
-                            <EditingMessage
-                                message={editedMessage}
-                                setMessage={setEditedMessage}
-                            />
-                        ) : (
-                            editedMessage
-                        )}
+                        {messageComponent}
                     </CardContent>
                     {footer}
                 </div>

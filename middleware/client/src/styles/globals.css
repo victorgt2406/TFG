@@ -58,3 +58,10 @@
         @apply bg-background text-foreground;
     }
 }
+
+ul {
+  list-style-type: disc;
+}
+ol {
+  list-style-type: decimal;
+}

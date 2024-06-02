@@ -3,11 +3,16 @@ import { Button } from "../../@shadcn/components/ui/button";
 import { Input } from "../../@shadcn/components/ui/input";
 import { Label } from "../../@shadcn/components/ui/label";
 import { TextareaAuto } from "../TextareaAuto";
-import mdwApi from "../../utils/mdwApi";
-import type { AppModel } from "../../models/App";
+import UploadButton from "./UploadButton";
 import { toast } from "sonner";
+import type { AppModel } from "../../models/App";
 
-export default function () {
+type MyProps = {
+    // handleCreate: (name: string, description?: string) => void;
+    handleCreate: (content: AppModel) => void;
+};
+
+export default function ({ handleCreate }: MyProps) {
     const nameRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -17,17 +22,23 @@ export default function () {
                 ? nameRef.current.value.trim().toLowerCase()
                 : undefined;
         const description =
-            descriptionRef.current && descriptionRef.current.value !== ""
-                ? descriptionRef.current.value
-                : undefined;
+            descriptionRef.current && descriptionRef.current.value !== "" ? descriptionRef.current.value : undefined;
         if (name) {
-            const content: AppModel = {
-                name,
-                description,
-            };
-            const response = await mdwApi.post("/apps/", content);
-            console.log(response)
-            toast("App created")
+            handleCreate({ name, description });
+            if (nameRef.current) nameRef.current.value = "";
+            if (descriptionRef.current) descriptionRef.current.value = "";
+        }
+    }
+
+    async function handleImportApp(filename: string, data: string) {
+        try {
+            const app: AppModel = JSON.parse(data);
+            if (app) {
+                handleCreate(app);
+                toast.info("Application created");
+            }
+        } catch {
+            toast.error("Error importing the application");
         }
     }
 
@@ -39,15 +50,23 @@ export default function () {
             </div>
             <div className="items-center gap-1.5">
                 <Label>Description</Label>
-                <TextareaAuto
-                    ref={descriptionRef}
-                    placeholder="Description"
-                    className="w-full"
-                />
+                <TextareaAuto ref={descriptionRef} placeholder="Description" className="w-full" />
             </div>
-            <Button variant="default" className="mt-4" onClick={()=>handleCreateApp()}>
-                Create App
-            </Button>
+            <div className="grid grid-cols-4 gap-4 mt-4">
+                <Button variant="default" className="me-4 col-span-3" onClick={handleCreateApp}>
+                    Create App
+                </Button>
+                <UploadButton
+                    variant="secondary"
+                    className="col-span-1"
+                    handleUploadData={handleImportApp}
+                    id={"import-app"}
+                >                    
+                    Import app
+                    <i className="bi bi-filetype-json ms-1"/>
+                    <i className="bi bi-arrow-up"/>
+                </UploadButton>
+            </div>
         </>
     );
 }

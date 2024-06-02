@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 // import App from "../../components/Apps/App.astro";
 
 import type { AppModel } from "../../models/App";
-import NavBar from "../../components/NavBar/NavBar.astro"
+import NavBar from "../../components/NavBar"
 import mdwApi from "../../utils/mdwApi";
 import CreateApp from "../../components/Apps/CreateApp";
 import Apps from "../../components/Apps"
@@ -20,16 +20,7 @@ async function fetchApps():Promise<AppModel[]> {
 const apps = await fetchApps();
 ---
 
-<Layout title="Aplicaciones">
-    <NavBar/>
-    <main class="container mx-auto px-4">
-        <h1>Apps</h1>
-        <section>
-            <Apps apps={apps} client:idle/>
-        </section>
-        <section class="mt-2 flex flex-col justify-center w-full">
-            <h2>Create App</h2>
-            <CreateApp client:idle />
-        </section>
-    </main>
+<Layout title="Apps">
+    <NavBar client:idle/>
+    <Apps client:idle/>
 </Layout>

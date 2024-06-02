@@ -7,7 +7,7 @@ import {
     SelectValue,
 } from "../../@shadcn/components/ui/select";
 import type { AppModel } from "../../models/App";
-import handleApp, { getAppCookie } from "../../utils/handleApp";
+import handleApp, { getAppName } from "../../utils/handleApp";
 import mdwApi from "../../utils/mdwApi";
 
 export default function AppsSelect({className}:{className?:string}) {
@@ -21,7 +21,7 @@ export default function AppsSelect({className}:{className?:string}) {
                 setApps(data.map((app) => app.name));
             }
         }
-        setAppValue(getAppCookie());
+        setAppValue(getAppName());
         // load all apps from api
         loadApps();
     }, []);
@@ -37,13 +37,12 @@ export default function AppsSelect({className}:{className?:string}) {
                 // defaultValue={defaultApp}
             >
                 <SelectTrigger>
-                    <SelectValue className="capitalize" placeholder={"Apps"} />
+                    <SelectValue placeholder={"Apps"} />
                 </SelectTrigger>
                 <SelectContent>
                     {apps.map((app, index) => {
                         return (
                             <SelectItem
-                                className="capitalize"
                                 value={app}
                                 key={"select-app-" + index}
                             >

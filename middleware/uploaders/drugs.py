@@ -1,5 +1,6 @@
 import json
 import asyncio
+from config import OpenSearchSingleton
 
 if __name__ == "__main__":
     import sys
@@ -19,7 +20,7 @@ if __name__ == "__main__":
         div_docs = divide_list(docs, 500)
         len_div_docs = len(div_docs)
         for i, div_doc in enumerate(div_docs):
-            index_docs(div_doc)
+            await index_docs(div_doc, OpenSearchSingleton.get_instance(), "drugs")
             await asyncio.sleep(2)
             print(f"{i+1}/{len_div_docs} indexed.")
 
