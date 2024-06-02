@@ -13,6 +13,8 @@ import handleLlm from "../../utils/handleLlm";
 import stringToTerms from "../../utils/stringToTerrms";
 import handleSearch from "../../utils/handleSearch";
 import createConclusionQuery from "../../utils/createConclusionQuery";
+import type { LlmMessageType } from "../../models/LlmMessage";
+import lsmMessageToLlmMessage from "../../utils/lsmMessageToLlmMessage";
 
 export default function Chat() {
     const [messages, setMessages] = useState<LsmMessageType[]>([]);
@@ -46,7 +48,8 @@ export default function Chat() {
             docs: [],
             terms: [],
         };
-        if (app) {
+        console.log(messages)
+        if (messages.length < 2 && app) {
             // input message
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
             // get last config of the app
@@ -89,6 +92,27 @@ export default function Chat() {
                 { message: responseConclusion, role: "assistant", lsmResponse },
             ]);
             // toast("Question answered " + responseConclusion);
+        }
+        else if(app){
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: "...", role: "assistant"},
+            ]);
+            const model = app?.model || "llama3";
+            const llmMessages:LlmMessageType[] = messages.map(lsmMessageToLlmMessage);
+            llmMessages.push({
+                role: "user",
+                content: message,
+            });
+            const llmResponse = (await handleLlm(llmMessages, model, false)) || "";
+            
+            lsmResponse.conclusion = llmResponse;
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: llmResponse, role: "assistant"},
+            ]);
         }
     }
 
