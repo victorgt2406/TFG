@@ -33,7 +33,37 @@ docker compose up -d
 ```
 3. Open a browser and paste this url: `http://localhost:2002`
 
-# Variables del entorno `.env`
+⚠️ In case your system has not a Nvidia GPU, you have to erase the next code from the docker-compose ollama config:
+```yaml
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+```
+
+So it will look like this:
+``` yaml
+  ollama-node:
+    build: ./ollama
+    container_name: ollama-node
+    ports:
+      - "11434:11434"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    networks:
+      - lsm-network
+    deploy:
+      resources:
+        limits:
+          cpus: "8"
+          memory: 20g
+        reservations:
+          cpus: "4"
+          memory: 8g
+```
+
+# Environment variables `.env`
 It will be required to declare a .env file, this is a example to getting started.
 ```bash
 OS_HOST=opensearch-node
