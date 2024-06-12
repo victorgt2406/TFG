@@ -6,8 +6,6 @@ import Input from "./Input";
 import Output from "./Output";
 import type { LsmMessageType } from "../../models/LsmMessage";
 import type { AppModel } from "../../models/App";
-import type { LlmChat } from "../../models/LlmChat";
-import type { LlmMessageType } from "../../models/LlmMessage";
 import { toast } from "sonner";
 import { globalAppName } from "../../utils/globals";
 import { useStore } from "@nanostores/react";
@@ -15,6 +13,8 @@ import handleLlm from "../../utils/handleLlm";
 import stringToTerms from "../../utils/stringToTerrms";
 import handleSearch from "../../utils/handleSearch";
 import createConclusionQuery from "../../utils/createConclusionQuery";
+import type { LlmMessageType } from "../../models/LlmMessage";
+import lsmMessageToLlmMessage from "../../utils/lsmMessageToLlmMessage";
 
 export default function Chat() {
     const [messages, setMessages] = useState<LsmMessageType[]>([]);
@@ -24,7 +24,6 @@ export default function Chat() {
     const appName = app?.name || "Select an App!";
     const gAppName = useStore(globalAppName);
     const appDescription = app?.description || "";
-    // const setAppName = useStore((state) => state.setApp);
 
     useEffect(() => {
         async function loadApp() {
@@ -42,45 +41,15 @@ export default function Chat() {
         }
     }
 
-    // async function queryLLM(model: string, messages: LlmMessageType[], stream: boolean) {
-    //     const body: LlmChat = {
-    //         model,
-    //         messages,
-    //         stream,
-    //     };
-    //     console.log(body);
-    //     const response = await mdwApi.post("/llm/", body);
-    //     if (response.status === 200) {
-    //         console.log(response);
-    //         const responseMsg: string = response.data.message.content;
-    //         return responseMsg;
-    //     } else {
-    //         toast.error("Error when loading terms");
-    //     }
-    //     return undefined;
-    // }
-
-    // async function fetchDocs(appName: string, query: string, ignore_fields: string[]) {
-    //     const response = await mdwApi.post(`/search/${appName}`, {
-    //         query,
-    //         ignore_fields,
-    //     });
-    //     if (response.status === 200) {
-    //         return response.data as any[];
-    //     } else {
-    //         return undefined;
-    //     }
-    // }
-
     async function handleMessage(message: string) {
-        // const appName = getApp();
         const lsmResponse: LsmResponseType = {
             message,
             conclusion: "...",
             docs: [],
             terms: [],
         };
-        if (app) {
+        console.log(messages)
+        if (messages.length < 2 && app) {
             // input message
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
             // get last config of the app
@@ -97,26 +66,21 @@ export default function Chat() {
                 role: "user",
                 content: message,
             });
-
-            // const responseTerms = (await queryLLM(model, terms, false)) || "";
             const responseTerms = (await handleLlm(terms, model, false)) || "";
-            // const cleanTerms = responseTerms.replace(" ", "").split(",");
             const cleanTerms = stringToTerms(responseTerms);
             lsmResponse.terms = cleanTerms;
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
+            toast.info(`Terms loaded.<br>${responseTerms}`)
 
             // Getting docs
-            // const responseDocs = (await fetchDocs(appName!, cleanTerms.join(" "), ignore_fields)) || [];
             const responseDocs = (await handleSearch(appName!, cleanTerms.join(" "), ignore_fields)) || [];
             lsmResponse.docs = responseDocs;
             setMessages([...messages, { message, role: "user" }, { message: "...", role: "assistant", lsmResponse }]);
+            toast.info(`Documents loaded.`)
 
             // Getting conclusion
             conclusions.push({
                 role: "user",
-                // content: `User message: ${message}\nTerms of the message: ${JSON.stringify(
-                //     cleanTerms
-                // )}\nJson Documents: ${JSON.stringify(responseDocs, null, 4)}`,
                 content: createConclusionQuery(message, responseDocs)
             });
             // const responseConclusion = (await queryLLM(model, conclusions, false)) || "";
@@ -127,7 +91,28 @@ export default function Chat() {
                 { message, role: "user" },
                 { message: responseConclusion, role: "assistant", lsmResponse },
             ]);
-            toast("Question answered " + responseConclusion);
+            // toast("Question answered " + responseConclusion);
+        }
+        else if(app){
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: "...", role: "assistant"},
+            ]);
+            const model = app?.model || "llama3";
+            const llmMessages:LlmMessageType[] = messages.map(lsmMessageToLlmMessage);
+            llmMessages.push({
+                role: "user",
+                content: message,
+            });
+            const llmResponse = (await handleLlm(llmMessages, model, false)) || "";
+            
+            lsmResponse.conclusion = llmResponse;
+            setMessages([
+                ...messages,
+                { message, role: "user" },
+                { message: llmResponse, role: "assistant"},
+            ]);
         }
     }
 

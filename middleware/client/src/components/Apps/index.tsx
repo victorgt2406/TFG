@@ -37,7 +37,7 @@ export default function Apps() {
         if (response.status === 200) {
             toast.info(`The App ${name} was created`);
             // handle apps
-            setApps([...apps, { name }]);
+            setApps([...apps, {...content}]);
         } else {
             console.log(response)
             toast.error(`The App ${name} was NOT created`);

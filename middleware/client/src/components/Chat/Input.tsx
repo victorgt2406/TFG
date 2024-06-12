@@ -21,6 +21,7 @@ export default function Input({ handleMessage }: MyProps) {
     async function handleClick() {
         const message = text.current?.value;
         if (message) {
+            text.current.value = "";
             setLoading(true);
             await handleMessage(message);
             setLoading(false);
