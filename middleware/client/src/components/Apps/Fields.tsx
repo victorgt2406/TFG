@@ -43,7 +43,7 @@ export default function Fields({ name, ignoreFields, setIgnoreFields }: MyProps)
             }
         }
         loadAppFields();
-    }, [fields]);
+    }, []);
 
     const fieldComponents = fields.map((field, index) => (
         <Field
