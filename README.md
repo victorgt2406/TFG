@@ -5,6 +5,7 @@ By *Víctor Gutiérrez Tovar*
 
 # Introduction
 This is the last project of my journey studying for the bachelors degree of Software Engineering.
+Here is a video of me explaining it, in Spanish https://youtu.be/GtO74xdpWHA
 
 The main goal of this project is create a prototype tha can use the advantages of the Search Engines and the LLMs. To do so, the prototype will do a cicle to be able to get some data from the search engine from the original question, and using that specific data from the search engine answer that question.
 
