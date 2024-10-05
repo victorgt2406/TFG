@@ -92,10 +92,6 @@ services:
         reservations:
           cpus: "4"
           memory: 8g
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
 
 networks:
   lsm-network:
